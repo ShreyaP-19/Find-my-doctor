@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import findDoc from "../assets/findDoc.png"
 import './homeHeader.css'
 import {Routes,Route,useNavigate} from 'react-router-dom'
@@ -10,12 +10,14 @@ import Service from './Service'
 function HomeHeader() {
   const navigate=useNavigate();
   const [active, setActive] = useState("home");
+  useState(location.pathname); 
+  useEffect(() => {
+    setActive(location.pathname);
+  }, [location.pathname]);
   const clickEvent=(e,path)=>{
     e.preventDefault();
     setActive(path);
-    navigate(path)
-    // navigation(newActive);
-    
+    navigate(path)  
   };
   return (
     <div>
