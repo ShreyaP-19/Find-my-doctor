@@ -18,16 +18,33 @@
     font-size: xx-large;
     border-bottom: 2.5px solid rgb(202, 231, 248);
 }
-.btn-one,.btn-two{
+.btn-two{
     padding: 10px 20px;
-    font-size: 16px;
+    font-size:20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
+    background-color:rgb(202, 231, 248);
+    color: #3674a7;
+    height:120px;
+    width:120px;
+    display: inline;
+    justify-content: center;
+    
+    /* align-items: center; */
+}
+.btn-one{
     background-color: #3674a7;
     color: white;
-
+    font-size: large;
+    height: 60px;
+    width:130px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }  
 .btn-one:hover,.btn-two:hover{
     opacity: 0.9;
