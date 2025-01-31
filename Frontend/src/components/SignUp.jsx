@@ -31,7 +31,12 @@ function SignUp() {
           // Handle the success response here (e.g., navigate to another page or show a success message)
         })
         .catch((error) => {
-          console.error('Error:', error);
+          if (error.response) {
+            // If error response exists, extract the message from backend
+            alert(error.response.data.message);
+          } else {
+            setErrorMessage("An error occurred. Please try again.");
+          }
           // Handle the error (e.g., show an error message)
         });
     }
