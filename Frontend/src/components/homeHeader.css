@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+}
+
+.nav {
+  height: 60px;
+  background-color: rgb(202, 231, 248);
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+#findDoc {
+  height: 60px;
+  padding-left: 6px;
+}
+
+#user {
+  height: 45px;
+  width: 150px;
+  margin-right: 20px;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.3s, opacity 0.3s;
+  border-radius: 5px;
+  padding-right: 10px;
+  font-size: medium;
+  background-color: #3674a7;
+  color: rgb(202, 231, 248);
+}
+
+#user:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+#findDr {
+  margin: 0;
+  color: #3674a7;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  font-size: large;
+}
+
+/* New navbar */
+.newnav {
+  display: flex;
+  gap: 15px;
+  justify-content: center; /* Center the navbar links horizontally */
+  flex-grow: 1; /* Ensures the navbar takes up remaining space */
+}
+
+.newnav a {
+  color: #165e98;
+  font-family: "Outfit", serif;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 5px 10px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.newnav a:hover {
+  color: #1a71ea;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Default state: no underline */
+.newnav a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; /* Position the underline just below the text */
+  left: 50%; /* Start at the center */
+  transform: translateX(-50%) scaleX(0); /* Scale to 0 initially */
+  width: 50%; /* The width of the underline */
+  height: 2px;
+  background-color: #1a71ea;
+  transition: transform 0.3s ease; /* Animate scaling */
+  transform-origin: center; /* Start scaling from the center */
+  border-radius: 50px;
+  opacity: 0; /* Start invisible */
+}
+
+/* Apply underline only when the link has the 'update' class (clicked state) */
+.newnav a.update::after {
+  transform: translateX(-50%) scaleX(1); /* Expand from the center */
+  opacity: 1; /* Make the underline visible */
+}
+
+/* Active link styles */
+.newnav a.update {
+  color: #1a71ea; /* Change the font color when active */
+  font-weight: 600; /* Optionally make the font slightly bolder */
+}

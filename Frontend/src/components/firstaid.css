@@ -1,0 +1,16 @@
+#head{
+    text-align: center;
+    margin-top: 60px;
+}
+#quote{
+    text-align: center;
+    margin-top: 20px;
+    font-size: larger;
+    color: #3674a7;
+    width:450px;
+}
+#paragraph{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
