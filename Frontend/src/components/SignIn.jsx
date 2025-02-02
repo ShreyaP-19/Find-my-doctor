@@ -3,10 +3,11 @@ import './signIn.css'
 import Header from './Header';
 import { Routes,Route,useNavigate } from 'react-router-dom';
 import SignUp from './SignUp';
+import axios from 'axios';
 
 function SignIn(){
   const navigate=useNavigate();
-  const initValues={userName:"",email:"",password:""}
+  const initValues={username:"",password:""}
   const [formErrors, setFormErrors] = useState({});
   const [formValue,setFormValue]=useState(initValues)
   const [isSubmit,setIsSubmit]=useState(false)
@@ -20,14 +21,38 @@ function SignIn(){
   function handleSubmit(e) {
     e.preventDefault();
     setFormErrors(Validate(formValue))
+    console.log(formValue)
+
     setIsSubmit(true);   //attempt to submit the form
+    if (Object.keys(formErrors).length === 0) {
+      axios.post('http://localhost:5000/login', formValue)
+        .then((response) => {
+          console.log('Success:', response.data);
+          if(response.data.role==='hospitalAdmin'){
+            navigate('/service')
+          }
+          else if(response.data.role==='patient'){
+            navigate('/home'); // Navigate to the home page
+          }
+         
+          
+        })
+        .catch((error) => {
+          if (error.response) {
+            // If error response exists, extract the message from backend
+            alert(error.response.data.message);
+          } else {
+            setErrorMessage("An error occurred. Please try again.");
+          }
+          // Handle the error (e.g., show an error message)
+        });
+    }
   }
       
   function Validate(values){ //mainly to check if there is any error or to find if any empty fields
     const errors={}
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     //to check if username field is not empty
-    if (!values.userName) errors.userName = "Username is required.";
+    if (!values.username) errors.username = "Username is required.";
 
     if (!values.password) {
       errors.password = "Password is required";
@@ -60,7 +85,7 @@ function SignIn(){
         crossOrigin="anonymous"
         referrerPolicy="no-referrer"
       />
-        <form>
+        <form onSubmit={handleSubmit}>
           <div id="container">
             <div id="box">
                <div className="header">
@@ -69,7 +94,7 @@ function SignIn(){
                 <div className="inputs">
                   <div className="username">
                     <i className="fa-solid fa-user"></i>
-                    <input type="text" onChange={handleChange} name="userName" placeholder="UserName" value={formValue.userName} style={{ borderColor: formErrors.userName ? "red" : "" }}></input>
+                    <input type="text" onChange={handleChange} name="username" placeholder="UserName" value={formValue.username} style={{ borderColor: formErrors.username ? "red" : "" }}></input>
                     <br></br><br></br>
                   </div>
             
@@ -80,7 +105,7 @@ function SignIn(){
                   </div>
                 </div>
 
-                <button id="button" type="submit" onClick={handleSubmit} style={{color:'#165e98'}}>Submit</button>
+                <button id="button" type="submit"  style={{color:'#165e98'}}>Submit</button>
                   <br></br>
                   <p>Already have an account?<span onClick={()=>navigate('/SignUp')}>Click here!</span></p>
             </div>
