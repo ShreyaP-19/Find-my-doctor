@@ -2,7 +2,8 @@ import {useState,useEffect} from 'react'
 import './signUp.css'
 import Header from './Header'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import { Routes,Route, useNavigate } from 'react-router-dom';  // Import useNavigate
+import HomeBody from './HomeBody';
 
 function SignUp() { 
     // const navigate=useNavigate();
@@ -27,7 +28,7 @@ function SignUp() {
       axios.post('http://localhost:5000/signup', formValue)
         .then((response) => {
           console.log('Success:', response.data);
-          navigate('/home'); // Navigate to the home page
+          navigate('/HomeBody'); // Navigate to the home page
           // Handle the success response here (e.g., navigate to another page or show a success message)
         })
         .catch((error) => {
@@ -118,6 +119,9 @@ function SignUp() {
               </div>
             </div>
           </div>
+          <Routes>
+            <Route path="/HomeBody" element={<HomeBody/>}/>
+          </Routes>
     </>
   )
 }

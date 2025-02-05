@@ -7,6 +7,7 @@ import Contact from './components/Contact'
 import FirstAid from './components/FirstAid'
 import About from './components/About'
 import Service from './components/Service'
+import HomeBody from './components/HomeBody'
 
 function MainRoute() {
   return (
@@ -20,6 +21,7 @@ function MainRoute() {
         <Route path='/FirstAid' element={<FirstAid/>}/>
         <Route path='/About/*' element={<About/>}/>
         <Route path='/Service/*' element={<Service/>}/>
+        <Route path='/HomeBody' element={<HomeBody/>}/>
       </Routes>
     </div>
   )

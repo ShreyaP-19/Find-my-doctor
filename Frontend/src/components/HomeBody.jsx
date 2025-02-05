@@ -1,9 +1,14 @@
 import React from 'react'
 import './homeBody.css'
+import HomeHeader from './HomeHeader'
+import HomeImage from './HomeImage'
+import HomeFooter from './HomeFooter'
 
 function HomeBody() {
   return (
     <div>
+      <HomeHeader/>
+      <HomeImage/>
       <div id="body">
         <div id="speciality">Find by Speciality</div>
         <div id="test">
@@ -26,6 +31,7 @@ function HomeBody() {
             <div id="text6" style={{marginLeft:"10px"}}>Gastroenterologist</div>
         </div>
       </div>
+      <HomeFooter/>
     </div>
   )
 }
