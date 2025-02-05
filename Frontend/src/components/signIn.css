@@ -40,3 +40,9 @@ span{
 .username,.password{
     font-size: larger;
 }
+.show-password input[type="checkbox"] {
+    width: 16px; /* Set a custom width for the checkbox */
+    height: 16px; /* Set a custom height for the checkbox */
+    margin-right: 8px; /* Optional: Adjust space between checkbox and label */
+    cursor:pointer;
+  }

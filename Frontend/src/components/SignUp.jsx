@@ -10,6 +10,7 @@ function SignUp() {
   const [formErrors, setFormErrors] = useState({});
   const [formValue,setFormValue]=useState(initValues)
   const [isSubmit,setIsSubmit]=useState(false)
+  const [isVisible,setIsVisible]=useState(false)
   const [action,setAction]=useState("Sign Up")
   const navigate = useNavigate();  // Initialize navigate function
   function handleChange(e){
@@ -94,6 +95,7 @@ function SignUp() {
                     <div></div>
                     ) : <div></div>}
                   </div>
+                <form onSubmit={handleSubmit}>
             
                 <div className="inputs">
                   <div className="email">
@@ -108,13 +110,24 @@ function SignUp() {
                   </div>
                   <div className="password">
                     <i className="fa-solid fa-lock"></i>
-                    <input type="password" name="password" onChange={handleChange} value={formValue.password} placeholder="Password" style={{ borderColor: formErrors.password ? "red" : "" }}></input>
+                    <input type={isVisible ? 'text' : 'password'} name="password" onChange={handleChange} value={formValue.password} placeholder="Password" style={{ borderColor: formErrors.password ? "red" : "" }}></input>
                     <br></br><br></br>
                   </div>
+                  <div className="show-password">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={isVisible}
+                    onChange={() => setIsVisible(!isVisible)} // Toggle password visibility
+                  />
+                  Show Password
+                </label>
+              </div>
                 </div>
                   
-                <button id="button" type="submit" onClick={handleSubmit} style={{color:'#165e98'}}>Submit</button>
+                <button id="button" type="submit"  style={{color:'#165e98'}}>Submit</button>
                 <br></br>
+                </form>
               </div>
             </div>
           </div>
