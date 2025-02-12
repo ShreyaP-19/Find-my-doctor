@@ -1,8 +1,7 @@
-POST http://localhost:5000/signup
+POST http://localhost:5000/hospital/add
 Content-Type: application/json
 
 {
-  "email":"ash23@hospital.com",
-  "username": "rohy65",
-  "password": "kekje1234"
+  "name": "KLIC",
+  "location": "Kannur"
 }

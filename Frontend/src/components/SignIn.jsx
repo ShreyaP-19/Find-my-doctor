@@ -1,7 +1,7 @@
-import {useState,useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import './signIn.css'
 import Header from './Header';
-import { Routes,Route,useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import SignUp from './SignUp';
 import axios from 'axios';
 import { useAuth } from "./AuthContext";
@@ -13,11 +13,12 @@ function SignIn(){
   const { setIsAuthenticated } = useAuth(); 
   const initValues={username:"",password:""}
   const [formErrors, setFormErrors] = useState({});
-  const [formValue,setFormValue]=useState(initValues)
-  const [isSubmit,setIsSubmit]=useState(false)
-   
+  const [formValue, setFormValue] = useState(initValues)
+  const [isSubmit, setIsSubmit] = useState(false)
+  const [isVisible,setIsVisible]=useState(false)
+
   //for handling multiple inputs
-  function handleChange(e){
+  function handleChange(e) {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
   };
@@ -62,16 +63,16 @@ function SignIn(){
 
     if (!values.password) {
       errors.password = "Password is required";
-      } 
+    }
     else if (values.password.length < 4) {
       errors.password = "Password must be more than 4 characters";
-    } 
+    }
     else if (values.password.length > 10) {
       errors.password = "Password cannot exceed more than 10 characters";
     }
     return errors;
   }
-    
+
   useEffect(() => {
     console.log(formErrors);
     if (Object.keys(formErrors).length === 0 && isSubmit) {   //no error useeff
@@ -83,7 +84,7 @@ function SignIn(){
 
   return (
     <>
-        <Header/>
+      <Header />
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -91,38 +92,50 @@ function SignIn(){
         crossOrigin="anonymous"
         referrerPolicy="no-referrer"
       />
-        <form onSubmit={handleSubmit}>
-          <div id="container">
-            <div id="box">
-               <div className="header">
-                  <h1 >Sign In</h1>
-                </div>
-                <div className="inputs">
-                  <div className="username">
-                    <i className="fa-solid fa-user"></i>
-                    <input type="text" onChange={handleChange} name="username" placeholder="UserName" value={formValue.username} style={{ borderColor: formErrors.username ? "red" : "" }}></input>
-                    <br></br><br></br>
-                  </div>
-            
-                  <div className="password">
-                    <i className="fa-solid fa-lock"></i>
-                      <input type="password" name="password" onChange={handleChange} value={formValue.password} placeholder="Password" style={{ borderColor: formErrors.password ? "red" : "" }}></input>
-                      <br></br><br></br>
-                  </div>
-                </div>
-
-                <button id="button" type="submit"  style={{color:'#165e98'}}>Submit</button>
-                  <br></br>
-                  <p>Create a new account?<span onClick={()=>navigate('/SignUp')}>Click here!</span></p>
+      <form onSubmit={handleSubmit}>
+        <div id="container">
+          <div id="box">
+            <div className="header">
+              <h1 >Sign In</h1>
             </div>
-          </div>
-          </form>
+            <div className="inputs">
+              <div className="username">
+                <i className="fa-solid fa-user"></i>
+                <input type="text" onChange={handleChange} name="username" placeholder="UserName" value={formValue.username} style={{ borderColor: formErrors.username ? "red" : "" }}></input>
+                <br></br><br></br>
+              </div>
 
-          <Routes>
-            <Route path='/SignUp' element={<SignUp/>}/>
-            <Route path="/HomeBody" element={<HomeBody/>}/>
-          </Routes>
-        </>
+              <div className="password">
+                <i className="fa-solid fa-lock"></i>
+                <input type={isVisible ? 'text' : 'password'} name="password" onChange={handleChange} value={formValue.password} placeholder="Password" style={{ borderColor: formErrors.password ? "red" : "" }}></input>
+                
+                <br></br><br></br>
+              </div>
+              <div className="show-password">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={isVisible}
+                    onChange={() => setIsVisible(!isVisible)} // Toggle password visibility
+                  />
+                  Show Password
+                </label>
+              </div>
+              
+            </div>
+
+            <button id="button" type="submit" style={{ color: '#165e98' }}>Submit</button>
+            <br></br>
+            <p>Already have an account?<span onClick={() => navigate('/SignUp')}>Click here!</span></p>
+          </div>
+        </div>
+      </form>
+
+      <Routes>
+        <Route path='/SignUp' element={<SignUp />} />
+        <Route path="/HomeBody" element={<HomeBody/>}/>
+      </Routes>
+    </>
   )
 
 }
