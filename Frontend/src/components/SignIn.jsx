@@ -30,7 +30,7 @@ function SignIn(){
 
     setIsSubmit(true);   //attempt to submit the form
     if (Object.keys(formErrors).length === 0) {
-      axios.post('http://localhost:5000/login', formValue)
+      axios.post('http://localhost:5000/auth/login', formValue)
         .then((response) => {
           console.log('Success:', response.data);
           setIsAuthenticated(true);
