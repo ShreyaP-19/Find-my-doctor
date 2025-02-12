@@ -5,12 +5,16 @@ import HomeImage from './HomeImage'
 import HomeFooter from './HomeFooter'
 import { useNavigate ,Routes,Route} from 'react-router-dom'
 import DoctorList from './DoctorList'
+import { useAuth } from './AuthContext'
+import SignIn from './SignIn'
 
 function HomeBody() {
   const navigate=useNavigate();
+  const { isAuthenticated } = useAuth(); 
+  
   return (
     <div>
-      <HomeHeader/>
+      {isAuthenticated?<div><HomeHeader/>
       <HomeImage/>
       <div id="body">
         <div id="speciality">Find by Speciality</div>
@@ -35,8 +39,11 @@ function HomeBody() {
         </div>
       </div>
       <HomeFooter/>
+      </div>:<div><SignIn/></div>}
+    
       <Routes>
         <Route path='/DoctorList' element={<DoctorList/>}/>
+        <Route path='/SignIn' element={<SignIn/>}/>
       </Routes>
     </div>
   )
