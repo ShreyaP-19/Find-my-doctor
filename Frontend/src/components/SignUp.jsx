@@ -4,6 +4,7 @@ import Header from './Header'
 import axios from 'axios'
 import { Routes,Route, useNavigate } from 'react-router-dom';  // Import useNavigate
 import HomeBody from './HomeBody';
+import { useAuth } from "./AuthContext"; 
 
 function SignUp() { 
     // const navigate=useNavigate();
@@ -13,6 +14,7 @@ function SignUp() {
   const [isSubmit,setIsSubmit]=useState(false)
   const [action,setAction]=useState("Sign Up")
   const navigate = useNavigate();  // Initialize navigate function
+  const { setIsAuthenticated } = useAuth(); 
   function handleChange(e){
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
@@ -28,6 +30,7 @@ function SignUp() {
       axios.post('http://localhost:5000/signup', formValue)
         .then((response) => {
           console.log('Success:', response.data);
+          setIsAuthenticated(true);
           navigate('/HomeBody'); // Navigate to the home page
           // Handle the success response here (e.g., navigate to another page or show a success message)
         })

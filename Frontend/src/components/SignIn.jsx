@@ -4,9 +4,13 @@ import Header from './Header';
 import { Routes,Route,useNavigate } from 'react-router-dom';
 import SignUp from './SignUp';
 import axios from 'axios';
+import { useAuth } from "./AuthContext";
+import HomeBody from './HomeBody';
+
 
 function SignIn(){
   const navigate=useNavigate();
+  const { setIsAuthenticated } = useAuth(); 
   const initValues={username:"",password:""}
   const [formErrors, setFormErrors] = useState({});
   const [formValue,setFormValue]=useState(initValues)
@@ -28,11 +32,13 @@ function SignIn(){
       axios.post('http://localhost:5000/login', formValue)
         .then((response) => {
           console.log('Success:', response.data);
+          setIsAuthenticated(true);
+
           if(response.data.role==='hospitalAdmin'){
             navigate('/service')
           }
           else if(response.data.role==='patient'){
-            navigate('/home'); // Navigate to the home page
+            navigate('/HomeBody'); // Navigate to the home page
           }
          
           
@@ -107,13 +113,14 @@ function SignIn(){
 
                 <button id="button" type="submit"  style={{color:'#165e98'}}>Submit</button>
                   <br></br>
-                  <p>Already have an account?<span onClick={()=>navigate('/SignUp')}>Click here!</span></p>
+                  <p>Create a new account?<span onClick={()=>navigate('/SignUp')}>Click here!</span></p>
             </div>
           </div>
           </form>
 
           <Routes>
             <Route path='/SignUp' element={<SignUp/>}/>
+            <Route path="/HomeBody" element={<HomeBody/>}/>
           </Routes>
         </>
   )

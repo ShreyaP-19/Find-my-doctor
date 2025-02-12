@@ -29,9 +29,15 @@
   color: rgb(202, 231, 248);
 }
 
-#user:hover {
+#user:hover,#userIcon:hover {
   opacity: 0.8;
   transform: scale(1.1);
+}
+#userIcon{
+  background-image: url('../Unwanted/user.jpg');
+  cursor: pointer;
+  margin-right: 10px;
+  background-size: cover;
 }
 
 #findDr {

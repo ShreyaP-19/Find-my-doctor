@@ -3,8 +3,11 @@ import './homeBody.css'
 import HomeHeader from './HomeHeader'
 import HomeImage from './HomeImage'
 import HomeFooter from './HomeFooter'
+import { useNavigate ,Routes,Route} from 'react-router-dom'
+import DoctorList from './DoctorList'
 
 function HomeBody() {
+  const navigate=useNavigate();
   return (
     <div>
       <HomeHeader/>
@@ -15,7 +18,7 @@ function HomeBody() {
             <div id="para">Simply browse through our extensive list of trusted doctors, schedule your appointment hassle-free.</div>
         </div>
         <div id="test">
-            <div id="round1"></div>
+            <div id="round1" onClick={()=>navigate('/DoctorList')}></div>
             <div id="round2"></div>
             <div id="round3"></div>
             <div id="round4"></div>
@@ -32,6 +35,9 @@ function HomeBody() {
         </div>
       </div>
       <HomeFooter/>
+      <Routes>
+        <Route path='/DoctorList' element={<DoctorList/>}/>
+      </Routes>
     </div>
   )
 }

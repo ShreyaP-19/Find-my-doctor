@@ -6,9 +6,12 @@ import Contact from "./Contact";
 import About from "./About";
 import Service from "./Service";
 import "./homeHeader.css";
+import { useAuth } from "./AuthContext";
+import HomeBody from "./HomeBody";
 
 function HomeHeader() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth(); 
   const location = useLocation();
   const [active, setActive] = useState("");
 
@@ -30,8 +33,8 @@ function HomeHeader() {
 
         <nav className="newnav">
           <a
-            onClick={(e) => clickEvent(e, "/")}
-            className={active === "/" ? "update" : ""}
+            onClick={(e) => {isAuthenticated? clickEvent(e, "/HomeBody"):clickEvent(e,"/")}}
+            className={active === "/" || active==="/HomeBody" ? "update" : ""}
           >
             HOME
           </a>
@@ -55,9 +58,21 @@ function HomeHeader() {
           </a>
         </nav>
 
+        {/* <button id="user" onClick={() => navigate("/SignIn")}>Log In</button> */}
+        {isAuthenticated ? (
+        // ✅ Show round div when logged in
+        <div id="userIcon" style={{
+          width: "50px",
+          height: "50px",
+          borderRadius: "50%"
+        }}></div>
+      ) : (
+        // Show Log In button if not logged in
         <button id="user" onClick={() => navigate("/SignIn")}>Log In</button>
+      )}
       </div>
       <Routes>
+        <Route path="/HomeBody" element={<HomeBody/>}/>
         <Route path="/SignIn" element={<SignIn />} />
         <Route path="/Contact/*" element={<Contact />} />
         <Route path="/About/*" element={<About />} />
