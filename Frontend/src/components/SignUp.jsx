@@ -32,8 +32,12 @@ function SignUp() {
         .then((response) => {
           console.log('Success:', response.data);
           setIsAuthenticated(true);
-          navigate('/HomeBody'); // Navigate to the home page
-          // Handle the success response here (e.g., navigate to another page or show a success message)
+          if(response.data.role==='hospitalAdmin'){
+            navigate('/service')
+          }
+          else if(response.data.role==='patient'){
+            navigate('/HomeBody'); // Navigate to the home page
+          }
         })
         .catch((error) => {
           if (error.response) {
