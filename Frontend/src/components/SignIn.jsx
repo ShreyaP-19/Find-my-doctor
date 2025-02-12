@@ -4,6 +4,7 @@ import Header from './Header';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import SignUp from './SignUp';
 import axios from 'axios';
+import { Eye,EyeOff} from 'lucide-react';
 
 function SignIn() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function SignIn() {
 
     setIsSubmit(true);   //attempt to submit the form
     if (Object.keys(formErrors).length === 0) {
-      axios.post('http://localhost:5000/login', formValue)
+      axios.post('http://localhost:5000/auth/login', formValue)
         .then((response) => {
           console.log('Success:', response.data);
           if (response.data.role === 'hospitalAdmin') {
@@ -102,6 +103,7 @@ function SignIn() {
               <div className="password">
                 <i className="fa-solid fa-lock"></i>
                 <input type={isVisible ? 'text' : 'password'} name="password" onChange={handleChange} value={formValue.password} placeholder="Password" style={{ borderColor: formErrors.password ? "red" : "" }}></input>
+                
                 <br></br><br></br>
               </div>
               <div className="show-password">

@@ -25,7 +25,7 @@ function SignUp() {
     setIsSubmit(true);   //attempt to submit the form
     // Only submit the form if no errors are found
     if (Object.keys(errors).length === 0) {
-      axios.post('http://localhost:5000/signup', formValue)
+      axios.post('http://localhost:5000/auth/signup', formValue)
         .then((response) => {
           console.log('Success:', response.data);
           navigate('/home'); // Navigate to the home page
@@ -35,6 +35,7 @@ function SignUp() {
           if (error.response) {
             // If error response exists, extract the message from backend
             alert(error.response.data.message);
+            console.log(error.response.data.message);
           } else {
             setErrorMessage("An error occurred. Please try again.");
           }

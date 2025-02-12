@@ -1,12 +1,13 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const User = require('./model/User'); // Import User model
+const connectDB = require("./db");
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const authRoutes = require("./routes/authRoutes"); // Import auth routes
+const hospitalRoutes=require("./routes/hospitalRoutes")//Import hospital routes
 
 
 
-const connectDB = require("./db");
+
 
 require("dotenv").config(); // Load environment variables
 const PORT = process.env.PORT || 5000;
@@ -19,66 +20,14 @@ app.use(bodyParser.json());
 
 connectDB();
 
+// Use authentication routes
+app.use("/auth", authRoutes);
 
-// signup route
-app.post('/signup', async (req, res) => {
-  const { email, username, password } = req.body;
-  console.log(req.body);
+// adding hospital by admin
+app.use("/hospital",hospitalRoutes);
 
-  // Check if the username already exists in the database
-  const existingUser = await User.findOne({ username });
+//fetching hospital by user
 
-  if (existingUser) {
-    // If username exists, return an error
-    return res.status(400).json({ message: 'Username already exists' });
-  }
-
-  const role = (email) => {
-    // Check if the email domain indicates a hospital admin
-    const hospitalDomain = '@hospital.com'; // Define your hospital's domain
-  
-    if (email.endsWith(hospitalDomain)) {
-      return 'hospitalAdmin';  // Email belongs to a hospital admin
-    }
-  
-    return 'patient';  // Email does not belong to a hospital admin
-  };
-
-  // Create a new user and save to the database
-  const newUser = new User({ email, username, password,role:role(email)});
-
-  try {
-    await newUser.save(); // Save the user to the database
-    console.log(newUser);
-    res.status(201).json({ message: 'Signup successful!',role:newUser.role });
-  } catch (error) {
-    console.error('Error saving user:', error);
-    res.status(500).json({ message: 'Error saving user, please try again.' });
-  }
-});
-
-
-
-//login rute
-app.post('/login',async(req,res)=>{
-  const { username, password } = req.body;
-
-   // Check if the username already exists in the database
-   const existingUser = await User.findOne({ username });
-   console.log(existingUser);
-
-   if (!existingUser) {
-    return res.status(400).json({ message: 'no user found' });
-   }
-   if (password !== existingUser.password) {
-    return res.status(401).json({ message: 'Invalid credentials' });
-  }
-
-   res.status(201).json({ message: 'login successful!',role:existingUser.role});
-   
-
-
-})
 
 
 // Start server

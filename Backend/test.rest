@@ -1,7 +1,7 @@
-POST http://localhost:5000/login
+POST http://localhost:5000/hospital/add
 Content-Type: application/json
 
 {
-  "username": "john",
-  "password": "john123"
+  "name": "KLIC",
+  "location": "Kannur"
 }
