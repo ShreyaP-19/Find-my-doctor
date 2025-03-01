@@ -2,16 +2,17 @@ import React,{useState,useEffect} from 'react'
 import HomeHeader from './HomeHeader';
 import './doctorList.css'
 import HomeFooter from './HomeFooter';
+import axios from "axios";
 
 function DoctorList() {
-  const [doctors,setDoctors]=useState([
-    { id: 1, name: "Dr. Ujjal Zaman", specialty: "General Physician", location: "Sylhet, BD",qualification:"MBBS",hospital:'City Hospital',year:'2 years' ,fee:'$150' },
-    { id: 2, name: "Dr. Samantha Hayes", specialty: "Gynecologist", location: "New York, USA",qualification:"MBBS,MS",hospital:'City Hospital',year:'2 years' ,fee:'$150' },
-    { id: 3, name: "Dr. Shilpa Mrinal", specialty: "Dermatology", location: "Kerala,India",qualification:"MBBS,MD",hospital:'City Hospital',year:'2 years' ,fee:'$150' },
-    { id: 4, name: "Dr. Yadheeshan", specialty: "Pediatrician", location: "Kerala,India",qualification:"MBBS,DNB,MD",hospital:'City Hospital',year:'2 years' ,fee:'$150' },
-    { id: 5, name: "Dr. Yashodha", specialty: "Neurologist", location: "Kerala,India",qualification:"MBBS,DO" ,hospital:'City Hospital',year:'2 years' ,fee:'$150'},
-    { id: 6, name: "Dr. Thambi", specialty: "Gastroenterologist", location: "Karnataka,India",qualification:"MBBS,MD",hospital:'City Hospital',year:'2 years' ,fee:'$150' },
-  ]);
+  const [doctors, setDoctors] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/doctor/doctors") // Adjust your API URL
+      .then((response) => setDoctors(response.data))
+      .catch((error) => console.error("Error fetching doctors:", error));
+  }, []);
+
 
   return (
     <div>
@@ -44,16 +45,16 @@ function DoctorList() {
         </div>
       <div id="list">
         {doctors.map((doctor)=>(
-            <div key={doctor.id} id="list1">
+            <div key={doctor._id} id="list1">
                 <div id="doctor1"></div>
                 <div className="doctor-info" style={{marginRight:"30px",marginLeft:"20px"}}>
                     <h2>{doctor.name}</h2>
-                    <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialty}</p>
+                    <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization}</p>
                     <p><strong><i className="fa-solid fa-user-graduate"></i></strong> {doctor.qualification}</p>
-                    <p><strong><i className="fa-solid fa-location-dot"></i></strong> {doctor.location}</p>
+                    <p><strong><i className="fa-solid fa-location-dot"></i></strong> {doctor.hospital.location}</p>
                 </div>
                 <div className="doctor-info">
-                    <p style={{marginTop:"12px"}}><strong><i className="fa-solid fa-hospital"></i></strong> {doctor.hospital}</p>
+                    <p style={{marginTop:"12px"}}><strong><i className="fa-solid fa-hospital"></i></strong> {doctor.hospital.name}</p>
                     {/* <p><strong>Year of Experience:</strong> {doctor.year}</p> */}
                     <p style={{marginLeft:"12px"}}><strong><i className="fa-solid fa-dollar-sign"></i></strong> {doctor.fee}</p>
                 </div>

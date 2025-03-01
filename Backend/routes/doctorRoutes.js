@@ -35,4 +35,35 @@ router.get("/doctors", async (req, res) => {
   }
 });
 
+//Add doctor
+router.post("/adddoctor", async (req, res) => {
+  try {
+    const { name, specialization,location,qualification, year, hospital,fee } = req.body;
+
+    // Check if the hospital exists
+    const hospitalExists = await Hospital.findOne({ name: hospital })
+    if (!hospitalExists) {
+      return res.status(400).json({ message: "Hospital does not exist" });
+    }
+
+    // Create a new doctor
+    const newDoctor = new Doctor({
+      name,
+      specialization,
+      location,
+      qualification,
+      year,
+      fee,
+      hospital: hospitalExists._id,
+    });
+
+    // Save the doctor to the database
+    await newDoctor.save();
+
+    res.json(newDoctor);
+  } catch (error) {
+    res.status(500).json({ error: "Error adding doctor",error});
+  }
+});
+
 module.exports = router;

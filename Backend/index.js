@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const authRoutes = require("./routes/authRoutes"); // Import auth routes
 const hospitalRoutes=require("./routes/hospitalRoutes")//Import hospital routes
-
+const doctorRoutes=require("./routes/doctorRoutes")//Import doctor routes
 
 
 
@@ -26,7 +26,8 @@ app.use("/auth", authRoutes);
 // adding hospital by admin
 app.use("/hospital",hospitalRoutes);
 
-//fetching hospital by user
+// adding doctor by admin
+app.use("/doctor",doctorRoutes);
 
 
 

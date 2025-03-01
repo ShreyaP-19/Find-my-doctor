@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 
 const doctorSchema = new mongoose.Schema({
+  id:{
+
+    type: String,
+    required: true,
+    unique: true,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Reference to the User model
-    required: true,
   },
   name:{
     type:String,
@@ -14,8 +19,12 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  experience: {
+  year: {
     type: Number,
+    required: true,
+  },
+  location:{
+    type:String,
     required: true,
   },
   hospital: {
@@ -27,8 +36,12 @@ const doctorSchema = new mongoose.Schema({
     type: [String], // Example: ["Monday", "Wednesday", "Friday"]
     default: [],
   },
-  consultationFee: {
+  fee: {
     type: Number,
+    required: true,
+  },
+  qualification:{
+    type: String,
     required: true,
   },
   appointmentHistory: [
