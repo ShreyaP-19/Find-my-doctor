@@ -126,7 +126,7 @@ function SignIn(){
 
             <button id="button" type="submit" style={{ color: '#165e98' }}>Submit</button>
             <br></br>
-            <p>Already have an account?<span onClick={() => navigate('/SignUp')}>Click here!</span></p>
+            <p>Don't have an account?<span onClick={() => navigate('/SignUp')}>Click here!</span></p>
           </div>
         </div>
       </form>
