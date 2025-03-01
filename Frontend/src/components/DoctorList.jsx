@@ -16,6 +16,8 @@ function DoctorList() {
 
   return (
     <div>
+    {isAuthenticated?
+    <div>
       <HomeHeader/>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
       <h1 id="heading">DOCTORS</h1>
@@ -31,16 +33,8 @@ function DoctorList() {
                 <input type="radio" value ="Specialization" name="Subject" id="checkbox" /><span id="span">  Pediatician</span><br/>
                 <input type="radio" value ="Specialization" name="Subject" id="checkbox" /><span id="span">  Neurologist</span><br/>
                 <input type="radio" value ="Specialization" name="Subject" id="checkbox" /><span id="span">  Gastroenterologist</span><br/>
-            </label><br/><br/>
-            <h3 style={{marginLeft:"20px"}}>Hospital:</h3>
-            <label htmlFor="hospital">
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span"> City Hospital</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span">  Apollo Hospital</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span">  MedicoCare</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span"> Green Valley Hospital</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span">  Indiana Hospital</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span">  Aster MIMS</span><br/>
             </label><br/>
+            <button id="done">Done</button>
             </form>
         </div>
       <div id="list">
@@ -57,6 +51,7 @@ function DoctorList() {
                     <p style={{marginTop:"12px"}}><strong><i className="fa-solid fa-hospital"></i></strong> {doctor.hospital.name}</p>
                     {/* <p><strong>Year of Experience:</strong> {doctor.year}</p> */}
                     <p style={{marginLeft:"12px"}}><strong><i className="fa-solid fa-dollar-sign"></i></strong> {doctor.fee}</p>
+                    <button id="userbut" onClick={()=>navigate('/Appointments',{state:{doctor}})}> Book Appointment</button>
                 </div>
             </div>
         ))}
@@ -64,6 +59,12 @@ function DoctorList() {
       </div>
       </div>
         <HomeFooter/>
+    </div>:<div><SignIn/></div>}
+    
+    <Routes>
+      <Route path='/Appointments' element={<Appointments/>}/>
+      <Route path='/SignIn' element={<SignIn/>}/>
+    </Routes>
     </div>
   )
 }
