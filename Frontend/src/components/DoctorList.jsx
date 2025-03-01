@@ -38,16 +38,8 @@ function DoctorList() {
                 <input type="radio" value ="Specialization" name="Subject" id="checkbox" /><span id="span">  Pediatician</span><br/>
                 <input type="radio" value ="Specialization" name="Subject" id="checkbox" /><span id="span">  Neurologist</span><br/>
                 <input type="radio" value ="Specialization" name="Subject" id="checkbox" /><span id="span">  Gastroenterologist</span><br/>
-            </label><br/><br/>
-            <h3 style={{marginLeft:"20px"}}>Hospital:</h3>
-            <label htmlFor="hospital">
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span"> City Hospital</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span">  Apollo Hospital</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span">  MedicoCare</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span"> Green Valley Hospital</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span">  Indiana Hospital</span><br/>
-                <input type="radio" value ="hospital" name="Subject" id="checkbox" /><span id="span">  Aster MIMS</span><br/>
             </label><br/>
+            <button id="done">Done</button>
             </form>
         </div>
       <div id="list">

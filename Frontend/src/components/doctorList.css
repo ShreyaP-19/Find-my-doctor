@@ -37,7 +37,7 @@
 }
 #filter-box{
     margin-top: 100px;
-    height:710px;
+    height:450px;
     width:250px;
     margin-left: 100px;
     border:1px solid black;
@@ -73,4 +73,19 @@
   padding-right: 10px;
   background-color: #3674a7;
   color:white;
+}
+#done{
+    background-color: #3674a7;
+    height:35px;
+    color:white;
+    width:70px;
+    margin-left: 80px;
+    border-radius:30px ;
+    margin-top: 5px;
+    cursor: pointer;
+    border:none;
+}
+#done:hover{
+    opacity: 0.8;
+    transform: scale(1.1);
 }
