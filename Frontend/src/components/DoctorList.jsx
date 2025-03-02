@@ -78,7 +78,7 @@ function DoctorList() {
 
                 <input type="radio" value ="Pediatrician" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)}/><span id="span">  Pediatician</span><br/>
 
-                <input type="radio" value =" Neurologist" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Neurologist</span><br/>
+                <input type="radio" value ="Neurologist" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Neurologist</span><br/>
 
                 <input type="radio" value ="Gastroenterologist" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Gastroenterologist</span><br/>
                 </label><br/>
