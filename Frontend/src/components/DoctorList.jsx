@@ -136,6 +136,9 @@ function DoctorList() {
 <HomeFooter/>
 
 </div>
+<Routes>
+  <Route path="/Appointments" element={<Appointments/>}/>
+</Routes>
 
 </div>
 
