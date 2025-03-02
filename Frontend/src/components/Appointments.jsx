@@ -127,7 +127,7 @@ function Appointments() {
       {/* Selected Date and Time Slots */}
       {selectedDate && (
         <div id="selectedDate">
-          <h3>Selected Date: {selectedDate.toDateString()}</h3>
+          <h3>Selected Date: {selectedDate.toDateString()}</h3><br></br>
           <h3>Available Time Slots</h3>
 
           <div id="timeSlots">
