@@ -22,9 +22,10 @@ function HomeImage() {
           {isAuthenticated ? (  
             <div></div>
           ):
-          <button className="btn-one" onClick={()=>navigate('/SignIn')} >Get Started</button> }
-
-            <button className="btn-two" onClick={()=>navigate('/FirstAid')}>First Aid</button>
+          <div><button className="btn-one" onClick={()=>navigate('/SignIn')} >Get Started</button> 
+          <button className="btn-two" onClick={()=>navigate('/FirstAid')}>First Aid</button>
+          </div>
+          }
           </div>
         </div>
       </div>         

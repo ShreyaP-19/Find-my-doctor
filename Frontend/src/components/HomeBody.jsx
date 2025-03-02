@@ -7,6 +7,8 @@ import { useNavigate ,Routes,Route} from 'react-router-dom'
 import DoctorList from './DoctorList'
 import { useAuth } from './AuthContext'
 import SignIn from './SignIn'
+import Contact from './Contact'
+import FirstAid from './FirstAid'
 
 function HomeBody() {
   const navigate=useNavigate();
@@ -22,20 +24,18 @@ function HomeBody() {
             <div id="para">Simply browse through our extensive list of trusted doctors, schedule your appointment hassle-free.</div>
         </div>
         <div id="test">
-            <div id="round1" onClick={()=>navigate('/DoctorList')}></div>
-            <div id="round2"></div>
-            <div id="round3"></div>
-            <div id="round4"></div>
-            <div id="round5"></div>
-            <div id="round6"></div>
-        </div>
-        <div id="test">
-            <div id="text1" style={{marginLeft:"10px"}}>General physician</div>
-            <div id="text2"> Gynecologist</div>
-            <div id="text3" style={{marginLeft:"10px"}}>Dermatologist</div>
-            <div id="text4" style={{marginLeft:"14px"}}>Pediatrician </div>
-            <div id="text5" style={{marginLeft:"25px"}}>Neurologist</div>
-            <div id="text6" style={{marginLeft:"10px"}}>Gastroenterologist</div>
+        <button id="card" onClick={()=>navigate('/DoctorList')}>
+            <h2 style={{marginBottom:"17px"}}>Book Appointments</h2>
+            <p id="notes">Click here to explore the doctors over the world and own your slot!!</p>
+        </button>
+        <button id="card" onClick={()=>navigate('/Contact')}>
+            <h2 style={{marginBottom:"17px"}}>Emergency Calls</h2>
+            <p id="notes">In case of any emergency , feel free to contact us.Click here to go to contact session.</p>
+        </button>
+        <button id="card" onClick={()=>navigate('/FirstAid')}>
+            <h2 style={{marginBottom:"17px"}}>First Aid</h2>
+            <p id="notes">Swift action can save lives. Quick First Aid Matters!!Explore more hacks!</p>
+        </button>
         </div>
       </div>
       <HomeFooter/>
@@ -44,6 +44,8 @@ function HomeBody() {
       <Routes>
         <Route path='/DoctorList' element={<DoctorList/>}/>
         <Route path='/SignIn' element={<SignIn/>}/>
+        <Route path='/Contact' element={<Contact/>}/>
+        <Route path='/FirstAid' element={<FirstAid/>}/>
       </Routes>
     </div>
   )
