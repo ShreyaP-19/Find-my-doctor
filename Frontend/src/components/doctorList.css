@@ -79,13 +79,29 @@
     height:35px;
     color:white;
     width:70px;
-    margin-left: 80px;
+    /* margin-left: 80px; */
     border-radius:30px ;
     margin-top: 5px;
     cursor: pointer;
     border:none;
 }
-#done:hover{
+#clr{
+    background-color: white;
+    height:35px;
+    color:#165e98;
+    width:70px;
+    /* margin-left: 80px; */
+    border-radius:30px ;
+    margin-top: 5px;
+    cursor: pointer;
+    border:1.5px solid #165e98;
+}
+#done:hover,#clr:hover{
     opacity: 0.8;
     transform: scale(1.1);
+}
+#done-clr{
+    display: flex;
+    justify-content: center;
+    gap:30px;
 }

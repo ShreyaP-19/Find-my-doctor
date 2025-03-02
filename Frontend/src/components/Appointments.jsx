@@ -24,6 +24,50 @@ function Appointments() {
     return week;
   };
 
+  const generateTimeSlots = (date, availability, startTime, endTime) => {
+    // Extract day from date (e.g., "Monday")
+    const day = date.toLocaleDateString('en-US', { weekday: 'long' });
+
+    // Check if the day is in the availability array
+    if (!availability.includes(day)) {
+        return []; // No available slots
+    }
+
+    // Convert time to minutes
+    const convertToMinutes = (timeStr) => {
+        let [hours, minutes] = timeStr.split(/[: ]/); // Split by ":" and " "
+        let isPM = timeStr.includes("pm");
+        hours = parseInt(hours, 10);
+        minutes = parseInt(minutes, 10) || 0;
+
+        // Convert to 24-hour format
+        if (isPM && hours !== 12) hours += 12;
+        if (!isPM && hours === 12) hours = 0;
+
+        return hours * 60 + minutes;
+    };
+
+    const startMinutes = convertToMinutes(startTime);
+    const endMinutes = convertToMinutes(endTime);
+    let slots = [];
+
+    // Generate slots at 30-minute intervals
+    for (let time = startMinutes; time < endMinutes; time += 30) {
+        let hours = Math.floor(time / 60);
+        let minutes = time % 60;
+        let period = hours >= 12 ? "pm" : "am";
+
+        // Convert back to 12-hour format
+        if (hours > 12) hours -= 12;
+        if (hours === 0) hours = 12;
+
+        let formattedTime = `${hours}:${minutes === 0 ? "00" : minutes} ${period}`;
+        slots.push(formattedTime);
+    }
+
+    return slots;
+};
+
   // Handle date selection
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -48,7 +92,8 @@ function Appointments() {
             <p><strong>Hospital:</strong> {doctor.hospital?.name}</p>
             <p><strong>Fee:</strong> {doctor.fee}</p>
             <p><strong>Available Days:</strong> {doctor.availability.join(", ")}</p>
-            {/* <p><strong>Slot:</strong> {doctor.slot.start} - {doctor.slot.end}</p> */}
+            <p><strong>Slot:</strong></p>
+             {/* {doctor.slot.start} - {doctor.slot.end}</p> */}
           </div>
         )}
       </div>

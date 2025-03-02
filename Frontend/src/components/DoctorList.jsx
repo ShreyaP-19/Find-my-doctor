@@ -13,12 +13,17 @@ import axios from "axios";
 function DoctorList() {
 
   const navigate=useNavigate();
-  const [selectedSpecialization,setSpecialization]=useState();
+  const [selectedSpecialization,setSpecialization]=useState("");
 
   const { isAuthenticated } = useAuth();
 
   const [doctors, setDoctors] = useState([]);
-  useEffect(() => {
+
+  useEffect(()=>{
+    fetchDoctors();
+  },[]);
+
+  const fetchDoctors=() => {
     axios
       .get('http://localhost:5000/doctor/doctors')
       .then((response) => {
@@ -26,7 +31,7 @@ function DoctorList() {
         setDoctors(response.data);
       })
       .catch((error) => console.error('Error fetching doctors:', error));
-  }, []);
+  };
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent form submission default behavior
     if (!selectedSpecialization) return; // Prevent unnecessary API calls
@@ -42,6 +47,10 @@ function DoctorList() {
       .catch((error) => console.error("Error fetching doctors:", error));
   };
 
+  const handleClear = () => {
+    setSpecialization("");
+    fetchDoctors(); // Reset state
+  };
 
 
   return (
@@ -70,24 +79,36 @@ function DoctorList() {
 
             <label htmlFor="Specialization">
 
-                <input type="radio" value ="General Physician" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  General Physician</span><br/>
+                <input type="radio" value ="General Physician" name="Subject" id="checkbox"
+                checked={selectedSpecialization === "General Physician"}
+                 onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  General Physician</span><br/>
 
-                <input type="radio" value ="Gynecologist" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Gynecologist</span><br/>
+                <input type="radio" value ="Gynecologist" name="Subject" id="checkbox" 
+                checked={selectedSpecialization === "Gynecologist"}
+                onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Gynecologist</span><br/>
 
-                <input type="radio" value ="Dermatologist" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Dermatologist</span><br/>
+                <input type="radio" value ="Dermatologist" name="Subject" id="checkbox" 
+                checked={selectedSpecialization === "Dermatologist"}
+                onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Dermatologist</span><br/>
 
-                <input type="radio" value ="Pediatrician" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)}/><span id="span">  Pediatician</span><br/>
+                <input type="radio" value ="Pediatrician" name="Subject" id="checkbox" 
+                checked={selectedSpecialization === "Pediatrician"}
+                onChange={(e) => setSpecialization(e.target.value)}/><span id="span">  Pediatrician</span><br/>
 
-                <input type="radio" value ="Neurologist" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Neurologist</span><br/>
+                <input type="radio" value ="Neurologist" name="Subject" id="checkbox" 
+                checked={selectedSpecialization === "Neurologist"}
+                onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Neurologist</span><br/>
 
-                <input type="radio" value ="Gastroenterologist" name="Subject" id="checkbox" onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Gastroenterologist</span><br/>
+                <input type="radio" value ="Gastroenterologist" name="Subject" id="checkbox"
+                checked={selectedSpecialization === "Gastroenterologist"}
+                onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  Gastroenterologist</span><br/>
                 </label><br/>
 
-
-
-<button id="done" type="submit" >Done</button>
-
-</form>
+            <div id="done-clr">
+                <button id="clr"  onClick={handleClear} >Clear</button>
+                <button id="done" type="submit" >Done</button>
+            </div>
+            </form>
 
 </div>
 
