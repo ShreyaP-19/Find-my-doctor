@@ -1,12 +1,6 @@
 const mongoose = require("mongoose");
 
 const doctorSchema = new mongoose.Schema({
-  id:{
-
-    type: String,
-    required: true,
-    unique: true,
-  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Reference to the User model
@@ -34,8 +28,18 @@ const doctorSchema = new mongoose.Schema({
   },
   availability: {
     type: [String], // Example: ["Monday", "Wednesday", "Friday"]
-    default: [],
+    required: true,
   },
+  timeSlots: {
+    type: [
+        {
+            start: { type: String, required: true },
+            end: { type: String, required: true }
+        }
+    ],
+    required: true // Ensures the array itself is required
+},
+
   fee: {
     type: Number,
     required: true,
