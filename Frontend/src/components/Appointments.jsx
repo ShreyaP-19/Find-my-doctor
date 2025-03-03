@@ -69,32 +69,34 @@ function Appointments() {
 
       {/* Date Selection */}
       <div id="dateSelect">
-        {weekDates.map((date) => (
+        {weekDates.map((date) => ( //loops over each date in weekDates
           <button
-            key={date.toDateString()}
+            key={date.toDateString()} //React requires a unique key when rendering lists.
             onClick={() => handleDateClick(date)}
             style={{
               padding: "10px 15px",
               border: "1px solid #165e98",
-              backgroundColor: selectedDate?.toDateString() === date.toDateString() ? "#165e98" : "white",
+              backgroundColor: selectedDate?.toDateString() === date.toDateString() ? "#165e98" : "white",//If selectedDate matches the date of this button Background = Blue (#165e98)
+              // Text color = White
               color: selectedDate?.toDateString() === date.toDateString() ? "white" : "#165e98",
               borderRadius: "5px",
               cursor: "pointer",
               fontWeight: "bold",
             }}
           >
-            {date.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short" })}
+            {date.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short" })} 
+            {/* Tue, Mar 4 */}
           </button>
         ))}
       </div>
 
       {/* Selected Date and Time Slots */}
-      {selectedDate && (
+      {selectedDate && (  //Checks if selectedDate is not null or undefined
         <div id="selectedDate">
           <h3>Selected Date: {selectedDate.toDateString()}</h3>
           {isAvailable ? (
             <div id="timeselect">
-              {filteredSlots.map((slot) => (
+              {filteredSlots.map((slot) => ( //Loops through filteredSlots, which contains the available time slots for the selected date
                 <button key={slot._id} onClick={() => handleTimeClick(slot)} className="timeslot" 
                   style={{padding: "10px 15px",
                   border: "1px solid #165e98",
@@ -112,8 +114,9 @@ function Appointments() {
           )}
         </div>
       )}
-
-
+      <div id="confirmBut">
+          {selectedDate && selectedTime && (<button id="confirm">Confirm</button>)}
+      </div>
       <HomeFooter />
     </div>
   );

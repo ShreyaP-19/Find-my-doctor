@@ -33,3 +33,18 @@
     text-align: center;
     color: #165e98;
 }
+#confirmBut{
+    display:flex ;
+    justify-content: center;
+    margin-top: 50px;
+}
+#confirm{
+    border:none;
+    cursor: pointer;
+    font-weight: bold;
+    height:40px;
+    width: 70px;
+    border-radius: 10px;
+    background-color: #165e98;
+    color: white;
+}
