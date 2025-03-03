@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import HomeHeader from "./HomeHeader";
 import HomeFooter from "./HomeFooter";
@@ -9,72 +9,43 @@ function Appointments() {
   const doctor = location.state?.doctor;
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(null);
-  const [timeSlots, setTimeSlots] = useState([]);
-
-  // console.log("Doctor Data:", doctor);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [filteredSlots, setfilteredSlots] = useState([]);
+  const [isAvailable, setisAvailable] = useState(false);
 
   // Generate weekdays (Monday to Friday)
   const generateWeek = (startDate) => {
     const week = [];
     for (let i = 0; i < 5; i++) {
-      const date = new Date(startDate);
-      date.setDate(startDate.getDate() + i);
+      const date = new Date(startDate); //new date object ,ie,it makes a copy of startDate
+      date.setDate(startDate.getDate() + i); //if startDate is March 3rd, 2025, getDate() returns 3 then increment
       week.push(date);
     }
     return week;
   };
 
-  const generateTimeSlots = (date, availability, startTime, endTime) => {
-    // Extract day from date (e.g., "Monday")
-    const day = date.toLocaleDateString('en-US', { weekday: 'long' });
-
-    // Check if the day is in the availability array
-    if (!availability.includes(day)) {
-        return []; // No available slots
-    }
-
-    // Convert time to minutes
-    const convertToMinutes = (timeStr) => {
-        let [hours, minutes] = timeStr.split(/[: ]/); // Split by ":" and " "
-        let isPM = timeStr.includes("pm");
-        hours = parseInt(hours, 10);
-        minutes = parseInt(minutes, 10) || 0;
-
-        // Convert to 24-hour format
-        if (isPM && hours !== 12) hours += 12;
-        if (!isPM && hours === 12) hours = 0;
-
-        return hours * 60 + minutes;
-    };
-
-    const startMinutes = convertToMinutes(startTime);
-    const endMinutes = convertToMinutes(endTime);
-    let slots = [];
-
-    // Generate slots at 30-minute intervals
-    for (let time = startMinutes; time < endMinutes; time += 30) {
-        let hours = Math.floor(time / 60);
-        let minutes = time % 60;
-        let period = hours >= 12 ? "pm" : "am";
-
-        // Convert back to 12-hour format
-        if (hours > 12) hours -= 12;
-        if (hours === 0) hours = 12;
-
-        let formattedTime = `${hours}:${minutes === 0 ? "00" : minutes} ${period}`;
-        slots.push(formattedTime);
-    }
-
-    return slots;
-};
+  const checkAvailability = (date) => {
+    const day = date.toLocaleDateString("en-US", { weekday: "long" }); // Extracts "Monday", "Tuesday", etc.
+    return doctor.availability.includes(day); // Returns true if available
+  };
 
   // Handle date selection
   const handleDateClick = (date) => {
-    setSelectedDate(date);
+    setSelectedDate(date); //set the date in the button 
+    const available = checkAvailability(date); //vailability of dr
+    setisAvailable(available);
+    if (available) {
+      setfilteredSlots(doctor.timeSlots); // Show time slots if available
+    }
     console.log("Selected Date:", date.toDateString());
+    console.log("Doctor available on this day?", available);
   };
 
-  
+  const handleTimeClick = (time) => {
+    setSelectedTime(time); //selected time from button
+    console.log(time.start)
+  };
+
   const weekDates = generateWeek(today);
 
   return (
@@ -83,7 +54,7 @@ function Appointments() {
       <h2 id="bookAppmt">Book an Appointment</h2>
       
       <div id="container">
-        {doctor && doctor.name && (
+        {doctor  && ( //if doc not null/undefined/false
           <div id="doc">
             <h2 style={{marginBottom:"10px"}}>{doctor.name}</h2>
             <p><strong>Specialty:</strong> {doctor.specialization}</p>
@@ -92,8 +63,6 @@ function Appointments() {
             <p><strong>Hospital:</strong> {doctor.hospital?.name}</p>
             <p><strong>Fee:</strong> {doctor.fee}</p>
             <p><strong>Available Days:</strong> {doctor.availability.join(", ")}</p>
-            <p><strong>Slot:</strong></p>
-             {/* {doctor.slot.start} - {doctor.slot.end}</p> */}
           </div>
         )}
       </div>
@@ -122,9 +91,28 @@ function Appointments() {
       {/* Selected Date and Time Slots */}
       {selectedDate && (
         <div id="selectedDate">
-          <h3>Selected Date: {selectedDate.toDateString()}</h3><br></br>
+          <h3>Selected Date: {selectedDate.toDateString()}</h3>
+          {isAvailable ? (
+            <div id="timeselect">
+              {filteredSlots.map((slot) => (
+                <button key={slot._id} onClick={() => handleTimeClick(slot)} className="timeslot" 
+                  style={{padding: "10px 15px",
+                  border: "1px solid #165e98",
+                  backgroundColor: selectedTime?._id === slot._id ? "#165e98" : "white",
+                  color: selectedTime?._id === slot._id ? "white" : "#165e98",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontWeight: "bold",}}>
+                  {slot.start}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: "red", fontWeight: "bold" }}>Doctor not available on this day.</p>
+          )}
         </div>
       )}
+
 
       <HomeFooter />
     </div>

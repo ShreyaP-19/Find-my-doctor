@@ -22,7 +22,7 @@
     color: #165e98;
     line-height: 24px;
 }
-#dateSelect{
+#dateSelect,#timeselect{
     display: flex;
     justify-content: center;
     gap: 10px;
