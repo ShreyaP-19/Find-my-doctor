@@ -76,7 +76,7 @@ router.get("/doctors", async (req, res) => {
 // Add doctor
 router.post("/adddoctor", async (req, res) => {
   try {
-    const { name, specialization, location, qualification, year, hospital, fee, availability } = req.body;
+    const { name, specialization, location, qualification, year,Slots, hospital, fee, availability } = req.body;
 
     // Check if the hospital exists
     const hospitalExists = await Hospital.findOne({ name: hospital });
@@ -95,6 +95,7 @@ router.post("/adddoctor", async (req, res) => {
       location,
       qualification,
       year,
+      Slots,
       fee,
       hospital: hospitalExists._id,
       availability,
