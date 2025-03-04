@@ -121,7 +121,7 @@ function Appointments() {
           )}
         </div>
       )}
-      <div id="confirmBut">
+        <div id="confirmBut">
           {selectedDate && selectedTime && (<button id="confirm" onClick={handleConfirm}>Confirm</button>)}
       </div>
       <HomeFooter />
