@@ -26,6 +26,10 @@ const doctorSchema = new mongoose.Schema({
     ref: "Hospital", // Reference to the Hospital model
     required: true,
   },
+  Slots:{
+    type:[String],
+    required:true,
+  },
   availability: {
     type: [String], // Example: ["Monday", "Wednesday", "Friday"]
     required: true,

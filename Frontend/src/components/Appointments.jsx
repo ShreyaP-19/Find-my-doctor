@@ -69,6 +69,7 @@ function Appointments() {
             <p><strong>Hospital:</strong> {doctor.hospital?.name}</p>
             <p><strong>Fee:</strong> {doctor.fee}</p>
             <p><strong>Available Days:</strong> {doctor.availability.join(", ")}</p>
+           {/* <p><strong>Available :</strong>{doctor.Slots.join(", ")}</p>*/}
           </div>
         )}
       </div>
