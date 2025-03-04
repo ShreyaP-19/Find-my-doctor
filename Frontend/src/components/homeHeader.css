@@ -38,6 +38,7 @@
   cursor: pointer;
   margin-right: 10px;
   background-size: cover;
+  border:none;
 }
 
 #findDr {
@@ -100,4 +101,44 @@
 .newnav a.update {
   color: #1a71ea; /* Change the font color when active */
   font-weight: 600; /* Optionally make the font slightly bolder */
+}
+#prof-box{
+    background-color:#f4f8fb ;
+    width: 200px;
+    height: 250px;
+    position:absolute;
+    right:0;
+    margin-right: 10px;
+    border: 1px solid #165e98;
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px rgba(138, 135, 135, 0.3), 
+    -5px -5px 10px rgba(255, 255, 255, 0.5);
+}
+#user-image-box{
+    display: flex;
+    justify-content: center;
+}
+#user-img{
+  width:120px;
+  height:120px;
+  border-radius: 70px;
+  margin-top: 10px;
+}
+#details{
+  text-align: center;
+  margin-top: 12px;
+  line-height: 25px;
+}
+#logout{
+  margin-top: 5px;
+  padding:6px;
+  border: none;
+  background-color: #3674a7;
+  color: white;
+  border-radius: 7px;
+}
+#logout:hover{
+  opacity: 0.8;
+  transform: scale(1.1);
+  cursor: pointer;
 }

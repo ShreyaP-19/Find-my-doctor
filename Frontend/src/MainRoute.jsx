@@ -23,7 +23,7 @@ function MainRoute() {
         <Route path='/FirstAid' element={<FirstAid/>}/>
         <Route path='/About/*' element={<About/>}/>
         <Route path='/Service/*' element={<Service/>}/>
-        <Route path='/HomeBody' element={<HomeBody/>}/>
+        <Route path='/HomeBody/*' element={<HomeBody/>}/>
         <Route path='/DoctorList' element={<DoctorList/>}/>
         <Route path='/Appointments' element={<Appointments/>}/>
 

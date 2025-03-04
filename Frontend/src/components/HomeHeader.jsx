@@ -8,12 +8,17 @@ import Service from "./Service";
 import "./homeHeader.css";
 import { useAuth } from "./AuthContext";
 import HomeBody from "./HomeBody";
+import user from '../Unwanted/user.jpg'
 
 function HomeHeader() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth(); 
+  const { isAuthenticated,setIsAuthenticated } = useAuth(); 
   const location = useLocation();
   const [active, setActive] = useState("");
+  const [open,setOpen]=useState(false);
+  const handleclick=()=>{
+    setOpen(!open);
+  }
 
   // Update active state based on current location
   useEffect(() => {
@@ -23,6 +28,12 @@ function HomeHeader() {
   const clickEvent = (e, path) => {
     e.preventDefault();
     navigate(path);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false); // Update global auth state
+    setOpen(false); // Close profile box
+    navigate("/");
   };
 
   return (
@@ -61,16 +72,28 @@ function HomeHeader() {
         {/* <button id="user" onClick={() => navigate("/SignIn")}>Log In</button> */}
         {isAuthenticated ? (
         // ✅ Show round div when logged in
-        <div id="userIcon" style={{
+        <button id="userIcon" style={{
           width: "50px",
           height: "50px",
           borderRadius: "50%"
-        }}></div>
+        }} onClick={handleclick}></button>
       ) : (
         // Show Log In button if not logged in
         <button id="user" onClick={() => navigate("/SignIn")}>Log In</button>
       )}
       </div>
+      {open && (
+          <div id="prof-box">
+            <div id="user-image-box">
+            <img src={user} id="user-img"></img>
+            </div>
+            <div id="details">
+              <p>Username</p>
+              <p>Email</p>
+              <button id="logout"onClick={handleLogout } >Logout</button>
+            </div>
+          </div>
+      )}
       <Routes>
         <Route path="/HomeBody" element={<HomeBody/>}/>
         <Route path="/SignIn" element={<SignIn />} />

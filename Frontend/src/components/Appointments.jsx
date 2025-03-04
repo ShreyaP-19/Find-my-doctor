@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import HomeHeader from "./HomeHeader";
 import HomeFooter from "./HomeFooter";
 import "./appointments.css";
 
 function Appointments() {
+  const navigate=useNavigate();
   const location = useLocation();
   const doctor = location.state?.doctor;
   const today = new Date();
@@ -45,6 +46,11 @@ function Appointments() {
     setSelectedTime(time); //selected time from button
     console.log(time.start)
   };
+
+  const handleConfirm=()=>{
+    alert("Your appointment has been confirmed!!");
+    navigate('/HomeBody')
+  }
 
   const weekDates = generateWeek(today);
 
@@ -115,7 +121,7 @@ function Appointments() {
         </div>
       )}
       <div id="confirmBut">
-          {selectedDate && selectedTime && (<button id="confirm">Confirm</button>)}
+          {selectedDate && selectedTime && (<button id="confirm" onClick={handleConfirm}>Confirm</button>)}
       </div>
       <HomeFooter />
     </div>
