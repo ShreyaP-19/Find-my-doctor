@@ -10,12 +10,13 @@ import HomeBody from './HomeBody';
 
 function SignIn(){
   const navigate=useNavigate();
-  const { setIsAuthenticated } = useAuth(); 
+  //const { setIsAuthenticated } = useAuth(); 
   const initValues={username:"",password:""}
   const [formErrors, setFormErrors] = useState({});
   const [formValue, setFormValue] = useState(initValues)
   const [isSubmit, setIsSubmit] = useState(false)
   const [isVisible,setIsVisible]=useState(false)
+  const { setIsAuthenticated, setUserData } = useAuth();
 
   //for handling multiple inputs
   function handleChange(e) {
@@ -34,6 +35,7 @@ function SignIn(){
         .then((response) => {
           console.log('Success:', response.data);
           setIsAuthenticated(true);
+          setUserData(response.data);//Newly added
 
           if(response.data.role==='hospitalAdmin'){
             navigate('/service')

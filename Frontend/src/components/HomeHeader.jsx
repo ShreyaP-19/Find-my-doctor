@@ -12,7 +12,8 @@ import user from '../Unwanted/user.jpg'
 
 function HomeHeader() {
   const navigate = useNavigate();
-  const { isAuthenticated,setIsAuthenticated } = useAuth(); 
+  //const { isAuthenticated,setIsAuthenticated } = useAuth(); 
+  const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
   const location = useLocation();
   const [active, setActive] = useState("");
   const [open,setOpen]=useState(false);
@@ -33,6 +34,7 @@ function HomeHeader() {
   const handleLogout = () => {
     setIsAuthenticated(false); // Update global auth state
     setOpen(false); // Close profile box
+    setUserData(null); // Clear user data
     navigate("/");
   };
 
@@ -88,8 +90,8 @@ function HomeHeader() {
             <img src={user} id="user-img"></img>
             </div>
             <div id="details">
-              <p>Username</p>
-              <p>Email</p>
+              <p>{userData?.username || "Username"}</p>
+              <p>{userData?.email || "Email"}</p>
               <button id="logout"onClick={handleLogout } >Logout</button>
             </div>
           </div>
