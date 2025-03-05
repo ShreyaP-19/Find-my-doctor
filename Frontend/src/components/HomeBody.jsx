@@ -9,6 +9,7 @@ import { useAuth } from './AuthContext'
 import SignIn from './SignIn'
 import Contact from './Contact'
 import FirstAid from './FirstAid'
+import AppointmentHistory from './AppointmentHistory.jsx'
 
 function HomeBody() {
   const navigate=useNavigate();
@@ -28,9 +29,9 @@ function HomeBody() {
             <h2 style={{marginBottom:"17px"}}>Book Appointments</h2>
             <p id="notes">Click here to explore the doctors over the world and own your slot!!</p>
         </button>
-        <button id="card" onClick={()=>navigate('/Contact')}>
-            <h2 style={{marginBottom:"17px"}}>Emergency Calls</h2>
-            <p id="notes">In case of any emergency , feel free to contact us.Click here to go to contact session.</p>
+        <button id="card" onClick={()=>navigate('/AppointmentHistory')}>
+            <h2 style={{marginBottom:"17px"}}>Appointment History</h2>
+            <p id="notes">Wanna check your appointments history?Click here!!</p>
         </button>
         <button id="card" onClick={()=>navigate('/FirstAid')}>
             <h2 style={{marginBottom:"17px"}}>First Aid</h2>
@@ -46,6 +47,7 @@ function HomeBody() {
         <Route path='/SignIn' element={<SignIn/>}/>
         <Route path='/Contact' element={<Contact/>}/>
         <Route path='/FirstAid' element={<FirstAid/>}/>
+        <Route path='/AppointmentHistory' element={<AppointmentHistory/>}/>
       </Routes>
     </div>
   )

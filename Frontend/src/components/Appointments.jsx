@@ -47,9 +47,14 @@ function Appointments() {
     console.log(time.start)
   };
 
-  const handleConfirm=()=>{
+  const handleConfirm=(time,date)=>{
+    console.log("Doctor:",doctor.name);
+    console.log("Hospital:",doctor.hospital.name,",",doctor.hospital.location);
+    console.log("Time:",time.start,"-",time.end);
+    console.log("Fee:",doctor.fee);
+
     alert("Your appointment has been confirmed!!");
-    navigate('/HomeBody')
+    navigate('/AppointmentHistory')
   }
 
   const weekDates = generateWeek(today);
@@ -122,9 +127,10 @@ function Appointments() {
         </div>
       )}
         <div id="confirmBut">
-          {selectedDate && selectedTime && (<button id="confirm" onClick={handleConfirm}>Confirm</button>)}
+          {selectedDate && selectedTime && (<button id="confirm" onClick={handleConfirm(selectedTime,selectedDate)}>Confirm</button>)}
       </div>
       <HomeFooter />
+
     </div>
   );
 }

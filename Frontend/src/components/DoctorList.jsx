@@ -56,9 +56,6 @@ function DoctorList() {
   return (
 
     <div>
-
-    
-
     <div>
 
       <HomeHeader/>
