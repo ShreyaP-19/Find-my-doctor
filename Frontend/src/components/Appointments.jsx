@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import HomeHeader from "./HomeHeader";
 import HomeFooter from "./HomeFooter";
 import "./appointments.css";
+import { useAuth } from "./AuthContext";
+import SignIn from "./SignIn"; 
+import axios from "axios";
 
 function Appointments() {
+  const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
   const navigate=useNavigate();
   const location = useLocation();
   const doctor = location.state?.doctor;
@@ -13,6 +18,7 @@ function Appointments() {
   const [selectedTime, setSelectedTime] = useState(null);
   const [filteredSlots, setfilteredSlots] = useState([]);
   const [isAvailable, setisAvailable] = useState(false);
+ 
 
   // Generate weekdays (Monday to Friday)
   const generateWeek = (startDate) => {
@@ -33,6 +39,8 @@ function Appointments() {
   // Handle date selection
   const handleDateClick = (date) => {
     setSelectedDate(date); //set the date in the button 
+   // setSelectedDate(new Date(date.getTime()));
+
     const available = checkAvailability(date); //vailability of dr
     setisAvailable(available);
     if (available) {
@@ -47,14 +55,73 @@ function Appointments() {
     console.log(time.start)
   };
 
-  const handleConfirm=()=>{
-    alert("Your appointment has been confirmed!!");
-    navigate('/HomeBody')
+  const handleConfirm=async ()=>{
+
+    console.log("Appointment confirmed for", selectedDate);
+    
+    //alert("Your appointment has been confirmed!!");
+    // Convert selectedDate to a full DateTime object
+ // const selectedDateTime = new Date(selectedDate);
+  const selectedDateTime = new Date(selectedDate?.getTime());
+  console.log(isNaN(selectedDateTime.getTime())); // Output: false (if valid)
+  if (!selectedTime || !selectedTime.start) {
+    console.error("selectedTime is undefined or missing 'start' property:", selectedTime);
+    alert("Please select a valid time slot.");
+    return;
+}
+
+console.log(selectedTime.start);
+const timeMatch = selectedTime.start.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/); // Extract hours, minutes, and AM/PM
+let [_, hours, minutes, period] = timeMatch;
+hours = Number(hours);
+minutes = Number(minutes);
+if (period === "PM" && hours !== 12) {
+  hours += 12;
+} else if (period === "AM" && hours === 12) {
+  hours = 0;
+}
+console.log("Final selectedDateTime:", selectedDateTime.toISOString());
+  //const [hours, minutes] = selectedTime.start.split(":").map(Number); // Extract hours and minutes
+  selectedDateTime.setHours(hours, minutes, 0, 0); // Set hours and minutes
+  console.log(selectedDateTime instanceof Date);  // Output: true
+  
+  console.log(typeof(selectedDateTime));
+  console.log("Doctor:", doctor.name ,"doctor id is ", doctor._id) ;
+  console.log("user details :",userData);
+
+
+  const requestBody = {
+    patientId: userData?._id, // Ensure userData contains patient ID
+    doctor: doctor?._id, // Ensure doctor ID exists
+    hospital: doctor?.hospital?._id, // Ensure hospital ID exists
+    appointmentDateTime: selectedDateTime.toISOString(), // Send in ISO format
+  };
+ // appointment data to send and store in backend
+
+  try {
+    const response = await axios.post("http://localhost:5000/doctor/bookappointment", requestBody, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Appointment booked successfully:", response.data);
+    alert("Your appointment has been confirmed!");
+    navigate("/HomeBody");
+
+  } catch (error) {
+    console.error("Error booking appointment:", error.response?.data || error.message);
+    alert("Failed to book appointment. Please try again.");
   }
+};
+    
+  
 
   const weekDates = generateWeek(today);
 
   return (
+    <div>
+    {isAuthenticated ?
     <div>
       <HomeHeader />
       <h2 id="bookAppmt">Book an Appointment</h2>
@@ -125,6 +192,10 @@ function Appointments() {
           {selectedDate && selectedTime && (<button id="confirm" onClick={handleConfirm}>Confirm</button>)}
       </div>
       <HomeFooter />
+    </div>:<div><SignIn/></div>}
+    <Routes>
+        <Route path='/SignIn' element={<SignIn/>}/>
+    </Routes>
     </div>
   );
 }

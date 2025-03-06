@@ -1,0 +1,20 @@
+POST http://localhost:5000/doctor/adddoctor
+Content-Type: application/json
+
+{
+  "name": "Dr. Arifuzzaman Khan",
+  "specialization": "Gastroenterologist",
+  "year": 7,
+  "location": "Khulna, BD",
+  "hospital": "City Hospital",
+  "availability": ["Monday", "Wednesday", "Saturday"],
+  "fee": 270,
+  "qualification": "MBBS, MD (Gastroenterology)",
+  "Slots": ["09:00 AM - 11:00 AM", "02:00 PM - 04:00 PM"]
+}
+
+
+
+
+
+

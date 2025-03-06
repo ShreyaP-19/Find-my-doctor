@@ -20,19 +20,6 @@ const appointmentHistorySchema = new mongoose.Schema({
     type: Date, // Stores both date and time
     required: true,
   },
-  status: {
-    type: String,
-    enum: ["completed", "cancelled", "no-show"],
-    default: "completed",
-  },
-  diagnosis: {
-    type: String,
-    default: "",
-  },
-  prescription: {
-    type: String,
-    default: "",
-  },
   createdAt: {
     type: Date,
     default: Date.now,
