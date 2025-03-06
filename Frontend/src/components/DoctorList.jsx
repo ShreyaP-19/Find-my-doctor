@@ -108,7 +108,7 @@ function DoctorList() {
                 </label><br/>
 
             <div id="done-clr">
-                <button id="clr"  onClick={handleClear} >Clear</button>
+                <button id="clr"  onClick={()=>handleClear()} >Clear</button>
                 <button id="done" type="submit" >Done</button>
             </div>
             </form>
