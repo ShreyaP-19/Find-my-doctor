@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     required: true, 
     enum: ['admin', 'hospitalAdmin', 'doctor', 'patient'],  
     default: 'patient' // Default role
-  }
+  },
+  appointments: [{ type: mongoose.Schema.Types.ObjectId, ref: "AppointmentHistory" }],
 });
 
 const User = mongoose.model('User', userSchema);

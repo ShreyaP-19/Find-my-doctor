@@ -9,7 +9,7 @@ const hospitalSchema = new mongoose.Schema(
       required: true },
     admin: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Hospital admins
     doctors: [{ type: mongoose.Schema.Types.ObjectId, ref: "Doctor" }], // Associated doctors
-    appointments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Appointment" }], // Appointments linked to hospital
+    appointments: [{ type: mongoose.Schema.Types.ObjectId, ref: "AppointmentHistory" }], // Appointments linked to hospital
   }
 );
 

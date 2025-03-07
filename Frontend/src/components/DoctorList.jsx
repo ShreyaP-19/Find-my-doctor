@@ -1,9 +1,11 @@
 import React,{useState,useEffect} from 'react'
 import HomeHeader from './HomeHeader';
+//import { Routes, Route } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import SignIn from "./SignIn"; 
 import './doctorList.css'
 import HomeFooter from './HomeFooter';
-import { useAuth } from './AuthContext'
-import SignIn from './SignIn'
+//import { useAuth } from './AuthContext'
 import { useNavigate ,Routes,Route} from 'react-router-dom'
 import Appointments from './Appointments';
 import axios from "axios";
@@ -56,6 +58,10 @@ function DoctorList() {
   return (
 
     <div>
+      {isAuthenticated?
+
+    
+
     <div>
 
       <HomeHeader/>
@@ -102,7 +108,7 @@ function DoctorList() {
                 </label><br/>
 
             <div id="done-clr">
-                <button id="clr"  onClick={handleClear} >Clear</button>
+                <button id="clr"  onClick={()=>handleClear()} >Clear</button>
                 <button id="done" type="submit" >Done</button>
             </div>
             </form>
@@ -153,9 +159,10 @@ function DoctorList() {
 
 <HomeFooter/>
 
-</div>
+</div>:<div><SignIn/></div>}
 <Routes>
   <Route path="/Appointments" element={<Appointments/>}/>
+  <Route path='/SignIn' element={<SignIn/>}/>
 </Routes>
 
 </div>
