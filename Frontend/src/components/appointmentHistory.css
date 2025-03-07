@@ -4,21 +4,67 @@
 #appointment-history{
     text-align: center;
     margin-top: 70px;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
 }
 #appointment-container{
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    justify-content: center; /* Center vertically */
+    justify-content: center;
     align-items: center;
-    /* height: 100vh; */
-    width:100%;
+    gap:7px;
+    margin-bottom: 9px;
 }
-#details{
-    width: 600px; /* Set a fixed width */
-    height: 150px; /* Set a fixed height */
-    background-color: lightblue; /* Just for visibility */
-    margin: 10px 0; /* Add spacing between boxes */
+#details-doc{
     text-align: center;
+    font-size: 17px;
+    height:50px;
+    width: 450px;
+    background-color:  rgb(183, 220, 241);
     border-radius: 10px;
+}
+#details-fees{
+    text-align: center;
+    font-size: 17px;
+    height:50px;
+    width: 130px;
+    background-color:  rgb(183, 220, 241);
+    border-radius: 10px;
+}
+#details-slot{
+    text-align: center;
+    font-size: 17px;
+    height:50px;
+    width: 150px;
+    background-color:  rgb(183, 220, 241);
+    border-radius: 10px;
+}
+#details-status{
+    text-align: center;
+    font-size: 17px;
+    height:50px;
+    width: 200px;
+    background-color:  rgb(183, 220, 241);
+    border-radius: 10px;
+}
+#else-div{
+    display: flex;
+    justify-content: center;
+}
+#no{
+    text-align: center;
+    font-size: larger;
+    color: red;
+    margin-bottom: 30px;
+}
+#book-but{
+    width:160px;
+    height:40px;
+    background-color: #165e98;
+    border: none;
+    border-radius: 12px;
+    color: white;
+}
+#book-but:hover{
+    opacity: 0.8;
+    transform: scale(1.1);
+    cursor: pointer;
 }

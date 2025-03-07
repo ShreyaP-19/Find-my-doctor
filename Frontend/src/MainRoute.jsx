@@ -21,12 +21,12 @@ function MainRoute() {
         <Route path="/SignIn/*" element={<SignIn/>}/>
         <Route path="/SignUp/*" element={<SignUp/>}/>
         <Route path="/Contact/*" element={<Contact/>}/>
-        <Route path='/FirstAid' element={<FirstAid/>}/>
+        <Route path='/FirstAid/*' element={<FirstAid/>}/>
         <Route path='/About/*' element={<About/>}/>
         <Route path='/Service/*' element={<Service/>}/>
         <Route path='/HomeBody/*' element={<HomeBody/>}/>
-        <Route path='/DoctorList' element={<DoctorList/>}/>
-        <Route path='/Appointments' element={<Appointments/>}/>
+        <Route path='/DoctorList/*' element={<DoctorList/>}/>
+        <Route path='/Appointments/*' element={<Appointments/>}/>
         <Route path='/AppointmentHistory/*' element={<AppointmentHistory/>}/>
 
       </Routes>

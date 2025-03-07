@@ -189,7 +189,7 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
         </div>
       )}
         <div id="confirmBut">
-          {selectedDate && selectedTime && (<button id="confirm" onClick={handleConfirm(selectedTime,selectedDate)}>Confirm</button>)}
+          {selectedDate && selectedTime && (<button id="confirm" onClick={()=>handleConfirm()}>Confirm</button>)}
       </div>
       <HomeFooter />
     </div>:<div><SignIn/></div>}

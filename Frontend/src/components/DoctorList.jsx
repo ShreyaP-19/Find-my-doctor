@@ -137,7 +137,7 @@ function DoctorList() {
 
     <div className="doctor-info">
 
-    <p style={{marginTop:"12px"}}><strong><i className="fa-solid fa-hospital"></i></strong> {doctor.hospital.name}</p>
+    <p style={{marginTop:"53px"}}><strong><i className="fa-solid fa-hospital"></i></strong> {doctor.hospital.name}</p>
 
         {/* <p><strong>Year of Experience:</strong> {doctor.year}</p> */}
 
