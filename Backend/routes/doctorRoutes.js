@@ -166,7 +166,7 @@ router.get("/history",async (req, res) => {
     const appointments = await Appointment.find({ patient: patientId })
   .populate("doctor", "name fee location")  // Populate only 'name' and 'fee' from doctor
   .populate("hospital", "name")  // Populate only 'name' from hospital
-  .populate("patient", "name") // Populate only 'name' from patient
+  .populate("patient", "username") // Populate only 'name' from patient
   .select("appointmentDateTime doctor hospital patient"); // Select only required fields
   if (appointments.length === 0) {
     return res.status(404).json({ message: "No appointments found" });
@@ -180,14 +180,16 @@ router.get("/history",async (req, res) => {
       location:app.doctor.location,
       fee: app.doctor.fee,
       hospitalName: app.hospital.name,
-      appointmentDate: appointmentDateTime.toISOString().split("T")[0], // Extract YYYY-MM-DD
+      appointmentDate: appointmentDateTime.toISOString().split("T")[0].split("-").reverse().join("-"), // Extract YYYY-MM-DD
       appointmentTime: appointmentDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) // Extract HH:MM AM/PM
 
     };
   });
-  const patientName = appointments.length > 0 ? appointments[0]?.patient?.name : "Unknown";
+  const patientName = appointments.length > 0 ? appointments[0]?.patient?.username : "Unknown";
 
-  
+  //console.log("hi everything is ok");
+  console.log(patientName);
+  console.log(formattedAppointments[0]);
   
   // Send the formatted response
   res.status(200).json({
@@ -200,6 +202,49 @@ router.get("/history",async (req, res) => {
   }
 
 
+
+
+});
+
+router.get("/checkslots", async (req, res) => {
+  try {
+    console.log("recieved ",req.query);
+    let { appointmentDateTime, doctorId } = req.query;
+
+    if (!appointmentDateTime) {
+      return res.status(400).json({ message: "Appointment date and time required" });
+    }else if (!doctorId) {
+      return res.status(400).json({ message: "Doctor ID required" });
+
+      
+  
+    }
+    appointmentDateTime = decodeURIComponent(appointmentDateTime); // Decode URI component
+    // ✅ Fix: Remove extra spaces and replace incorrect format
+    appointmentDateTime = appointmentDateTime.replace(/\s(?=\d{2}:\d{2}$)/, "+"); // Fix timezone formatting
+
+    // 🔥 Convert appointmentDateTime to a Date object
+    const parsedDate = new Date(appointmentDateTime);
+    console.log("Parsed Date:", parsedDate);
+
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ message: "Invalid appointment date format" });
+    }
+
+    // Count existing appointments for the requested date & time
+    const existingAppointments = await Appointment.countDocuments({ 
+      appointmentDateTime: parsedDate, 
+      doctor: doctorId 
+    });
+
+    // If less than 5, slot is available; otherwise, it's full
+    const isSlotAvailable = existingAppointments < 5;
+
+    res.json({ isSlotAvailable, totalBookings: existingAppointments });
+  } catch (error) {
+    console.error("Error checking slot availability:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 
 
 });

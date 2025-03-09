@@ -18,6 +18,59 @@ function Appointments() {
   const [selectedTime, setSelectedTime] = useState(null);
   const [filteredSlots, setfilteredSlots] = useState([]);
   const [isAvailable, setisAvailable] = useState(false);
+  const [slotAvailability, setSlotAvailability] = useState({}); // Store slot availability
+
+  
+  const checkSlotAvailability = async (date, time) => {
+    try {
+      console.log("Checking slot availability for", date,"and the time is", time);
+      if (!(date instanceof Date) || isNaN(date.getTime())) {
+        console.error("Invalid date received:", date);
+        return false;
+      }
+
+      const utcTime = new Date(date?.getTime());
+  //console.log(isNaN(selectedDateTime.getTime())); // Output: false (if valid)
+  if (!time || !time.start) {
+    console.error("selectedTime is undefined or missing 'start' property:", selectedTime);
+    alert("Please select a valid time slot.");
+    return;
+}
+
+      
+    const timeMatch = time.start.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/);
+    if (!timeMatch) {
+      console.error("Invalid time format:", time.start);
+      return false;
+    }
+    let [_, hours, minutes, period] = timeMatch;
+    hours = Number(hours);
+    minutes = Number(minutes);
+    if (period === "PM" && hours !== 12) {
+      hours += 12;
+    } else if (period === "AM" && hours === 12) {
+      hours = 0;
+    }
+
+    console.log("Final selectedDateTime:", utcTime.toISOString());
+  //const [hours, minutes] = selectedTime.start.split(":").map(Number); // Extract hours and minutes
+  utcTime.setHours(hours, minutes, 0, 0); // Set hours and minutes
+
+    
+      const response = await axios.get("http://localhost:5000/doctor/checkslots", {
+        params: {
+          appointmentDateTime: utcTime.toISOString(),
+          doctorId: doctor._id,
+        },
+      });
+      console.log("Selected DateTime:", utcTime.toISOString());
+  
+      return response.data.isSlotAvailable; // Returns true or false
+    } catch (error) {
+      console.error("Error checking slot:", error);
+      return false;
+    }
+  };
  
 
   // Generate weekdays (Monday to Friday)
@@ -37,16 +90,25 @@ function Appointments() {
   };
 
   // Handle date selection
-  const handleDateClick = (date) => {
+  const handleDateClick = async(date) => {
     setSelectedDate(date); //set the date in the button 
    // setSelectedDate(new Date(date.getTime()));
+   
 
     const available = checkAvailability(date); //vailability of dr
     setisAvailable(available);
     if (available) {
       setfilteredSlots(doctor.timeSlots); // Show time slots if available
+      // Fetch availability for each slot
+      const availabilityMap = {};
+      for (const slot of doctor.timeSlots) {
+        const isAvailable = await checkSlotAvailability(date, slot);
+        console.log(`Slot ${slot._id} availability:`, isAvailable);
+        availabilityMap[slot._id] = isAvailable;
+      }
+      setSlotAvailability(availabilityMap);
     }
-    console.log("Selected Date:", date.toDateString());
+    console.log("Selected Date:", date.toDateString(),"type is :",typeof(date));
     console.log("Doctor available on this day?", available);
   };
 
@@ -56,7 +118,7 @@ function Appointments() {
   };
 
   const handleConfirm=async ()=>{
-
+    console.log("Slot Availability State:", slotAvailability);
     console.log("Appointment confirmed for", selectedDate);
     
     //alert("Your appointment has been confirmed!!");
@@ -172,10 +234,11 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
             <div id="timeselect">
               {filteredSlots.map((slot) => ( //Loops through filteredSlots, which contains the available time slots for the selected date
                 <button key={slot._id} onClick={() => handleTimeClick(slot)} className="timeslot" 
+                disabled={!slotAvailability[slot._id]} // Disable button if slot is unavailable
                   style={{padding: "10px 15px",
                   border: "1px solid #165e98",
-                  backgroundColor: selectedTime?._id === slot._id ? "#165e98" : "white",
-                  color: selectedTime?._id === slot._id ? "white" : "#165e98",
+                  backgroundColor: !slotAvailability[slot._id] ? "#D6D6D6" : (selectedTime?._id === slot._id ? "#165e98" : "white"), // Gray when disabled
+      color: !slotAvailability[slot._id] ? "#A0A0A0" : (selectedTime?._id === slot._id ? "white" : "#165e98"), // Muted text when disabled
                   borderRadius: "5px",
                   cursor: "pointer",
                   fontWeight: "bold",}}>
