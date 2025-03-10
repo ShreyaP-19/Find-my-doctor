@@ -237,8 +237,18 @@ router.get("/checkslots", async (req, res) => {
       doctor: doctorId 
     });
 
+    const nowUTC = new Date(); // Get current time in UTC
+    console.log("current time is", nowUTC.toISOString()); // Example: "2025-03-10T12:34:56.789Z"
+    let isSlotAvailable = false;
+    if(parsedDate < nowUTC){
+      isSlotAvailable=false;
+    }else{
+      isSlotAvailable = existingAppointments < 5;
+    }
+
+
     // If less than 5, slot is available; otherwise, it's full
-    const isSlotAvailable = existingAppointments < 5;
+    
 
     res.json({ isSlotAvailable, totalBookings: existingAppointments });
   } catch (error) {
