@@ -247,7 +247,7 @@ router.get("/checkslots", async (req, res) => {
     }
 
 
-    // If less than 5, slot is available; otherwise, it's full
+  
     
 
     res.json({ isSlotAvailable, totalBookings: existingAppointments });
