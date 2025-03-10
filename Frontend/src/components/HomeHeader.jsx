@@ -89,7 +89,7 @@ function HomeHeader() {
             <div id="user-image-box">
             <img src={user} id="user-img"></img>
             </div>
-            <div id="details">
+            <div id="details-prof">
               <p>{userData?.username || "Username"}</p>
               <p>{userData?.email || "Email"}</p>
               <button id="logout"onClick={handleLogout } >Logout</button>

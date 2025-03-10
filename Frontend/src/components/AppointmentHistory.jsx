@@ -55,54 +55,26 @@ function AppointmentHistory() {
             <h1>Appointment History</h1>
       </div>
 
-      {/* <div id="appointment-container">
-        <div id="details-doc">
-          <p style={{marginTop:"13px"}}>Doctor</p>
-        </div>
-        <div id="details-fees">
-          <p style={{marginTop:"14px"}}>Fees</p>
-        </div>
-        <div id="details-slot">
-          <p style={{marginTop:"14px"}}>Slot</p>
-        </div>
-        <div id="details-status">
-          <p style={{marginTop:"13px"}}>Status</p>
-        </div>
-      </div>
-      <div id="appointment-container">
-        <div id="details-doc">
-          <p style={{marginTop:"13px"}}></p>
-        </div>
-        <div id="details-fees">
-          <p style={{marginTop:"14px"}}></p>
-        </div>
-        <div id="details-slot">
-          <p style={{marginTop:"14px"}}></p>
-        </div>
-        <div id="details-status">
-          <p style={{marginTop:"13px"}}></p>
-        </div>
-      </div> 
-      <div id="appointment-container">
-        <div id="details-doc">
-          <p style={{marginTop:"13px"}}></p>
-        </div>
-        <div id="details-fees">
-          <p style={{marginTop:"14px"}}></p>
-        </div>
-        <div id="details-slot">
-          <p style={{marginTop:"14px"}}></p>
-        </div>
-        <div id="details-status">
-          <p style={{marginTop:"13px"}}></p>
-        </div>
-      </div>  */}
-      <div id="no">No Appointments yet....</div>
-      <div id="else-div">
-        <button id="book-but" onClick={()=>navigate('/DoctorList')}>Explore Doctors</button>
-      </div>
-      <div style={{height:"63px"}}></div>
-      <HomeFooter/>
+      {appointments.length>0?
+          (<div id="appointment-container">
+            {appointments.map((appointment, index) => (
+              <div key={index} id="details">
+                <p><strong>Doctor:</strong> {appointment.doctorName}</p>
+                <p><strong>Fees:</strong> {appointment.fee}</p>
+                <p><strong>Slot:</strong> {appointment.appointmentTime}</p>
+                <p><strong>Status:</strong> {appointment.status}</p>
+                </div>
+            ))}
+          </div>):
+          <div>
+            <div id="no">No Appointments yet....</div>
+            <div id="else-div">
+              <button id="book-but" onClick={()=>navigate('/DoctorList')}>Explore Doctors</button>
+            </div>
+            <div style={{height:"63px"}}></div>
+          </div>
+        }
+    <HomeFooter/>
     </div>
       ) : (
         <div>

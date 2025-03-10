@@ -8,42 +8,23 @@
 }
 #appointment-container{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap:7px;
+    gap:30px;
+    width:1280px;
     margin-bottom: 9px;
+    overflow: hidden;
 }
-#details-doc{
+#details{
     text-align: center;
     font-size: 17px;
-    height:50px;
-    width: 450px;
+    padding-top: 30px;
+    height:120px;
+    width:450px;
     background-color:  rgb(183, 220, 241);
     border-radius: 10px;
-}
-#details-fees{
-    text-align: center;
-    font-size: 17px;
-    height:50px;
-    width: 130px;
-    background-color:  rgb(183, 220, 241);
-    border-radius: 10px;
-}
-#details-slot{
-    text-align: center;
-    font-size: 17px;
-    height:50px;
-    width: 150px;
-    background-color:  rgb(183, 220, 241);
-    border-radius: 10px;
-}
-#details-status{
-    text-align: center;
-    font-size: 17px;
-    height:50px;
-    width: 200px;
-    background-color:  rgb(183, 220, 241);
-    border-radius: 10px;
+    line-height: 1.4;
 }
 #else-div{
     display: flex;
