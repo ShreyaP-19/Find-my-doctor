@@ -2,12 +2,17 @@ import React from 'react'
 import HomeHeader from './HomeHeader'
 import './firstaid.css'
 import HomeFooter from './HomeFooter'
+import { Route, Routes, useNavigate } from 'react-router-dom'
+import HomeBody from './HomeBody'
 
 function FirstAid() {
+  const navigate=useNavigate();
   return (
     <div>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
       <HomeHeader/>
       <h1 id="head">First Aid</h1>
+      <button id="back-button" style={{marginTop:"159px"}}><i className="fa-solid fa-circle-left" onClick={()=>navigate('/HomeBody')}></i></button>
       <div id="paragraph">
       <div id="quote">Empower yourself with first-aid knowledge and make a difference when it matters the most</div>
       </div>
@@ -124,6 +129,9 @@ function FirstAid() {
         </div>
       </div>
       <HomeFooter/>
+      <Routes>
+        <Route path='/HomeBody' element={<HomeBody/>}/>
+      </Routes>
     </div>
   )
 }

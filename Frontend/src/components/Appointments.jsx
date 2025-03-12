@@ -7,6 +7,7 @@ import "./appointments.css";
 import { useAuth } from "./AuthContext";
 import SignIn from "./SignIn"; 
 import axios from "axios";
+import DoctorList from "./DoctorList";
 
 function Appointments() {
   const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
@@ -183,10 +184,12 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
 
   return (
     <div>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
     {isAuthenticated ?
     <div>
       <HomeHeader />
       <h2 id="bookAppmt">Book an Appointment</h2>
+      <button id="back-button" style={{marginTop:"159px"}}><i className="fa-solid fa-circle-left" onClick={()=>navigate('/DoctorList')}></i></button>
       
       <div id="container">
         {doctor  && ( //if doc not null/undefined/false
@@ -252,12 +255,23 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
         </div>
       )}
         <div id="confirmBut">
-          {selectedDate && selectedTime && (<button id="confirm" onClick={()=>handleConfirm()}>Confirm</button>)}
+          {selectedDate && selectedTime && (
+            
+            <div>
+              {/* <div className="username">
+                    <i className="fa-solid fa-user"></i>
+                    <input type="text" onChange={handleChange} name="username" placeholder="UserName" value={formValue.username} style={{ borderColor: formErrors.userName ? "red" : "" }}></input>
+                    <br></br><br></br>
+              </div> */}
+              <button id="confirm" onClick={()=>handleConfirm()}>Confirm</button>
+            </div>)}
       </div>
       <HomeFooter />
     </div>:<div><SignIn/></div>}
     <Routes>
         <Route path='/SignIn' element={<SignIn/>}/>
+        <Route path='/DoctorList' element={<DoctorList/>}/>
+
     </Routes>
     </div>
   );

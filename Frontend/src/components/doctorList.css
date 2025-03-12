@@ -105,3 +105,22 @@
     justify-content: center;
     gap:30px;
 }
+#back-button{
+    position: fixed;
+    margin-left: 15px;
+    margin-top: 90px;
+    /* width:30px;
+    height:90px;
+    border-radius: 20px;
+    border:1px solid #165e98;
+    background-color: white; */
+    border:none;
+    background-color: white;
+    font-size: xx-large;
+    color: #95b7d2;
+}
+#back-button:hover{
+    cursor:pointer;
+    opacity:0.8;
+    transform: scale(1.27);
+}

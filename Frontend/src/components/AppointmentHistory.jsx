@@ -48,6 +48,7 @@ function AppointmentHistory() {
     
   return (
     <div>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
       {isAuthenticated ? (
     <div>
       <HomeHeader/>
@@ -55,15 +56,45 @@ function AppointmentHistory() {
             <h1>Appointment History</h1>
       </div>
 
+      <button id="back-button"><i className="fa-solid fa-circle-left" onClick={()=>navigate('/HomeBody')}></i></button>
+
       {appointments.length>0?
           (<div id="appointment-container">
+            <div id="another-container">
+              <div id="column-doc">
+                <p id="styling-para"><strong>Doctor</strong></p>
+              </div>
+              <div id="column-hosp">
+                <p id="styling-para"><strong>Hospital</strong></p>
+              </div>
+              <div id="column-fees">
+                <p id="styling-para"><strong>Fees</strong></p>
+              </div>
+              <div id="column-date">
+                <p id="styling-para"><strong>Date</strong></p>
+              </div>
+              <div id="column-slot">
+                <p id="styling-para"><strong>Slot</strong></p>
+              </div>
+            </div>
             {appointments.map((appointment, index) => (
-              <div key={index} id="details">
-                <p><strong>Doctor:</strong> {appointment.doctorName}</p>
-                <p><strong>Fees:</strong> {appointment.fee}</p>
-                <p><strong>Slot:</strong> {appointment.appointmentTime}</p>
-                <p><strong>Status:</strong> {appointment.status}</p>
+              <div key={index} id="another-container">
+                <div id="column-doc">
+                  <p id="styling-para"> {appointment.doctorName}</p>
                 </div>
+                <div id="column-hosp" >
+                <p id="styling-para"> {appointment.hospitalName},{appointment.location}</p>
+                </div>
+                <div id="column-fees" >
+                <p id="styling-para"> {appointment.fee}</p>
+                </div>
+                <div id="column-date">
+                  <p id="styling-para">{appointment.appointmentDate}</p>
+                </div>
+                <div id="column-slot">
+                  <p id="styling-para"> {appointment.appointmentTime}</p>
+                </div>
+              </div>
             ))}
           </div>):
           <div>
@@ -76,11 +107,11 @@ function AppointmentHistory() {
         }
     <HomeFooter/>
     </div>
-      ) : (
+       ) : (
         <div>
           <SignIn/>
         </div>
-      )}
+      )} 
       <Routes>
         <Route path='/DoctorList' element={<DoctorList/>}/>
         <Route path='/SignIn' element={<SignIn/>}/>

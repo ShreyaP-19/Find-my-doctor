@@ -5,10 +5,11 @@ import axios from 'axios'
 import { Routes,Route, useNavigate } from 'react-router-dom';  // Import useNavigate
 import HomeBody from './HomeBody';
 import { useAuth } from "./AuthContext"; 
+import SignIn from './SignIn';
 
 function SignUp() { 
     // const navigate=useNavigate();
-  const initValues={username:"",email:"",password:""}
+  const initValues={username:"",email:"",password:"",rePassword:""}
   const [formErrors, setFormErrors] = useState({});
   const [formValue,setFormValue]=useState(initValues)
   const [isSubmit,setIsSubmit]=useState(false)
@@ -36,7 +37,7 @@ function SignUp() {
             navigate('/service')
           }
           else if(response.data.role==='patient'){
-            navigate('/HomeBody'); // Navigate to the home page
+            navigate('/SignIn'); // Navigate to the home page
           }
         })
         .catch((error) => {
@@ -73,6 +74,11 @@ function SignUp() {
     } 
     else if (values.password.length > 10) {
       errors.password = "Password cannot exceed more than 10 characters";
+    }
+    if (!values.rePassword) {
+      errors.rePassword = "Please re-enter your password";
+    } else if (values.password !== values.rePassword) {
+      errors.rePassword = "Passwords do not match!";
     }
     return errors;
   }
@@ -122,6 +128,12 @@ function SignUp() {
                     <input type={isVisible ? 'text' : 'password'} name="password" onChange={handleChange} value={formValue.password} placeholder="Password" style={{ borderColor: formErrors.password ? "red" : "" }}></input>
                     <br></br><br></br>
                   </div>
+                  <div className="password" style={{marginLeft:"35px"}}>
+                    {/* <i className="fa-solid fa-lock"></i> */}
+                    <input type={isVisible ? 'text' : 'password'} name="rePassword" onChange={handleChange} value={formValue.rePassword} placeholder="Re-enter Password" style={{ borderColor: formErrors.rePassword ? "red" : "" }}></input>
+                    {/* {formErrors.rePassword && <p style={{ color: "red", fontSize: "12px" }}>{formErrors.rePassword}</p>} */}
+                    <br></br><br></br>
+                  </div>
                   <div className="show-password">
                 <label>
                   <input
@@ -135,13 +147,13 @@ function SignUp() {
                 </div>
                   
                 <button id="button" type="submit"  style={{color:'#165e98'}}>Submit</button>
-                <br></br>
+                <div style={{height:"50px"}}></div>
                 </form>
               </div>
             </div>
           </div>
           <Routes>
-            <Route path="/HomeBody" element={<HomeBody/>}/>
+            <Route path="/SignIn" element={<SignIn/>}/>
           </Routes>
     </>
   )

@@ -9,6 +9,7 @@ import HomeFooter from './HomeFooter';
 import { useNavigate ,Routes,Route} from 'react-router-dom'
 import Appointments from './Appointments';
 import axios from "axios";
+import HomeBody from './HomeBody';
 
 
 
@@ -69,6 +70,7 @@ function DoctorList() {
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
 
       <h1 id="heading">DOCTORS</h1>
+      <button id="back-button"><i className="fa-solid fa-circle-left" onClick={()=>navigate('/HomeBody')}></i></button>
 
       <div id="container1">
 
@@ -163,6 +165,7 @@ function DoctorList() {
 <Routes>
   <Route path="/Appointments" element={<Appointments/>}/>
   <Route path='/SignIn' element={<SignIn/>}/>
+  <Route path='/HomeBody' element={<HomeBody/>}/>
 </Routes>
 
 </div>
