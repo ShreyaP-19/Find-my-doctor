@@ -16,6 +16,15 @@ const appointmentHistorySchema = new mongoose.Schema({
     ref: "Hospital",
     required: true,
   },
+  name: {
+    type: String,
+  },
+  age:{
+    type:Number,
+  },
+  symptom:{
+    type:String
+  },
   appointmentDateTime: {
     type: Date, // Stores both date and time
     required: true,
