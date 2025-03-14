@@ -172,10 +172,9 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
     console.log("Appointment booked successfully:", response.data);
     // Save appointmentId for confirmation
     const appointmentId = response.data.appointmentId;
-    // Store appointmentId in localStorage for later confirmation in SymptomList
-    localStorage.setItem("appointmentId", appointmentId);
+    
     alert("Slot booked successfully! Proceed to confirmation.");
-
+    // alert("Your appointment has been confirmed!");
     navigate("/SymptomList");
     
 
