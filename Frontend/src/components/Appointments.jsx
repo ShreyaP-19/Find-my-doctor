@@ -170,7 +170,7 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
     });
 
     console.log("Appointment booked successfully:", response.data);
-    alert("Your appointment has been confirmed!");
+    // alert("Your appointment has been confirmed!");
     navigate("/SymptomList");
 
   } catch (error) {

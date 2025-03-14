@@ -16,13 +16,19 @@ function SymptomList() {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
   };
+
   
   function handleSubmit(e) {
     e.preventDefault();
-    setFormErrors(Validate(formValue))
+    const errors=Validate(formValue);
+    setFormErrors(errors);
+    if (Object.keys(errors).length !== 0) {
+      return; // Stop submission if there are validation errors
+  }
+
     console.log(formValue);
     setIsSubmit(true);
-    alert("Submitted");
+    alert("Your appointment has been confirmed successfully ");
     navigate('/HomeBody');
   }
 
@@ -34,6 +40,8 @@ function SymptomList() {
       if (!values.age) {
         errors.age = "age is required";
       }
+      else if (!/^\d+$/.test(values.age)) errors.age = "Age must be a number.";
+    else if (parseInt(values.age) < 1 || parseInt(values.age) > 120) errors.age = "Enter a valid age (1-120).";
       if (!values.symptom) {
         errors.symptom = "symptom is required";
       }
