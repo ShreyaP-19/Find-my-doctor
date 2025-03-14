@@ -170,8 +170,14 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
     });
 
     console.log("Appointment booked successfully:", response.data);
+    // Save appointmentId for confirmation
+    const appointmentId = response.data.appointmentId;
+    
+    alert("Slot booked successfully! Proceed to confirmation.");
+    // alert("Your appointment has been confirmed!");
     // alert("Your appointment has been confirmed!");
     navigate("/SymptomList");
+    
 
   } catch (error) {
     console.error("Error booking appointment:", error.response?.data || error.message);

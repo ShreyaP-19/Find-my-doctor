@@ -44,6 +44,9 @@ function SignIn(){
           else if(response.data.role==='patient'){
             navigate('/HomeBody'); // Navigate to the home page
           }
+          else if(response.data.role==='doctor'){
+            navigate('/DoctorBody');
+          }
          
           
         })

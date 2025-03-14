@@ -3,6 +3,7 @@ import './symptomList.css'
 import HomeHeader from './HomeHeader'
 import HomeFooter from './HomeFooter'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 function SymptomList() {
   const initValues={name:"",age:"",symptom:""}
@@ -18,18 +19,51 @@ function SymptomList() {
   };
 
   
-  function handleSubmit(e) {
+  async function  handleSubmit(e) {
     e.preventDefault();
     const errors=Validate(formValue);
     setFormErrors(errors);
     if (Object.keys(errors).length !== 0) {
       return; // Stop submission if there are validation errors
   }
+  try{
+    // Retrieve appointmentId stored in localStorage
+    const appointmentId = localStorage.getItem("appointmentId");
 
-    console.log(formValue);
+    if (!appointmentId) {
+      alert("No appointment found to confirm. Please book an appointment first.");
+      return;
+    }
+
+    const requestBody = {
+      appointmentId,
+      name: formValue.name,
+      age: formValue.age,
+      symptoms: formValue.symptom, // Make sure this matches backend expectations
+    };
+
+    // Send confirmation request
+    const response = await axios.post("http://localhost:5000/doctor/submit",
+      requestBody,
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    console.log("Appointment confirmed:", response.data);
+    //alert("Your appointment has been confirmed!");
+
+    // Clear localStorage after confirmation
+    localStorage.removeItem("appointmentId");
+    //console.log(formValue);
     setIsSubmit(true);
     alert("Your appointment has been confirmed successfully ");
     navigate('/HomeBody');
+
+  }catch (error) {
+    console.error("Error confirming appointment:", error.response?.data || error.message);
+    alert("Failed to confirm appointment. Please try again.");
+  }
+
+    
   }
 
   function Validate(values){ //mainly to check if there is any error or to find if any empty fields
