@@ -11,6 +11,8 @@ import HomeBody from './components/HomeBody'
 import DoctorList from './components/DoctorList'
 import Appointments from './components/Appointments'
 import AppointmentHistory from './components/AppointmentHistory'
+import SymptomList from './components/SymptomList'
+import DoctorBody from './components/DoctorBody'
 
 function MainRoute() {
   return (
@@ -28,6 +30,8 @@ function MainRoute() {
         <Route path='/DoctorList/*' element={<DoctorList/>}/>
         <Route path='/Appointments/*' element={<Appointments/>}/>
         <Route path='/AppointmentHistory/*' element={<AppointmentHistory/>}/>
+        <Route path='/SymptomList/*' element={<SymptomList/>}/>
+        <Route path='/DoctorBody/*' element={<DoctorBody/>}/>
 
       </Routes>
     </div>

@@ -6,6 +6,7 @@ import SignUp from './SignUp';
 import axios from 'axios';
 import { useAuth } from "./AuthContext";
 import HomeBody from './HomeBody';
+import DoctorBody from './DoctorBody';
 
 
 function SignIn(){
@@ -38,7 +39,7 @@ function SignIn(){
           setUserData(response.data);//Newly added
 
           if(response.data.role==='hospitalAdmin'){
-            navigate('/service')
+            navigate('/DoctorBody')
           }
           else if(response.data.role==='patient'){
             navigate('/HomeBody'); // Navigate to the home page
@@ -136,6 +137,7 @@ function SignIn(){
       <Routes>
         <Route path='/SignUp' element={<SignUp />} />
         <Route path="/HomeBody" element={<HomeBody/>}/>
+        <Route path="/DoctorBody" element={<DoctorBody/>}/>
       </Routes>
     </>
   )

@@ -8,6 +8,7 @@ import { useAuth } from "./AuthContext";
 import SignIn from "./SignIn"; 
 import axios from "axios";
 import DoctorList from "./DoctorList";
+import SymptomList from "./SymptomList";
 
 function Appointments() {
   const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
@@ -170,7 +171,7 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
 
     console.log("Appointment booked successfully:", response.data);
     alert("Your appointment has been confirmed!");
-    navigate("/HomeBody");
+    navigate("/SymptomList");
 
   } catch (error) {
     console.error("Error booking appointment:", error.response?.data || error.message);
@@ -258,11 +259,6 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
           {selectedDate && selectedTime && (
             
             <div>
-              {/* <div className="username">
-                    <i className="fa-solid fa-user"></i>
-                    <input type="text" onChange={handleChange} name="username" placeholder="UserName" value={formValue.username} style={{ borderColor: formErrors.userName ? "red" : "" }}></input>
-                    <br></br><br></br>
-              </div> */}
               <button id="confirm" onClick={()=>handleConfirm()}>Confirm</button>
             </div>)}
       </div>
@@ -271,7 +267,7 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
     <Routes>
         <Route path='/SignIn' element={<SignIn/>}/>
         <Route path='/DoctorList' element={<DoctorList/>}/>
-
+        <Route path='/SymptomList' element={<SymptomList/>}/>
     </Routes>
     </div>
   );
