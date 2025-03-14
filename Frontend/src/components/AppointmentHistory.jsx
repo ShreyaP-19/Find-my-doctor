@@ -77,7 +77,8 @@ function AppointmentHistory() {
                 <p id="styling-para"><strong>Slot</strong></p>
               </div>
             </div>
-            {appointments.map((appointment, index) => (
+            {appointments
+            .map((appointment, index) => (
               <div key={index} id="another-container">
                 <div id="column-doc">
                   <p id="styling-para"> {appointment.doctorName}</p>

@@ -77,6 +77,7 @@ router.get("/doctors", async (req, res) => {
 // Add doctor
 router.post("/adddoctor", async (req, res) => {
   try {
+    console.log("data is ",req.body);
     const { name, specialization, location, qualification, year,Slots, hospital, fee, availability } = req.body;
 
     // Check if the hospital exists
@@ -113,6 +114,7 @@ router.post("/adddoctor", async (req, res) => {
 
 router.post("/bookappointment", async (req, res) => {
   try{  // Extract data from the request body
+    console.log("data is ",req.body);
     const { patientId, doctor, hospital, appointmentDateTime } = req.body;
 
     // Validate required fields
@@ -145,6 +147,7 @@ router.post("/bookappointment", async (req, res) => {
     // Return a success response with the new appointment details
     res.status(201).json({
       message: "Appointment booked successfully",
+      appointmentId: newAppointment._id, // Explicitly sending appointmentId
       appointment: newAppointment,
       patient: patient,
     });
@@ -220,10 +223,10 @@ router.get("/checkslots", async (req, res) => {
   
     }
     appointmentDateTime = decodeURIComponent(appointmentDateTime); // Decode URI component
-    // ✅ Fix: Remove extra spaces and replace incorrect format
+    // Fix: Remove extra spaces and replace incorrect format
     appointmentDateTime = appointmentDateTime.replace(/\s(?=\d{2}:\d{2}$)/, "+"); // Fix timezone formatting
 
-    // 🔥 Convert appointmentDateTime to a Date object
+    // Convert appointmentDateTime to a Date object
     const parsedDate = new Date(appointmentDateTime);
     console.log("Parsed Date:", parsedDate);
 
@@ -256,6 +259,31 @@ router.get("/checkslots", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 
+
+});
+
+
+router.post("/submit", async (req, res) => {
+  try{
+    console.log(req.body);
+    const {appId,name,age,symptoms}=req.body;
+    const appointment = await Appointment.findById(appId);
+    if (!appointment) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+
+
+    appointment.name=name;
+    appointment.age=age;
+    appointment.symptoms=symptoms;
+    await appointment.save();
+    res.status(201).json({
+      message: "Appointment booked successfully",
+    });
+  }catch(error){
+    res.status(500).json({ error: "Error fetching appointments", error: error.message });
+  }
 
 });
 
