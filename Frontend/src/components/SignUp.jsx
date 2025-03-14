@@ -6,6 +6,7 @@ import { Routes,Route, useNavigate } from 'react-router-dom';  // Import useNavi
 import HomeBody from './HomeBody';
 import { useAuth } from "./AuthContext"; 
 import SignIn from './SignIn';
+import DoctorBody from './DoctorBody';
 
 function SignUp() { 
     // const navigate=useNavigate();
@@ -34,7 +35,7 @@ function SignUp() {
           console.log('Success:', response.data);
           setIsAuthenticated(true);
           if(response.data.role==='hospitalAdmin'){
-            navigate('/service')
+            navigate('/DoctorBody')
           }
           else if(response.data.role==='patient'){
             navigate('/SignIn'); // Navigate to the home page
@@ -154,6 +155,8 @@ function SignUp() {
           </div>
           <Routes>
             <Route path="/SignIn" element={<SignIn/>}/>
+            <Route path="/DoctorBody" element={<DoctorBody/>}/>
+
           </Routes>
     </>
   )
