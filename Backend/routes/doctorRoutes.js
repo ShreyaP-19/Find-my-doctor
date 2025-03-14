@@ -265,9 +265,9 @@ router.get("/checkslots", async (req, res) => {
 
 router.post("/submit", async (req, res) => {
   try{
-    console.log(req.body);
-    const {appId,name,age,symptoms}=req.body;
-    const appointment = await Appointment.findById(appId);
+    console.log("recieved data is",req.body);
+    const {appointmentId,name,age,symptoms}=req.body;
+    const appointment = await Appointment.findById(appointmentId);
     if (!appointment) {
       return res.status(404).json({ message: "Not found" });
     }
