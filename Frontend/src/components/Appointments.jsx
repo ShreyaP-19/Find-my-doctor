@@ -175,6 +175,7 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
     
     alert("Slot booked successfully! Proceed to confirmation.");
     // alert("Your appointment has been confirmed!");
+    // alert("Your appointment has been confirmed!");
     navigate("/SymptomList");
     
 
