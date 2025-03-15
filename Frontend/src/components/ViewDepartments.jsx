@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DoctorHeader from './DoctorHeader';
 import HomeFooter from './HomeFooter';
-import './viewdepartments.css';
+import './viewdepartment.css';
 
 function ViewDepartments() {
   const navigate = useNavigate();
@@ -25,22 +25,23 @@ function ViewDepartments() {
   return (
     <div>
       <DoctorHeader />
-      <h1 id="heading">View Departments</h1>
+      <h1 id="heading" style={{marginTop:"70px"}}>View Departments</h1>
       <button id="back-button" onClick={() => navigate('/DoctorBody')}>
         <i className="fa-solid fa-circle-left"></i>
       </button>
-      <div id="container">
-        <div id="list-box">
+      <div id="main-container">
+        <div id="existing">
           <h2>Existing Departments</h2>
-          <ul>
+          <ul id="ul">
             {departments.length > 0 ? (
-              departments.map((dept) => <li key={dept._id}>{dept.name}</li>)
+              departments.map((dept) => <li key={dept._id} id="li">{dept.name}</li>)
             ) : (
-              <p>No departments available</p>
+              <p style={{textAlign:"center"}}>No departments available</p>
             )}
           </ul>
         </div>
       </div>
+      <div style={{height:"62px"}}></div>
       <HomeFooter />
     </div>
   );

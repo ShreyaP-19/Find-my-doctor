@@ -1,7 +1,5 @@
 * {
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
 }
 
 /* Page heading */
@@ -13,7 +11,7 @@
 }
 
 /* Main container */
-#container {
+#main-container {
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -23,7 +21,7 @@
 }
 
 /* Form container */
-#form-box {
+#addDep-box {
     background-color: rgb(232, 234, 235);
     border-radius: 20px;
     padding: 20px;
@@ -33,14 +31,14 @@
 }
 
 /* Form title */
-#form-box h2 {
+#addDep-box h2 {
     margin-bottom: 15px;
     font-size: 22px;
     color: #165e98;
 }
 
 /* Input field */
-input {
+#add {
     width: 90%;
     padding: 10px;
     margin-bottom: 15px;
@@ -50,7 +48,7 @@ input {
 }
 
 /* Submit button */
-button {
+#add-but {
     background-color: #3674a7;
     color: white;
     border: none;
@@ -61,7 +59,7 @@ button {
     transition: transform 0.3s, opacity 0.3s;
 }
 
-button:hover {
+#add-but:hover {
     opacity: 0.8;
     transform: scale(1.05);
 }
@@ -84,13 +82,13 @@ button:hover {
 }
 
 /* Unordered list styles */
-ul {
+#dep-ul {
     list-style-type: none;
     padding: 0;
 }
 
 /* Individual department items */
-li {
+#dep-li {
     background: white;
     padding: 12px;
     margin-bottom: 10px;

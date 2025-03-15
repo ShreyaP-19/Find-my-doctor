@@ -25,17 +25,17 @@ function ViewAppointments() {
   return (
     <div>
       <DoctorHeader />
-      <h1 id="heading">View Appointments</h1>
+      <h1 id="heading" style={{marginTop:"70px"}}>View Appointments</h1>
       <button id="back-button" onClick={() => navigate('/DoctorBody')}>
         <i className="fa-solid fa-circle-left"></i>
       </button>
-      <div id="container">
-        <div id="list-box">
+      <div id="main-container">
+        <div id="existing">
           <h2>Appointments List</h2>
-          <ul>
+          <ul id="appoint-ul">
             {appointments.length > 0 ? (
               appointments.map((appointment) => (
-                <li key={appointment._id}>
+                <li id="appoint-li" key={appointment._id}>
                   <strong>Patient:</strong> {appointment.patientName} | 
                   <strong> Doctor:</strong> {appointment.doctorName} | 
                   <strong> Date:</strong> {appointment.date} | 
@@ -43,11 +43,12 @@ function ViewAppointments() {
                 </li>
               ))
             ) : (
-              <p>No appointments available</p>
+              <p style={{textAlign:"center"}}>No appointments available</p>
             )}
           </ul>
         </div>
       </div>
+      <div style={{height:"62px"}}></div>
       <HomeFooter />
     </div>
   );
