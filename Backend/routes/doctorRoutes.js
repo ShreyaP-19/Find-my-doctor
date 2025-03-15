@@ -176,31 +176,37 @@ router.post("/bookappointment", async (req, res) => {
   }
 });
 
-router.get("/history",async (req, res) => {
+router.get("/history/:patientId",async (req, res) => {
   try {
-    const { patientId } = req.query;
+    console.log("query data",req.query);
+    const { patientId } = req.params;
     if (!patientId) {
       return res.status(400).json({ message: "Missing patient ID" });
     }
 
     
-    const appointments = await Appointment.find({ patient: patientId })
-  .populate("doctor", "name fee location")  // Populate only 'name' and 'fee' from doctor
+    let appointments = await Appointment.find({ patient: patientId })
+  .populate({ path: "doctor",
+    select: "name fee location",
+    match: { name: { $exists: true, $ne: null } },})  // Populate only 'name' and 'fee' from doctor
   .populate("hospital", "name")  // Populate only 'name' from hospital
   .populate("patient", "username") // Populate only 'name' from patient
-  .select("appointmentDateTime doctor hospital patient"); // Select only required fields
+  .select("appointmentDateTime doctor hospital patient") // Select only required fields
+  .sort({ appointmentDateTime: -1 }); // ✅ Sort by latest first
   if (appointments.length === 0) {
     return res.status(404).json({ message: "No appointments found" });
   }
+
+   appointments = appointments.filter(app => app.doctor !== null);
 
   const formattedAppointments = appointments.map(app => {
     const appointmentDateTime = new Date(app.appointmentDateTime); // Convert ISO string to Date object
     
     return {
-      doctorName: app.doctor.name,
-      location:app.doctor.location,
-      fee: app.doctor.fee,
-      hospitalName: app.hospital.name,
+      doctorName: app.doctor?.name || "Unknown",
+      location:app.doctor?.location || "Unknown",
+      fee: app.doctor?.fee || "NA",
+      hospitalName: app.hospital?.name || "Unknown",
       appointmentDate: appointmentDateTime.toISOString().split("T")[0].split("-").reverse().join("-"), // Extract YYYY-MM-DD
       appointmentTime: appointmentDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) // Extract HH:MM AM/PM
 

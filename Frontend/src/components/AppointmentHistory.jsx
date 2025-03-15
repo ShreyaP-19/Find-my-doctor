@@ -16,28 +16,30 @@ function AppointmentHistory() {
     const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
     const navigate=useNavigate();
    // console.log("User Data:", userData);
-    try{
-      useEffect(() => {
-        const fetchAppointments = async () => {
-          const response = await axios.get("http://localhost:5000/doctor/history", {
-            params: { patientId: userData._id },
-          });
-          console.log("appointment history of",response.data.patientName);
-          console.log("API response:", response.data);
-          setAppointments(response.data.appointments);
-         // console.log("Appointments:", appointments[0]);
-         // console.log(appointments.length); // Should print 1
+   useEffect(() => {
+    const fetchAppointments =async () => {
+      try {
+        if (!userData?._id) {
+          console.error("User ID is missing!");
+          setError("User not logged in.");
+          return;
+        }
+        const response = await axios.get(`http://localhost:5000/doctor/history/${userData._id}`);
+      console.log("Appointment history of:", response.data.patientName);
+      console.log("API response:", response.data);
 
-          setError(""); // Reset error state if successful
-        };
-        fetchAppointments();
-      }, []);
+      setAppointments(response.data.appointments);
+      setError(""); // Reset error state if successful
+      
     }catch(error){
       console.error("Error fetching appointments:", error);
       if (err.response && err.response.status === 404) {
         setError("No appointments yet...."); // Set custom message
       }
     }
+  };
+    fetchAppointments()
+},[userData]);
     useEffect(() => {
       if (appointments.length > 0) {
         console.log("Appointments:", appointments[0]); 
