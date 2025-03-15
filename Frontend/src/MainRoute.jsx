@@ -19,6 +19,8 @@ import ViewAppointments from './components/ViewAppointments';
 import DrBody from './components/DrBody'
 import EditProfile from './components/EditProfile'
 import ViewDrAppntmnt from './components/ViewDrAppntmnt'
+import DeptList from './components/DeptList'
+import AddDr from './components/AddDr'
 
 
 function MainRoute() {
@@ -45,7 +47,8 @@ function MainRoute() {
         <Route path="/DrBody/*" element={<DrBody/>}/>
         <Route path="/EditProfile/*" element={<EditProfile/>}/>
         <Route path="/ViewDrAppntmnt/*" element={<ViewDrAppntmnt/>}/>
-
+        <Route path="/DeptList/*" element={<DeptList/>}/>
+        <Route path="/AddDr/*" element={<AddDr/>}/>
 
       </Routes>
     </div>
