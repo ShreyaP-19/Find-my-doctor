@@ -4,19 +4,27 @@ import axios from 'axios';
 import DoctorHeader from './DoctorHeader';
 import HomeFooter from './HomeFooter';
 import './adddepartment.css';
+import { useAuth } from './AuthContext'
+import SignIn from './SignIn';
+
 
 function AddDepartment() {
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
   const [departmentName, setDepartmentName] = useState('');
+  const { isAuthenticated,userData } = useAuth(); // Add this inside the component
+  const hospitalId = userData?.hospitalId; // Get hospital ID
+
 
   useEffect(() => {
-    fetchDepartments();
-  }, []);
+    if (hospitalId) {
+      fetchDepartments(hospitalId);
+    }
+  }, [hospitalId]); // Fetch departments when hospitalId is available
 
-  const fetchDepartments = () => {
+  const fetchDepartments = async (id) => {
     axios
-      .get('http://localhost:5000/hospital/departments')
+      .get(`http://localhost:5000/hospital/departments/${id}`)
       .then((response) => {
         setDepartments(response.data);
       })
@@ -26,9 +34,12 @@ function AddDepartment() {
   const handleAddDepartment = (e) => {
     e.preventDefault();
     if (!departmentName) return;
+    console.log(departmentName);
+    const hospitalId = userData?.hospitalId; // Ensure userData exists before accessing hospitalId
+    console.log("Hospital ID:", hospitalId);
 
     axios
-      .post('http://localhost:5000/hospital/departments', { name: departmentName })
+      .post('http://localhost:5000/hospital//add-department', { name: departmentName, hospital:hospitalId })
       .then((response) => {
         setDepartments([...departments, response.data]);
         setDepartmentName('');
@@ -38,6 +49,8 @@ function AddDepartment() {
 
   return (
     <div>
+       {isAuthenticated ? (
+        <div>
       <DoctorHeader />
       <h1 id="heading" style={{marginTop:"70px"}}>Manage Departments</h1>
       {/* <button id="back-button" onClick={() => navigate('/DoctorBody')}>
@@ -54,7 +67,7 @@ function AddDepartment() {
               onChange={(e) => setDepartmentName(e.target.value)}
               required
             />
-            <button type="submit" id="add-but">Add Department</button>
+            <button type="submit" id="add-but" onClick={handleAddDepartment} >Add Department</button>
           </form>
         </div>
         <div id="list-box">
@@ -68,6 +81,10 @@ function AddDepartment() {
       </div>
       <div style={{height:"5px"}}></div>
       <HomeFooter />
+    </div>) : (
+
+        <div><SignIn /></div>
+      )}
     </div>
   );
 }

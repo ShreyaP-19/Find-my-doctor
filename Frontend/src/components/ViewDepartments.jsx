@@ -4,10 +4,13 @@ import axios from 'axios';
 import DoctorHeader from './DoctorHeader';
 import HomeFooter from './HomeFooter';
 import './viewdepartment.css';
+import { useAuth } from './AuthContext';
+import SignIn from './SignIn';
 
 function ViewDepartments() {
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
+  const { isAuthenticated } = useAuth(); // Add this inside the component
 
   useEffect(() => {
     fetchDepartments();
@@ -24,6 +27,8 @@ function ViewDepartments() {
 
   return (
     <div>
+      {isAuthenticated ? (
+        <div>
       <DoctorHeader />
       <h1 id="heading" style={{marginTop:"70px"}}>View Departments</h1>
       <button id="back-button" onClick={() => navigate('/DoctorBody')}>
@@ -43,6 +48,7 @@ function ViewDepartments() {
       </div>
       <div style={{height:"62px"}}></div>
       <HomeFooter />
+    </div>):(<div><SignIn /></div>)}
     </div>
   );
 }

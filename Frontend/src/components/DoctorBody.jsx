@@ -10,6 +10,7 @@ import ViewAppointments from './ViewAppointments'
 import { useAuth } from './AuthContext'
 import SignIn from './SignIn'
 
+
 function DoctorBody() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();

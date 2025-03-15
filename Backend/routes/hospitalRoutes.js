@@ -2,6 +2,7 @@ const express = require("express");
 const Hospital = require("../model/Hospital"); // Import the Hospital model
 const Department=require("../model/Department");
 const router = express.Router();
+const User=require("../model/User");
 // Add a hospital
 //not finalized just for reference
 router.post("/addhospital", async (req, res) => {
@@ -42,7 +43,7 @@ router.post("/addhospital", async (req, res) => {
 
   //add department
 
-  router.post("/adddepartment", async (req, res) => {
+  router.post("/add-department", async (req, res) => {
     try{
       const { hospital, name } = req.body; // hospital = hospital ID, name = department name
       // Check if the hospital exists
@@ -76,5 +77,62 @@ router.post("/addhospital", async (req, res) => {
 
 
   });
+
+  router.post("/register-hospital-admin", async (req, res) => {
+    try {
+      const { email, username, password, hospitalId } = req.body;
+  
+      // Check if the hospital exists
+      const hospitalExists = await Hospital.findById(hospitalId);
+      if (!hospitalExists) {
+        return res.status(400).json({ error: "Hospital not found" });
+      }
+  
+      // Check if the hospital already has an admin
+      if (hospitalExists.admin) {
+        return res.status(400).json({ error: "This hospital already has an admin." });
+      }
+  
+      // Create hospital admin user
+      const newAdmin = new User({
+        email,
+        username,
+        password,
+        role: "hospitalAdmin",
+        hospital: hospitalId
+      });
+  
+      await newAdmin.save();
+  
+      // Assign the admin to the hospital
+      hospitalExists.admin = newAdmin._id;
+      await hospitalExists.save();
+  
+      res.status(201).json(newAdmin);
+    } catch (error) {
+      res.status(500).json({ error: "Error creating hospital admin", details: error.message });
+    }
+  });
+
+  router.get("/departments/:hospitalId", async (req, res) => {
+    try{
+      const { hospitalId } = req.params;
+      // Check if hospital exists
+    const hospitalExists = await Hospital.findById(hospitalId);
+    if (!hospitalExists) {
+      return res.status(404).json({ error: "Hospital not found" });
+    }
+
+    // Fetch departments for the hospital
+    const departments = await Department.find({ hospital: hospitalId });
+
+    res.status(200).json(departments);
+  }catch (error) {
+      res.status(500).json({ error: "Error fetching departments", details: error.message });
+    }
+
+
+  });
+  
   
   module.exports = router;

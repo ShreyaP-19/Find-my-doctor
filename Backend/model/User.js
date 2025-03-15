@@ -10,6 +10,20 @@ const userSchema = new mongoose.Schema({
     enum: ['admin', 'hospitalAdmin', 'doctor', 'patient'],  
     default: 'patient' // Default role
   },
+  hospital: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Hospital",
+    required: function () {
+      return this.role === "hospitalAdmin"; // Required only for hospital admins
+    }
+  },
+  doctor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Doctor",
+    required: function () {
+      return this.role === "doctor"; // Only required for doctors
+    }
+  },
   appointments: [{ type: mongoose.Schema.Types.ObjectId, ref: "AppointmentHistory" }],
 });
 

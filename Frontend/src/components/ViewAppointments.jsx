@@ -4,10 +4,12 @@ import axios from 'axios';
 import DoctorHeader from './DoctorHeader';
 import HomeFooter from './HomeFooter';
 import './viewappointments.css';
-
+import { useAuth } from './AuthContext';
+import SignIn from './SignIn';
 function ViewAppointments() {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
+  const { isAuthenticated } = useAuth(); // Add this inside the component
 
   useEffect(() => {
     fetchAppointments();
@@ -24,6 +26,9 @@ function ViewAppointments() {
 
   return (
     <div>
+      {isAuthenticated ? (
+
+        <div>
       <DoctorHeader />
       <h1 id="heading" style={{marginTop:"70px"}}>View Appointments</h1>
       <button id="back-button" onClick={() => navigate('/DoctorBody')}>
@@ -50,6 +55,7 @@ function ViewAppointments() {
       </div>
       <div style={{height:"62px"}}></div>
       <HomeFooter />
+    </div>):(<div><SignIn /></div>)}
     </div>
   );
 }
