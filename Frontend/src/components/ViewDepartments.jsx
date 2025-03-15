@@ -10,20 +10,25 @@ import SignIn from './SignIn';
 function ViewDepartments() {
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
-  const { isAuthenticated } = useAuth(); // Add this inside the component
+  const { isAuthenticated,userData } = useAuth(); // Add this inside the component
+  const hospitalId = userData?.hospitalId; // Get hospital ID
 
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
+   useEffect(() => {
+      if (hospitalId) {
+        fetchDepartments(hospitalId);
+      }
+    }, [hospitalId]); // Fetch departments when hospitalId is available
 
-  const fetchDepartments = () => {
-    axios
-      .get('http://localhost:5000/hospital/departments')
-      .then((response) => {
-        setDepartments(response.data);
-      })
-      .catch((error) => console.error('Error fetching departments:', error));
-  };
+
+
+  const fetchDepartments = async (id) => {
+     axios
+       .get(`http://localhost:5000/hospital/departments/${id}`)
+       .then((response) => {
+         setDepartments(response.data);
+       })
+       .catch((error) => console.error('Error fetching departments:', error));
+   };
 
   return (
     <div>
