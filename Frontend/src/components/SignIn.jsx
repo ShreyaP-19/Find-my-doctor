@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useAuth } from "./AuthContext";
 import HomeBody from './HomeBody';
 import DoctorBody from './DoctorBody';
+import DrBody from './DrBody';
 
 
 function SignIn(){
@@ -45,7 +46,7 @@ function SignIn(){
             navigate('/HomeBody'); // Navigate to the home page
           }
           else if(response.data.role==='doctor'){
-            navigate('/DoctorBody');
+            navigate('/DrBody');
           }
          
           
@@ -141,6 +142,7 @@ function SignIn(){
         <Route path='/SignUp' element={<SignUp />} />
         <Route path="/HomeBody" element={<HomeBody/>}/>
         <Route path="/DoctorBody" element={<DoctorBody/>}/>
+        <Route path="/DrBody" element={<DrBody/>}/>
       </Routes>
     </>
   )

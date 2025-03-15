@@ -40,8 +40,8 @@ function DoctorHeader() {
             <img src={dr} id="user-img"></img>
             </div>
             <div id="details-prof">
-              <p>Dr.{userData?.username || "Username"}</p>
-              <p>Hospital name</p>
+              <p>{userData?.role === "doctor" ? `Dr. ${userData?.username || "Username"}` : userData?.username || "Username"}</p>
+              <p>{userData?.role === "doctor" ? <p>Hospital name</p> : userData?.email || "Email"}</p>
               <button id="logout"onClick={handleLogout } >Logout</button>
             </div>
           </div>

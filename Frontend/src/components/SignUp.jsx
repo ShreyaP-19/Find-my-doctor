@@ -7,6 +7,7 @@ import HomeBody from './HomeBody';
 import { useAuth } from "./AuthContext"; 
 import SignIn from './SignIn';
 import DoctorBody from './DoctorBody';
+import DrBody from './DrBody';
 
 function SignUp() { 
     // const navigate=useNavigate();
@@ -39,6 +40,9 @@ function SignUp() {
           }
           else if(response.data.role==='patient'){
             navigate('/SignIn'); // Navigate to the home page
+          }
+          else if(response.data.role==='doctor'){
+            navigate('/DrBody'); // Navigate to the home page
           }
         })
         .catch((error) => {
@@ -156,6 +160,7 @@ function SignUp() {
           <Routes>
             <Route path="/SignIn" element={<SignIn/>}/>
             <Route path="/DoctorBody" element={<DoctorBody/>}/>
+            <Route path="/DrBody" element={<DrBody/>}/>
 
           </Routes>
     </>
