@@ -6,18 +6,23 @@ import HomeFooter from './HomeFooter';
 import './viewappointments.css';
 import { useAuth } from './AuthContext';
 import SignIn from './SignIn';
+
+
 function ViewAppointments() {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
-  const { isAuthenticated } = useAuth(); // Add this inside the component
+  const { isAuthenticated,userData } = useAuth(); // Add this inside the component
+  const hospitalId = userData?.hospitalId; // Get hospital ID
 
   useEffect(() => {
-    fetchAppointments();
-  }, []);
+      if (hospitalId) {
+        fetchAppointments(hospitalId);
+      }
+    }, [hospitalId]); // Fetch departments when hospitalId is available
 
-  const fetchAppointments = () => {
+  const fetchAppointments = async(id) => {
     axios
-      .get('http://localhost:5000/hospital/appointments')
+      .get(`http://localhost:5000/hospital/appointment-list/${id}`)
       .then((response) => {
         setAppointments(response.data);
       })
@@ -41,10 +46,12 @@ function ViewAppointments() {
             {appointments.length > 0 ? (
               appointments.map((appointment) => (
                 <li id="appoint-li" key={appointment._id}>
-                  <strong>Patient:</strong> {appointment.patientName} | 
                   <strong> Doctor:</strong> {appointment.doctorName} | 
-                  <strong> Date:</strong> {appointment.date} | 
-                  <strong> Time:</strong> {appointment.time}
+                  <strong> Department:</strong> {appointment.department} |
+                  <strong>Patient:</strong> {appointment.patientName} | 
+                  <strong> Age:</strong> {appointment.age} |
+                  <strong> Date:</strong> {appointment.appointmentDate} | 
+                  <strong> Time:</strong> {appointment.appointmentTime}
                 </li>
               ))
             ) : (

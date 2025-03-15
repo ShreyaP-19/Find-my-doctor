@@ -63,16 +63,27 @@ router.get("/doctors", async (req, res) => {
     if (hospital) filter.hospital = hospital;
     if (experience) filter.year = { $gte: parseInt(experience) }; // Fixed from experience to year
 
-    const doctors = await Doctor.find(filter).populate("hospital", "name location");
+    const doctors = await Doctor.find(filter)
+    .populate({
+      path: "specialization",
+      select: "name", // Fetch only the department name
+      model: "Department",
+      match: specialization ? { name: specialization } : {}, // Filter by department name if provided
+    })
+    .populate("hospital", "name location");
 
-    if (doctors.length === 0) {
+    const filteredDoctors = doctors.filter((doc) => doc.specialization !== null);
+
+    if (filteredDoctors.length === 0) {
       return res.status(404).json({ message: "No doctors found" });
     }
+    console.log(filteredDoctors);
 
-    res.json(doctors);
+    res.json(filteredDoctors);
   } catch (error) {
     res.status(500).json({ error: "Error fetching doctors" });
   }
+  
 });
 
 // Add doctor

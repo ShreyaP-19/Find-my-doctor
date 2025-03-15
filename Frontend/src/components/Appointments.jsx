@@ -15,6 +15,7 @@ function Appointments() {
   const navigate=useNavigate();
   const location = useLocation();
   const doctor = location.state?.doctor;
+  console.log("Doctor details:", doctor);
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -163,6 +164,7 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
  // appointment data to send and store in backend
 
   try {
+    console.log("Booking appointment with data:", requestBody);
     const response = await axios.post("http://localhost:5000/doctor/bookappointment", requestBody, {
       headers: {
         "Content-Type": "application/json",
@@ -172,6 +174,8 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
     console.log("Appointment booked successfully:", response.data);
     // Save appointmentId for confirmation
     const appointmentId = response.data.appointmentId;
+    localStorage.setItem("appointmentId", appointmentId);
+
     
     alert("Slot booked successfully! Proceed to confirmation.");
     // alert("Your appointment has been confirmed!");
@@ -202,7 +206,7 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
         {doctor  && ( //if doc not null/undefined/false
           <div id="doc">
             <h2 style={{marginBottom:"10px"}}>{doctor.name}</h2>
-            <p><strong>Specialty:</strong> {doctor.specialization}</p>
+            <p><strong>Specialty:</strong> {doctor.specialization?.name}</p>
             <p><strong>Qualification:</strong> {doctor.qualification}</p>
             <p><strong>Location:</strong> {doctor.location}</p>
             <p><strong>Hospital:</strong> {doctor.hospital?.name}</p>

@@ -21,40 +21,33 @@ function DoctorList() {
   const { isAuthenticated } = useAuth();
 
   const [doctors, setDoctors] = useState([]);
+  useEffect(() => {
+    fetchDoctors(); // ✅ Fetches doctors when specialization changes
+  }, [selectedSpecialization]); // ✅ Fetch doctors when selectedSpecialization changes
 
-  useEffect(()=>{
-    fetchDoctors();
-  },[]);
-
-  const fetchDoctors=() => {
-    axios
-      .get('http://localhost:5000/doctor/doctors')
-      .then((response) => {
-        console.log('Initial API response:', response.data);
-        setDoctors(response.data);
-      })
-      .catch((error) => console.error('Error fetching doctors:', error));
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent form submission default behavior
-    if (!selectedSpecialization) return; // Prevent unnecessary API calls
+  const fetchDoctors = () => {
     axios
       .get("http://localhost:5000/doctor/doctors", {
-        params: { specialization: selectedSpecialization },
+        params: selectedSpecialization ? { specialization: selectedSpecialization } : {},
       })
-      
       .then((response) => {
         console.log("API response:", response.data);
-        setDoctors(response.data); // Ensure response.data is an array
+        setDoctors(response.data);
       })
       .catch((error) => console.error("Error fetching doctors:", error));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevents page reload
+    console.log("Filtering by specialization:", selectedSpecialization);
+  };
+  
+
   const handleClear = () => {
     setSpecialization("");
-    fetchDoctors(); // Reset state
   };
 
+  
 
   return (
 
@@ -129,11 +122,11 @@ function DoctorList() {
 
         <h2>{doctor.name}</h2>
 
-        <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization}</p>
+        <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization?.name}</p>
 
         <p><strong><i className="fa-solid fa-user-graduate"></i></strong> {doctor.qualification}</p>
 
-        <p><strong><i className="fa-solid fa-location-dot"></i></strong> {doctor.hospital.location}</p>
+        <p><strong><i className="fa-solid fa-location-dot"></i></strong> {doctor.hospital?.location}</p>
 
     </div>
 

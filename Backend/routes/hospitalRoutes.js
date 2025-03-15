@@ -3,6 +3,8 @@ const Hospital = require("../model/Hospital"); // Import the Hospital model
 const Department=require("../model/Department");
 const router = express.Router();
 const User=require("../model/User");
+const Appointment = require("../model/AppointmentHistory"); 
+const moment = require("moment");
 // Add a hospital
 //not finalized just for reference
 router.post("/addhospital", async (req, res) => {
@@ -133,6 +135,108 @@ router.post("/addhospital", async (req, res) => {
 
 
   });
+
+  router.get("/appointment-list/:hospitalId", async (req, res) => {
+
+    try{
+      const { hospitalId } = req.params;
+      // Check if hospital exists
+    const hospitalExists = await Hospital.findById(hospitalId);
+    if (!hospitalExists) {
+      return res.status(404).json({ error: "Hospital not found" });
+    
+    }
+
+    // ✅ Get today's date at 00:00:00
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Remove time part for accurate filtering
+
+
+    // ✅ Fetch appointments for the hospital
+    let appointments = await Appointment.find({ hospital: hospitalId, appointmentDateTime: { $gte: today } })
+    .populate("doctor", "name specialization") // ✅ Corrected syntax
+    .populate({
+      path: "doctor",
+      populate: { path: "specialization", model: "Department", select: "name" } // ✅ Fetch department name
+    }) // ✅ Properly closed `.populate`
+    .populate("patient", "username email") // ✅ Fetch patient details
+    .sort({ appointmentDateTime: 1 }); // ✅ Sort by upcoming appointments
+
+    // Fetch appointments for the hospital
+
+    appointments = appointments.filter(appointment => appointment.doctor && appointment.doctor.name && appointment.name);
+
+    // ✅ Transform data to return only required fields
+    const formattedAppointments = appointments.map(appointment => {
+      const appointmentDate = new Date(appointment.appointmentDateTime);
+      
+      return {
+        patientName: appointment.name || "Unknown",
+        age: appointment.age || "N/A",
+        doctorName: appointment.doctor?.name || "Unknown",
+        department: appointment.doctor?.specialization?.name || "N/A",
+        appointmentDate: appointmentDate.toISOString().split("T")[0], // Extracts YYYY-MM-DD
+        appointmentTime: appointmentDate.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true
+        }) // Extracts HH:MM AM/PM
+      };
+    });
+
+
+    if (formattedAppointments.length === 0) {
+      return res.status(404).json({ message: "No appointments found for this hospital." });
+    }
+
+    res.status(200).json(formattedAppointments);
+
+  }catch (error) {
+      res.status(500).json({ error: "Error fetching appointments", details: error.message });
+    }
+
+  });
+
+  
+
+  router.post("/register-doctor-username", async (req, res) => {
+    try {
+      const { email, username, password, hospitalId,doctorId } = req.body;
+
+      // Check if the hospital exists
+      const hospitalExists = await Hospital.findById(hospitalId);
+      if (!hospitalExists) {
+        return res.status(400).json({ error: "Hospital not found" });
+      }
+
+      const existingUser = await User.findOne({ username });
+      if (existingUser) {
+        return res.status(400).json({ error: "Username already taken. Choose another username." });
+            }
+
+
+      // Create doctor user
+      const newDoctor = new User({
+        username,
+        password,
+        role: "doctor",
+        hospital: hospitalId,
+        doctor:doctorId,
+      });
+
+      await newDoctor.save();
+
+      // Add doctor to the hospital
+      hospitalExists.doctors.push(newDoctor._id);
+      await hospitalExists.save();
+
+      res.status(201).json(newDoctor);
+    } catch (error) {
+      res.status(500).json({ error: "Error creating doctor", details: error.message });
+    }
+  });
+  
+
   
   
   module.exports = router;

@@ -4,8 +4,10 @@ import HomeHeader from './HomeHeader'
 import HomeFooter from './HomeFooter'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-
+import {useAuth} from './AuthContext';
+import SignIn from './SignIn';
 function SymptomList() {
+  const { isAuthenticated} = useAuth();
   const initValues={name:"",age:"",symptom:""}
   const [formErrors, setFormErrors] = useState({});
   const [formValue, setFormValue] = useState(initValues)
@@ -90,6 +92,8 @@ function SymptomList() {
 
   return (
     <div>
+      {isAuthenticated ? (
+        <div>
       <HomeHeader/>
       <h1 id="enter">Enter your details...</h1>
         
@@ -127,6 +131,7 @@ function SymptomList() {
         </form>
         <div style={{height:"50px"}}></div>
       <HomeFooter/>
+    </div>):(<div><SignIn/></div>)}
     </div>
   )
 }
