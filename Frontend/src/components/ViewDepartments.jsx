@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DoctorHeader from './DoctorHeader';
 import HomeFooter from './HomeFooter';
 import './viewdepartment.css';
 import { useAuth } from './AuthContext';
 import SignIn from './SignIn';
+import DoctorBody from './DoctorBody';
+import DeptList from './DeptList';
 
 function ViewDepartments() {
   const navigate = useNavigate();
@@ -35,7 +37,8 @@ function ViewDepartments() {
       {isAuthenticated ? (
         <div>
       <DoctorHeader />
-      <h1 id="heading" style={{marginTop:"70px"}}>View Departments</h1>
+      {/* <h1 id="heading" style={{marginTop:"70px"}}>View Departments</h1> */}
+      <div style={{marginTop:"100px"}}></div>
       <button id="back-button" onClick={() => navigate('/DoctorBody')}>
         <i className="fa-solid fa-circle-left"></i>
       </button>
@@ -44,7 +47,7 @@ function ViewDepartments() {
           <h2>Existing Departments</h2>
           <ul id="ul">
             {departments.length > 0 ? (
-              departments.map((dept) => <li key={dept._id} id="li">{dept.name}</li>)
+              departments.map((dept) => <li key={dept._id} id="li" onClick={()=>navigate('/DeptList', { state: { dept } })}>{dept.name}</li>)
             ) : (
               <p style={{textAlign:"center"}}>No departments available</p>
             )}
@@ -54,6 +57,9 @@ function ViewDepartments() {
       <div style={{height:"62px"}}></div>
       <HomeFooter />
     </div>):(<div><SignIn /></div>)}
+    <Routes>
+      <Route path='/DeptList' element={<DeptList/>}/>
+    </Routes>
     </div>
   );
 }

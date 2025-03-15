@@ -13,7 +13,6 @@ function ViewAppointments() {
   const [appointments, setAppointments] = useState([]);
   const { isAuthenticated,userData } = useAuth(); // Add this inside the component
   const hospitalId = userData?.hospitalId; // Get hospital ID
-
   useEffect(() => {
       if (hospitalId) {
         fetchAppointments(hospitalId);
@@ -35,24 +34,57 @@ function ViewAppointments() {
 
         <div>
       <DoctorHeader />
-      <h1 id="heading" style={{marginTop:"70px"}}>View Appointments</h1>
+      {/* <h1 id="heading" style={{marginTop:"70px"}}>View Appointments</h1> */}
+      <div style={{height:"60px"}}></div>
       <button id="back-button" onClick={() => navigate('/DoctorBody')}>
         <i className="fa-solid fa-circle-left"></i>
       </button>
       <div id="main-container">
-        <div id="existing">
+        <div id="container-existing">
           <h2>Appointments List</h2>
           <ul id="appoint-ul">
+          <div id="another-container" style={{marginBottom:"10px"}}>
+              <div id="column-doc" style={{backgroundColor:"white",}}>
+                <p id="styling-para"><strong>Doctor</strong></p>
+              </div>
+              <div id="column-doc"style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Department</strong></p>
+              </div>
+              <div id="column-doc"style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Patient</strong></p>
+              </div>
+              <div id="column-fees"style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Age</strong></p>
+              </div>
+              <div id="column-date" style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Date</strong></p>
+              </div>
+              <div id="column-slot" style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Slot</strong></p>
+              </div>
+            </div>
             {appointments.length > 0 ? (
               appointments.map((appointment) => (
-                <li id="appoint-li" key={appointment._id}>
-                  <strong> Doctor:</strong> {appointment.doctorName} | 
-                  <strong> Department:</strong> {appointment.department} |
-                  <strong>Patient:</strong> {appointment.patientName} | 
-                  <strong> Age:</strong> {appointment.age} |
-                  <strong> Date:</strong> {appointment.appointmentDate} | 
-                  <strong> Time:</strong> {appointment.appointmentTime}
-                </li>
+                <div id="another-container" style={{marginBottom:"10px"}} key={appointment._id}>
+                  <div id="column-doc" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.doctorName}</p>
+                </div>
+                <div id="column-doc" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.department}</p>
+                </div>
+                <div id="column-doc" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.patientName}</p>
+                </div>
+                <div id="column-fees" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.age}</p>
+                </div>
+                <div id="column-date" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.appointmentDate}</p>
+                </div> 
+                <div id="column-slot" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.appointmentTime}</p>
+                </div> 
+                  </div>
               ))
             ) : (
               <p style={{textAlign:"center"}}>No appointments available</p>
