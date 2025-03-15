@@ -13,9 +13,9 @@ import Appointments from './components/Appointments'
 import AppointmentHistory from './components/AppointmentHistory'
 import SymptomList from './components/SymptomList'
 import DoctorBody from './components/DoctorBody'
-import AddDepartment from './AddDepartment';
-import ViewDepartments from './ViewDepartments';
-import ViewAppointments from './ViewAppointments';
+import AddDepartment from './components/AddDepartment';
+import ViewDepartments from './components/ViewDepartments';
+import ViewAppointments from './components/ViewAppointments';
 
 
 function MainRoute() {

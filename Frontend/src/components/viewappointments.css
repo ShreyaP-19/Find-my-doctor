@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-/* Main container */
+/* Container styling */
 #container {
     display: flex;
     justify-content: center;
@@ -12,7 +12,7 @@
     margin-top: 30px;
 }
 
-/* Page heading */
+/* Heading styles */
 #heading {
     text-align: center;
     margin-top: 20px;
@@ -20,10 +20,10 @@
     color: #165e98;
 }
 
-/* Department list container */
+/* Appointment list container */
 #list-box {
     width: 80%;
-    max-width: 600px;
+    max-width: 800px;
     background-color: rgb(232, 234, 235);
     border-radius: 20px;
     padding: 20px;
@@ -38,23 +38,28 @@
     color: #165e98;
 }
 
-/* Unordered list styles */
+/* Unordered list styling */
 ul {
     list-style-type: none;
     padding: 0;
 }
 
-/* Individual department items */
+/* Individual appointment items */
 li {
     background: white;
-    padding: 12px;
+    padding: 15px;
     margin-bottom: 10px;
     border-radius: 10px;
     box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
-    font-size: 18px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 16px;
+}
+
+/* Highlighted labels inside the list */
+li strong {
     color: #165e98;
-    font-weight: bold;
 }
 
 /* Back button styling */
@@ -75,14 +80,14 @@ li {
     transform: scale(1.27);
 }
 
-/* Responsive design */
+/* Responsive adjustments */
 @media (max-width: 768px) {
     #list-box {
         width: 90%;
     }
 
     li {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     #back-button {
