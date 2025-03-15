@@ -16,6 +16,9 @@ import DoctorBody from './components/DoctorBody'
 import AddDepartment from './components/AddDepartment';
 import ViewDepartments from './components/ViewDepartments';
 import ViewAppointments from './components/ViewAppointments';
+import DrBody from './components/DrBody'
+import EditProfile from './components/EditProfile'
+import ViewDrAppntmnt from './components/ViewDrAppntmnt'
 
 
 function MainRoute() {
@@ -39,7 +42,9 @@ function MainRoute() {
         <Route path="/AddDepartment" element={<AddDepartment />} />
         <Route path="/ViewDepartments" element={<ViewDepartments />} />
         <Route path="/ViewAppointments" element={<ViewAppointments />} />
-
+        <Route path="/DrBody/*" element={<DrBody/>}/>
+        <Route path="/EditProfile/*" element={<EditProfile/>}/>
+        <Route path="/ViewDrAppntmnt/*" element={<ViewDrAppntmnt/>}/>
 
 
       </Routes>
