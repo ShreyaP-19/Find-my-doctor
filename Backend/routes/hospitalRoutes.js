@@ -1,9 +1,10 @@
 const express = require("express");
 const Hospital = require("../model/Hospital"); // Import the Hospital model
+const Department=require("../model/Department");
 const router = express.Router();
 // Add a hospital
 //not finalized just for reference
-router.post("/add", async (req, res) => {
+router.post("/addhospital", async (req, res) => {
     try {
       const { name, location } = req.body;
   
@@ -36,6 +37,44 @@ router.post("/add", async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: "Error fetching hospital" });
     }
+  });
+
+
+  //add department
+
+  router.post("/adddepartment", async (req, res) => {
+    try{
+      const { hospital, name } = req.body; // hospital = hospital ID, name = department name
+      // Check if the hospital exists
+    const hospitalExists = await Hospital.findOne({ _id: hospital }).populate("departments");
+    if (!hospitalExists) {
+      return res.status(400).json({ error: `Hospital not found. Please register the hospital first.` });
+    }
+    // Check if the department already exists in this hospital
+    const departmentExists = hospitalExists.departments.find(dep => dep.name === name);
+    if (departmentExists) {
+      return res.status(400).json({ error: `Department '${name}' already exists in this hospital.` });
+    }
+    // Create the department
+    // Create a new department
+    const newDepartment = new Department({
+      name,
+      hospital: hospitalExists._id
+    });
+
+    await newDepartment.save();
+
+    // Add department reference to hospital
+    hospitalExists.departments.push(newDepartment._id);
+    await hospitalExists.save();
+
+    res.status(201).json(newDepartment);
+
+    }catch(error){
+      res.status(500).json({ error: "Error adding department", details: error.message });
+    }
+
+
   });
   
   module.exports = router;

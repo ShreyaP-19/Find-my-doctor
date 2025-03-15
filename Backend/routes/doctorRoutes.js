@@ -3,6 +3,7 @@ const Hospital = require("../model/Hospital");
 const Doctor = require("../model/Doctor"); 
 const Appointment = require("../model/AppointmentHistory"); 
 const User=require("../model/User");
+const Department=require("../model/Department");
 const router = express.Router();
 
 // Function to split time slots into 30-minute intervals
@@ -81,9 +82,15 @@ router.post("/adddoctor", async (req, res) => {
     const { name, specialization, location, qualification, year,Slots, hospital, fee, availability } = req.body;
 
     // Check if the hospital exists
-    const hospitalExists = await Hospital.findOne({ name: hospital });
+    const hospitalExists = await Hospital.findOne({ _id: hospital }).populate("departments");;
     if (!hospitalExists) {
       return res.status(400).json({ error: `Hospital '${hospital}' not found. Please register the hospital first.` });
+    }
+
+    // Find the department by name (client-side sends department as a name, not ID)
+    const departmentExists = hospitalExists.departments.find(dep => dep.name === specialization);
+    if (!departmentExists) {
+      return res.status(400).json({ error: `Department '${specialization}' not found in this hospital.` });
     }
 
     // Extract 'Slots' from request and split into 30-min intervals
@@ -93,7 +100,7 @@ router.post("/adddoctor", async (req, res) => {
     // Create new doctor
     const newDoctor = new Doctor({
       name,
-      specialization,
+      specialization:departmentExists._id,
       location,
       qualification,
       year,

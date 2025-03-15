@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DoctorHeader from './DoctorHeader';
 import HomeFooter from './HomeFooter';
-import './viewdepartments.css';
+import './viewdepartment.css';
 
 function ViewDepartments() {
   const navigate = useNavigate();
