@@ -39,33 +39,34 @@ function AddDepartment() {
   return (
     <div>
       <DoctorHeader />
-      <h1 id="heading">Manage Departments</h1>
-      <button id="back-button" onClick={() => navigate('/DoctorBody')}>
+      <h1 id="heading" style={{marginTop:"70px"}}>Manage Departments</h1>
+      {/* <button id="back-button" onClick={() => navigate('/DoctorBody')}>
         <i className="fa-solid fa-circle-left"></i>
-      </button>
-      <div id="container">
-        <div id="form-box">
+      </button> */}
+      <div id="main-container">
+        <div id="addDep-box">
           <h2>Add New Department</h2>
           <form onSubmit={handleAddDepartment}>
-            <input
+            <input id="add"
               type="text"
               placeholder="Enter Department Name"
               value={departmentName}
               onChange={(e) => setDepartmentName(e.target.value)}
               required
             />
-            <button type="submit">Add Department</button>
+            <button type="submit" id="add-but">Add Department</button>
           </form>
         </div>
         <div id="list-box">
           <h2>Existing Departments</h2>
-          <ul>
+          <ul id="dep-ul">
             {departments.map((dept) => (
-              <li key={dept._id}>{dept.name}</li>
+              <li id="dep-li" key={dept._id}>{dept.name}</li>
             ))}
           </ul>
         </div>
       </div>
+      <div style={{height:"5px"}}></div>
       <HomeFooter />
     </div>
   );

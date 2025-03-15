@@ -4,24 +4,9 @@
     box-sizing: border-box;
 }
 
-/* Container styling */
-#container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-}
-
-/* Heading styles */
-#heading {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 28px;
-    color: #165e98;
-}
 
 /* Appointment list container */
-#list-box {
+#existing {
     width: 80%;
     max-width: 800px;
     background-color: rgb(232, 234, 235);
@@ -31,7 +16,7 @@
 }
 
 /* Title inside the list box */
-#list-box h2 {
+#existing h2 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
@@ -39,13 +24,13 @@
 }
 
 /* Unordered list styling */
-ul {
+#appoint-ul {
     list-style-type: none;
     padding: 0;
 }
 
 /* Individual appointment items */
-li {
+#appoint-li {
     background: white;
     padding: 15px;
     margin-bottom: 10px;
@@ -58,7 +43,7 @@ li {
 }
 
 /* Highlighted labels inside the list */
-li strong {
+#appoint-li strong {
     color: #165e98;
 }
 
@@ -82,7 +67,7 @@ li strong {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    #list-box {
+    #existing {
         width: 90%;
     }
 
