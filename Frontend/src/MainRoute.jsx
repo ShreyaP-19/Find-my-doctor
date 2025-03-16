@@ -42,7 +42,7 @@ function MainRoute() {
         <Route path='/SymptomList/*' element={<SymptomList/>}/>
         <Route path='/DoctorBody/*' element={<DoctorBody/>}/>
         <Route path="/AddDepartment" element={<AddDepartment />} />
-        <Route path="/ViewDepartments" element={<ViewDepartments />} />
+        <Route path="/ViewDepartments/*" element={<ViewDepartments />} />
         <Route path="/ViewAppointments" element={<ViewAppointments />} />
         <Route path="/DrBody/*" element={<DrBody/>}/>
         <Route path="/EditProfile/*" element={<EditProfile/>}/>

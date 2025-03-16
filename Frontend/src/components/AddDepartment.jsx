@@ -14,6 +14,7 @@ function AddDepartment() {
   const [departmentName, setDepartmentName] = useState('');
   const { isAuthenticated,userData } = useAuth(); // Add this inside the component
   const hospitalId = userData?.hospitalId; // Get hospital ID
+  console.log("user data is",userData);
 
 
   useEffect(() => {

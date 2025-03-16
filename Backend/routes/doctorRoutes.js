@@ -11,7 +11,7 @@ function splitTimeSlots(slots, interval = 30) {
   const allSlots = [];
 
   slots.forEach(slot => {
-      const [startTime, endTime] = slot.split(" - ").map(time => time.trim());
+      const [startTime, endTime] = slot.split(/\s*-\s*/).map(time => time.trim());
       allSlots.push(...generateTimeSlots(startTime, endTime, interval));
   });
 
@@ -91,22 +91,38 @@ router.post("/adddoctor", async (req, res) => {
   try {
     console.log("data is ",req.body);
     const { name, specialization, location, qualification, year,Slots, hospital, fee, availability } = req.body;
+    if (!specialization) {
+      return res.status(400).json({ error: "Specialization is missing in the request." });
+    }
 
     // Check if the hospital exists
     const hospitalExists = await Hospital.findOne({ _id: hospital }).populate("departments");;
     if (!hospitalExists) {
       return res.status(400).json({ error: `Hospital '${hospital}' not found. Please register the hospital first.` });
     }
+    console.log("✅ Hospital found:", hospitalExists.name, "Departments:", hospitalExists.departments);
 
     // Find the department by name (client-side sends department as a name, not ID)
     const departmentExists = hospitalExists.departments.find(dep => dep.name === specialization);
     if (!departmentExists) {
       return res.status(400).json({ error: `Department '${specialization}' not found in this hospital.` });
     }
+    console.log("✅ Department found:", departmentExists.name);
 
     // Extract 'Slots' from request and split into 30-min intervals
+    console.log("🔹 Raw Slots Received:", Slots);
+    if (!Array.isArray(Slots)) {
+      console.error("❌ Error: Slots is not an array!", Slots);
+      return res.status(400).json({ error: "Invalid format for Slots. Expected an array." });
+    }
+    console.log("✅ Slots format is correct.");
     const slots = req.body.Slots && req.body.Slots.length > 0 ? req.body.Slots : [];
+    if(slots){
+      console.log("fine ",slots);
+    }
+    
     const timeSlots = splitTimeSlots(slots);
+    console.log("🔹 Processed Slots Array:", timeSlots);
 
     // Create new doctor
     const newDoctor = new Doctor({
@@ -121,8 +137,10 @@ router.post("/adddoctor", async (req, res) => {
       availability,
       timeSlots
     });
+    console.log("✅ Doctor added:", newDoctor);
 
     await newDoctor.save();
+
 
     res.status(201).json(newDoctor);
   } catch (error) {

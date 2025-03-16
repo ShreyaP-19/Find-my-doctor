@@ -1,15 +1,35 @@
 import React, { useState,useEffect } from 'react'
 import DoctorHeader from './DoctorHeader'
 import HomeFooter from './HomeFooter'
-import { Route, Routes, useLocation,useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation,useNavigate,Navigate } from 'react-router-dom';
 import './deptList.css'
 import AddDr from './AddDr';
+import axios from 'axios';
+import { useAuth } from './AuthContext';
+import SignIn from './SignIn';
 
 function DeptList() {
   const location = useLocation();
   const navigate=useNavigate();
   const dept = location.state?.dept;
+  
   const [doctors,setDoctors]=useState([]);
+  const { isAuthenticated,userData } = useAuth(); // Get user data from context
+  //console.log("user data is",userData);
+  //console.log("department",dept.name);
+
+  useEffect(() => {
+    if (dept && userData?.hospitalId) { 
+      axios
+        .get(`http://localhost:5000/hospital/doctor-hospital-admin/${userData.hospitalId}/${dept.name}`)
+        .then((response) => {
+          console.log(response.data);
+          setDoctors(response.data);
+        })
+        .catch((error) => console.error("Error fetching doctors:", error));
+    }
+  }, [dept, userData?.hospitalId]); // ✅ Runs when dept or hospitalId changes
+  
 
   const handleAddDoctor = () => {
     console.log("Add Doctor clicked");
@@ -24,6 +44,8 @@ function DeptList() {
 
   return (
     <div>
+      {isAuthenticated ? (
+        <div>
       <DoctorHeader/>
       <div id="but-div">
         <button id="buttonStyle" onClick={handleAddDoctor}>Add Doctor</button>
@@ -43,8 +65,11 @@ function DeptList() {
         </div>
         <div style={{height:"15px"}}></div>
         <HomeFooter/>
+        </div>) : (<div><Navigate to="/SignIn" replace /></div>)}
+      
         <Routes>
             <Route path='/AddDr' element={<AddDr/>}/>
+            {/*<Route path='/SignIn' element={<SignIn/>}/>*/}
         </Routes>
     </div>
   )

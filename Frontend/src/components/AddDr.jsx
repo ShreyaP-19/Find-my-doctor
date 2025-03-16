@@ -3,12 +3,15 @@ import DoctorHeader from './DoctorHeader'
 import './addDr.css'
 import { useNavigate,useLocation } from 'react-router-dom'
 import HomeFooter from './HomeFooter';
-
+import { useAuth } from "./AuthContext";
+import SignIn from './SignIn';
+import axios from "axios";
 
 function AddDr() {
+    const { isAuthenticated, userData, } = useAuth();
     const location = useLocation();
     const selectedDept = location.state?.dept?.name || "";
-    const initValues={name:"",dept:selectedDept,loc:"",qualification:"",year:"",slot:"",fee:"",availability:""}
+    const initValues={name:"",specialization:selectedDept,location:"",qualification:"",year:"",Slots:"",fee:"",availability:""}
     const [formErrors, setFormErrors] = useState({});
     const [formValue, setFormValue] = useState(initValues)
     const [isSubmit, setIsSubmit] = useState(false)
@@ -28,8 +31,10 @@ function AddDr() {
 
     const handleChange=(e)=>{
         const { name, value } = e.target;
+        
         setFormValue({ ...formValue, [name]: value });
-    }
+        }
+    
     function  handleSubmit(e) {
         e.preventDefault();
         const errors=Validate(formValue);
@@ -37,9 +42,31 @@ function AddDr() {
         if (Object.keys(errors).length !== 0) {
           return; // Stop submission if there are validation errors
         }
-        setIsSubmit(true);
-        alert("Successfully added a doctor");
-        console.log("confirmed");
+
+        const formattedSlots = Array.isArray(formValue.Slots) 
+        ? formValue.Slots 
+        : formValue.Slots.split(",").map(slot => slot.trim());
+
+        const doctorData = {
+            ...formValue,
+            availability: selectedDays,  // ✅ Send selected days as an array
+            Slots: formattedSlots,        // ✅ Already an array
+            hospital: userData?.hospitalId,
+        };
+        console.log(doctorData);
+
+        const sendDoctorData = async () => {
+            try {
+                const response = await axios.post("http://localhost:5000/doctor/adddoctor", doctorData);
+                alert("Successfully added a doctor!");
+                console.log("Server Response:", response.data);
+                setIsSubmit(true);
+            } catch (error) {
+                console.error("Error adding doctor:", error.response?.data || error.message);
+                alert("Failed to add doctor. Please try again.");
+            }
+        };
+        sendDoctorData(); // ✅ Call the async function
     }
 
     function Validate(values){ //mainly to check if there is any error or to find if any empty fields
@@ -57,18 +84,19 @@ function AddDr() {
         }
         else if (!/^\d+$/.test(values.year)) 
                   errors.year = "year must be a number.";
-        if (!values.dept) {
+        if (!values.specialization) {
           errors.dept = "Department is required";
         }
-        if (!values.loc) {
-            errors.loc = "Location is required";
+        if (!values.location) {
+            errors.location = "Location is required";
         }
         if (!values.qualification) {
             errors.qualification = "Qualification is required";
         }
-        if (!values.slot) {
-            errors.slot = "Slot is required";
+        if (!values.Slots || values.Slots.length === 0) {
+            errors.Slots = "At least one slot is required";
         }
+        
           if (selectedDays.length===0) {
             errors.availability = "Atleast one day must be selected";
           }
@@ -82,6 +110,8 @@ function AddDr() {
 
   return (
     <div>
+        {isAuthenticated ? (
+            <div>
       <DoctorHeader/>
       <h1 id="edit-head">Add a doctor</h1>
       <form id="form" onSubmit={handleSubmit}>
@@ -96,14 +126,14 @@ function AddDr() {
             </div>
             <br></br>
             <div className="name">
-                <input type="text" name="dept" value={formValue.dept} readOnly /> 
+                <input type="text" name="specialization" value={formValue.specialization} readOnly /> 
             </div>
             <br></br>
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
-                name="loc" placeholder="Location" 
-                value={formValue.loc} style={{ borderColor: formErrors.loc ? "red" : "" }}
+                name="location" placeholder="Location" 
+                value={formValue.location} style={{ borderColor: formErrors.location ? "red" : "" }}
                 ></input>
                 <br></br><br></br>
             </div>
@@ -138,8 +168,10 @@ function AddDr() {
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
-                name="slot" placeholder="Slot" 
-                value={formValue.slot} style={{ borderColor: formErrors.slot ? "red" : "" }}
+                name="Slots" placeholder="Slot" 
+                value={formValue.Slots}
+ 
+                style={{ borderColor: formErrors.Slots ? "red" : "" }}
                 ></input>
                 <br></br><br></br>
             </div>
@@ -162,6 +194,7 @@ function AddDr() {
             </div>
         </form>
         <HomeFooter/>
+    </div>):(<div>{navigate('/SignIn')}</div>)}
     </div>
   )
 }

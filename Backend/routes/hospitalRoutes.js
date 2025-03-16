@@ -4,6 +4,7 @@ const Department=require("../model/Department");
 const router = express.Router();
 const User=require("../model/User");
 const Appointment = require("../model/AppointmentHistory"); 
+const Doctor = require("../model/Doctor");
 const moment = require("moment");
 // Add a hospital
 //not finalized just for reference
@@ -234,6 +235,61 @@ router.post("/addhospital", async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: "Error creating doctor", details: error.message });
     }
+  });
+
+  router.get("/doctor-hospital-admin/:hospital/:specialization",async (req,res) =>{
+    try{
+    const { specialization, hospital } = req.params;
+     // Ensure specialization is provided
+     if (!specialization) {
+      return res.status(400).json({ error: "Specialization is required." });
+    }
+
+    // ✅ Check if the hospital exists
+    const hospitalExists = await Hospital.findById(hospital).populate("departments");
+    if (!hospitalExists) {
+      return res.status(404).json({ message: "Hospital not found" });
+    }
+
+    const departmentExists = hospitalExists.departments.find(dep => dep.name === specialization);
+    if (!departmentExists) {
+      return res.status(404).json({ message: `Department '${specialization}' not found in this hospital.` });
+    }
+    
+    const filter = {
+      specialization: departmentExists._id,
+      hospital: hospital
+    };
+
+    // ✅ Find doctors only in the given department and hospital
+    const doctors = await Doctor.find(filter)
+      .populate("specialization", "name") // Fetch department name
+      .populate("hospital", "name location"); // Fetch hospital details
+
+    if (doctors.length === 0) {
+      return res.status(404).json({ message: "No doctors found for this department in this hospital." });
+    }
+
+    const filteredDoctors = doctors.map(doctor => {
+      return {
+        id:doctor._id,
+        name: doctor.name,
+        qualification:doctor.qualification,
+        specialization: doctor.specialization.name,
+        location: doctor.location,
+        Slots: doctor.Slots,
+        availability: doctor.availability
+      };
+    });
+
+    res.json(filteredDoctors);
+
+    }catch(error){
+      res.status(500).json({ error: "Error fetching doctors", details: error.message });
+    }
+
+
+
   });
   
 
