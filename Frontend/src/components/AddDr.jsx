@@ -176,6 +176,7 @@ function AddDr() {
                 <br></br><br></br>
             </div>
             <br></br>
+            <div id="avail-box">
             <div className="name" id="checkdiv">
                 <p style={{fontSize:"larger",color:"#165e98"}}>Availability:</p>
                 {days.map((day) => (
@@ -187,6 +188,7 @@ function AddDr() {
                     </label>
                 ))}
                 {formErrors.availability && <p style={{ color: "red" }}>{formErrors.availability}</p>}
+            </div>
             </div>
 
             <br></br>

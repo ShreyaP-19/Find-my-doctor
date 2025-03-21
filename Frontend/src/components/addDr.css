@@ -5,10 +5,17 @@
 #checkdiv{
     display: flex;
     flex-direction: column; /* Stacks checkboxes vertically */
+    align-items: flex-start;
     gap: 10px; 
 }
 #checkbox-label {
     display: flex;
     align-items: center;
     gap: 20px; /* Small gap between checkbox and text */
+}
+#avail-box{
+    border:1px solid gray;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
 }

@@ -62,7 +62,7 @@ function DoctorList() {
 
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
 
-      <h1 id="heading">DOCTORS</h1>
+      <h1 id="heading" style={{marginTop:"80px",marginBottom:"30px"}}>DOCTORS</h1>
       <button id="back-button"><i className="fa-solid fa-circle-left" onClick={()=>navigate('/HomeBody')}></i></button>
 
       <div id="container1">
