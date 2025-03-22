@@ -13,7 +13,7 @@ function EditProfile() {
   const [isEditing, setIsEditing] = useState(false); // Track edit mode
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+  const navigate=useNavigate()
   // Form State Variables
   const [location, setLocation] = useState("");
   const [availableDays, setAvailableDays] = useState([]);
@@ -95,6 +95,9 @@ function EditProfile() {
   return (
     <div>
       <DoctorHeader />
+      <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DrBody')}>
+        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
+      </div>
       <div className="edit-profile-container">
         <h1 id="edit-head">Doctor Profile</h1>
 
