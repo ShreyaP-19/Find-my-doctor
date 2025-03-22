@@ -108,7 +108,7 @@ function EditProfile() {
             )}
 
             {/* Display Doctor Details */}
-            <div className="doctor-details">
+            <div className="doctor-information">
               <h2>Current Profile Information</h2>
               <p><strong>Name:</strong> {doctor.name}</p>
               <p><strong>Specialization:</strong> {doctor.specialization}</p>
@@ -130,21 +130,22 @@ function EditProfile() {
             {/* Editable Form */}
             {isEditing && (
               <form onSubmit={handleSubmit} className="edit-form">
-                <label>Location:</label>
+                <label id="edit-label">Location:</label>
                 <input
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="Enter your clinic/hospital location"
                   required
-                  disabled={!isEditing}
+                  disabled={!isEditing} id="text-input"
                 />
 
-                <label>Available Days:</label>
-                <div className="days-container">
+                <label id="edit-label">Available Days:</label>
+                <div className="availdays-container">
                   {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
-                    <label key={day}>
+                    <label id="edit-label-check" key={day}>
                       <input
+                        id="check-input"
                         type="checkbox"
                         value={day}
                         checked={availableDays.includes(day)}
@@ -156,8 +157,9 @@ function EditProfile() {
                   ))}
                 </div>
 
-                <label>Available Slots:</label>
+                <label id="edit-label">Available Slots:</label>
                 <input
+                  id="text-input"
                   type="text"
                   value={availableSlots}
                   onChange={(e) => setAvailableSlots(e.target.value)}
@@ -166,8 +168,9 @@ function EditProfile() {
                   disabled={!isEditing}
                 />
 
-                <label>Change Password:</label>
+                <label id="edit-label">Change Password:</label>
                 <input
+                  id="password-input"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

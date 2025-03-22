@@ -13,14 +13,14 @@
   margin-bottom: 20px;
 }
 
-.doctor-details {
+.doctor-information {
   background: #f9f9f9;
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 20px;
 }
 
-.doctor-details p {
+.doctor-information p {
   font-size: 16px;
   margin: 5px 0;
   color: #555;
@@ -50,14 +50,13 @@
   gap: 15px;
 }
 
-label {
+#edit-label {
   font-size: 16px;
   font-weight: bold;
   color: #444;
 }
 
-input[type="text"],
-input[type="password"] {
+#text-input,#password-input {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -65,19 +64,19 @@ input[type="password"] {
   font-size: 14px;
 }
 
-.days-container {
+.availdays-container {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.days-container label {
+#edit-label-check {
   font-weight: normal;
   display: flex;
   align-items: center;
 }
 
-.days-container input {
+#check-input{
   margin-right: 5px;
 }
 

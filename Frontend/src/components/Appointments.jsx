@@ -15,7 +15,7 @@ function Appointments() {
   const navigate=useNavigate();
   const location = useLocation();
   const doctor = location.state?.doctor;
-  console.log("Doctor details:", doctor);
+  console.log("Doctor details:", doctor,"UserData:",userData);
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -63,7 +63,7 @@ function Appointments() {
       const response = await axios.get("http://localhost:5000/doctor/checkslots", {
         params: {
           appointmentDateTime: utcTime.toISOString(),
-          doctorId: doctor._id,
+          doctorId: doctor.id,
         },
       });
       console.log("Selected DateTime:", utcTime.toISOString());
@@ -151,14 +151,14 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
   console.log(selectedDateTime instanceof Date);  // Output: true
   
   console.log(typeof(selectedDateTime));
-  console.log("Doctor:", doctor.name ,"doctor id is ", doctor._id) ;
+  console.log("Doctor:", doctor.name ,"doctor id is ", doctor.id) ;
   console.log("user details :",userData);
 
 
   const requestBody = {
     patientId: userData?._id, // Ensure userData contains patient ID
-    doctor: doctor?._id, // Ensure doctor ID exists
-    hospital: doctor?.hospital?._id, // Ensure hospital ID exists
+    doctor: doctor?.id, // Ensure doctor ID exists
+    hospital: doctor?.hospital, // Ensure hospital ID exists
     appointmentDateTime: selectedDateTime.toISOString(), // Send in ISO format
   };
  // appointment data to send and store in backend
@@ -206,10 +206,10 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
         {doctor  && ( //if doc not null/undefined/false
           <div id="doc">
             <h2 style={{marginBottom:"10px"}}>{doctor.name}</h2>
-            <p><strong>Specialty:</strong> {doctor.specialization?.name}</p>
+            <p><strong>Specialty:</strong> {doctor.specialization}</p>
             <p><strong>Qualification:</strong> {doctor.qualification}</p>
             <p><strong>Location:</strong> {doctor.location}</p>
-            <p><strong>Hospital:</strong> {doctor.hospital?.name}</p>
+            <p><strong>Hospital:</strong> {doctor.hospital}</p>
             <p><strong>Fee:</strong> {doctor.fee}</p>
             <p><strong>Available Days:</strong> {doctor.availability.join(", ")}</p>
            {/* <p><strong>Available :</strong>{doctor.Slots.join(", ")}</p>*/}
@@ -251,7 +251,7 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
                 disabled={!slotAvailability[slot._id]} // Disable button if slot is unavailable
                   style={{padding: "10px 15px",
                   border: "1px solid #165e98",
-                  backgroundColor: !slotAvailability[slot._id] ? "#D6D6D6" : (selectedTime?._id === slot._id ? "#165e98" : "white"), // Gray when disabled
+                  backgroundColor: slotAvailability[slot._id]===false? "#D6D6D6" : (selectedTime?._id === slot._id ? "#165e98" : "white"), // Gray when disabled
       color: !slotAvailability[slot._id] ? "#A0A0A0" : (selectedTime?._id === slot._id ? "white" : "#165e98"), // Muted text when disabled
                   borderRadius: "5px",
                   cursor: "pointer",
