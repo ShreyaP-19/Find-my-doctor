@@ -136,7 +136,7 @@ const handleSubmit = (e) => {
     <div key={doctor._id} id="list1">
        <div id="doctor1"></div>
 
-     <div className="doctor-info" style={{ marginRight: "30px" }}>
+     <div className="doctor-info" style={{ marginRight: "30px",marginLeft:'20px' }}>
         <h2>{doctor.name}</h2>
          <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization}</p>
          <p><strong><i className="fa-solid fa-user-graduate"></i></strong> {doctor.qualification}</p>
