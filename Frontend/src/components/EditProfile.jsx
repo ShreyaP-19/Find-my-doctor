@@ -186,9 +186,10 @@ function EditProfile() {
             )}
           </div>
         ) : (
-          <p>No doctor details found.</p>
+          <p style={{textAlign:"center",color:"red"}}>No doctor details found.</p>
         )}
       </div>
+      <div style={{height:"56px"}}></div>
       <HomeFooter />
     </div>
   );

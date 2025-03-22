@@ -1,12 +1,86 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import DoctorHeader from './DoctorHeader'
 import HomeFooter from './HomeFooter'
+import './viewDrAppntmnt.css'
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 function ViewDrAppntmnt() {
+  const navigate = useNavigate();
+  const [appointments, setAppointments] = useState([]);
+  const { isAuthenticated,userData } = useAuth(); // Add this inside the component
+  const docId = userData?._Id; // Get doctor ID
+  console.log(userData);
+  useEffect(() => {
+    if (docId) {
+      fetchAppointments(docId);
+    }
+  }, [docId]); // Fetch departments when hospitalId is available
+
+const fetchAppointments = async(id) => {
+  // axios
+  //   .get(`http://localhost:5000/hospital/appointment-list/${id}`)
+  //   .then((response) => {
+  //     setAppointments(response.data);
+  //   })
+  //   .catch((error) => console.error('Error fetching appointments:', error));
+};
   return (
     <div>
         <DoctorHeader/>
-        <h1>View</h1>
+        {/* <h1>View</h1> */}
+        <div style={{height:"62px"}}></div>
+      {/* <button id="back-button" onClick={() => navigate('/DoctorBody')}>
+        <i className="fa-solid fa-circle-left"></i>
+      </button> */}
+      <div id="main-container">
+        <div id="container-existing">
+          <h2>Appointments List</h2>
+          <ul id="appoint-ul">
+          <div id="another-container" style={{marginBottom:"20px"}}>
+              <div id="column-doc"style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Patient</strong></p>
+              </div>
+              <div id="column-fees"style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Age</strong></p>
+              </div>
+              <div id="column-date" style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Date</strong></p>
+              </div>
+              <div id="column-slot" style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Slot</strong></p>
+              </div>
+              <div id="column-sym"style={{backgroundColor:"white"}}>
+                <p id="styling-para"><strong>Symptoms</strong></p>
+              </div>
+            </div>
+            {appointments.length > 0 ? (
+              appointments.map((appointment) => (
+                <div id="another-container" style={{marginBottom:"10px"}} key={appointment._id}>
+                <div id="column-doc" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.patientName}</p>
+                </div>
+                <div id="column-fees" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.age}</p>
+                </div>
+                <div id="column-date" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.appointmentDate}</p>
+                </div> 
+                <div id="column-slot" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.appointmentTime}</p>
+                </div> 
+                <div id="column-doc" style={{backgroundColor:"white"}}>
+                  <p id="styling-para"> {appointment.symptom}</p>
+                </div>
+                  </div>
+              ))
+            ) : (
+              <p style={{textAlign:"center"}}>No appointments available</p>
+            )}
+          </ul>
+        </div>
+      </div>
+      <div style={{height:"62px"}}></div>
         <HomeFooter/>
     </div>
   )

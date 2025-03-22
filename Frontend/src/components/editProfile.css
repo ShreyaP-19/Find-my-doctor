@@ -1,7 +1,7 @@
 .edit-profile-container {
   max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
+  margin: 70px auto;
+  padding: 25px;
   background: #fff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -9,7 +9,7 @@
 
 #edit-head {
   text-align: center;
-  color: #333;
+  color: #165e98;
   margin-bottom: 20px;
 }
 
