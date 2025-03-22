@@ -74,12 +74,12 @@ function DeptList() {
                   <div id="doc-style">
                     <p><strong>Name :</strong> {doctor.name}</p>
                     {doctor.user && (
-      <>
-        <p><strong>Username :</strong> {doctor.user.username}</p>
-        <p><strong>Email :</strong> {doctor.user.email}</p>
-        <p><strong>Password :</strong> {doctor.user.password}</p>
-      </>
-    )}  
+                      <>
+                        <p><strong>Username :</strong> {doctor.user.username}</p>
+                        <p><strong>Email :</strong> {doctor.user.email}</p>
+                        <p><strong>Password :</strong> {doctor.user.password}</p>
+                      </>
+                    )}  
                     <p><strong>Qualification :</strong> {doctor.qualification}</p>
                     <p><strong>Location : </strong>{doctor.location}</p>
                     <p><strong>Available days : </strong>{doctor.availability.join(", ")}</p>
