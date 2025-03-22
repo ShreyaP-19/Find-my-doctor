@@ -17,6 +17,7 @@ function DoctorList() {
 
   const navigate=useNavigate();
   const [selectedSpecialization,setSpecialization]=useState("");
+  const [error, setError] = useState(null);
 
   const { isAuthenticated } = useAuth();
 
@@ -26,20 +27,35 @@ function DoctorList() {
   }, [selectedSpecialization]); // ✅ Fetch doctors when selectedSpecialization changes
 
   const fetchDoctors = () => {
+    const url = selectedSpecialization 
+      ? `http://localhost:5000/doctor/doctors/${selectedSpecialization}` 
+      : "http://localhost:5000/doctor/doctors";
+
     axios
-      .get("http://localhost:5000/doctor/doctors", {
-        params: selectedSpecialization ? { specialization: selectedSpecialization } : {},
-      })
+      .get(url)
       .then((response) => {
         console.log("API response:", response.data);
-        setDoctors(response.data);
-      })
-      .catch((error) => console.error("Error fetching doctors:", error));
-  };
+        if (Array.isArray(response.data) && response.data.length === 0) {
+          setDoctors([]);
+          setError("No doctors found.");  // ✅ Set error state when no doctors exist
+        } else {
+          setDoctors(response.data);
+          setError(null);  // ✅ Clear error if doctors are found
+      }
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevents page reload
-    console.log("Filtering by specialization:", selectedSpecialization);
+      })
+      .catch((error) =>{
+        console.error("Error fetching doctors:", error);
+        setDoctors([]);  // ✅ Ensure doctors list is cleared on error
+        setError("Failed to fetch doctors. Please try again."); 
+     });
+
+
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault(); // Prevents page reload
+  console.log("Filtering by specialization:", selectedSpecialization);
   };
   
 
@@ -104,50 +120,44 @@ function DoctorList() {
 
             <div id="done-clr">
                 <button id="clr"  onClick={()=>handleClear()} >Clear</button>
-                <button id="done" type="submit" >Done</button>
             </div>
             </form>
 
 </div>
 
 <div id="list">
+{/* ✅ Handle No Doctors Found */}
+  {error ? (
+      <p style={{ color: "red", fontSize: "28px", textAlign: "center" ,marginLeft:"170px"}}>No doctors found...</p>
+    ) : doctors.length === 0 ? (
+    <p style={{ color: "red", fontSize: "28px", textAlign: "center" ,marginLeft:"170px"}}>No doctors found...</p>
+    ) : (
+    doctors.map((doctor) => (
+    <div key={doctor._id} id="list1">
+       <div id="doctor1"></div>
 
-{doctors.map((doctor)=>(
-
-<div key={doctor._id} id="list1">
-
-    <div id="doctor1"></div>
-
-    <div className="doctor-info" style={{marginRight:"30px",marginLeft:"20px"}}>
-
+     <div className="doctor-info" style={{ marginRight: "30px" }}>
         <h2>{doctor.name}</h2>
+         <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization}</p>
+         <p><strong><i className="fa-solid fa-user-graduate"></i></strong> {doctor.qualification}</p>
+         <p><strong><i className="fa-solid fa-location-dot"></i></strong> {doctor.location}</p>
+     </div>
 
-        <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization?.name}</p>
+     <div className="doctor-info">
+       <p style={{ marginTop: "53px" }}>
+         <strong><i className="fa-solid fa-hospital"></i></strong> {doctor.hospital}
+       </p>
+       <p style={{ marginLeft: "12px" }}>
+         <strong><i className="fa-solid fa-dollar-sign"></i></strong> {doctor.fee}
+       </p>
 
-        <p><strong><i className="fa-solid fa-user-graduate"></i></strong> {doctor.qualification}</p>
-
-        <p><strong><i className="fa-solid fa-location-dot"></i></strong> {doctor.hospital?.location}</p>
-
-    </div>
-
-    <div className="doctor-info">
-
-    <p style={{marginTop:"53px"}}><strong><i className="fa-solid fa-hospital"></i></strong> {doctor.hospital.name}</p>
-
-        {/* <p><strong>Year of Experience:</strong> {doctor.year}</p> */}
-
-        <p style={{marginLeft:"12px"}}><strong><i className="fa-solid fa-dollar-sign"></i></strong> {doctor.fee}</p>
-
-        <button id="userbut" onClick={()=>navigate('/Appointments',{state:{doctor}})}> Book Appointment</button>
-
-    </div>
-
-</div>
-
-))}
-
-
-
+       <button id="userbut" onClick={() => navigate("/Appointments", { state: { doctor } })}>
+         Book Appointment
+       </button>
+     </div>
+   </div>
+ ))
+)}
 </div>
 
 </div>
