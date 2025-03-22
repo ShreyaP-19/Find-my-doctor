@@ -37,6 +37,17 @@ function DeptList() {
     const confirmDelete = window.confirm(`Are you sure you want to delete ${doctor.name}?`);
     if (confirmDelete) {
       console.log(`Deleting Dr. ${doctor.name}`);
+      axios
+      .delete(`http://localhost:5000/doctor/delete-doctor/${doctor.id}`)
+      .then((response) => {
+        console.log(`Doctor ${doctor.name} deleted successfully!`, response.data);
+        // Remove the deleted doctor from the state
+        setDoctors((prevDoctors) => prevDoctors.filter((d) => d.id !== doctor.id));
+      })
+      .catch((error) => {
+        console.error("Error deleting doctor:", error);
+        alert("Failed to delete doctor. Please try again.");
+      });
       // Add delete logic here
     } else {
       console.log("Deletion canceled");

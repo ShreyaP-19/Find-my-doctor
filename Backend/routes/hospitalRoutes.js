@@ -297,6 +297,58 @@ router.post("/addhospital", async (req, res) => {
 
 
   });
+
+  router.get("/doctor-appointment-history/:doctorId", async (req, res) => {
+
+    try{
+      const { doctorId } = req.params;
+      // Check if doctor exists
+    const doctorExists = await Doctor.findById(doctorId);
+    if (!doctorExists) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // ✅ Get today's date at 00:00:00
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Remove time part for accurate filtering
+
+
+    // ✅ Fetch appointments for the hospital
+    let appointments = await Appointment.find({
+      doctor: doctorId,
+      appointmentDateTime: { $gte: today }, // ✅ Fetch upcoming appointments
+    })
+      .populate("doctor", "name") // ✅ Fetch doctor name
+      .sort({ appointmentDateTime: 1 }); // ✅ Sort by upcoming appointments
+
+    // ✅ Handle case where no appointments are found
+    if (appointments.length === 0) {
+      return res.status(404).json({ message: "No appointments found for this doctor." });
+    }
+    const formattedAppointments = appointments.map((appointment) => {
+      const appointmentDate = new Date(appointment.appointmentDateTime);
+
+      return {
+        _id: appointment._id,
+        patientName: appointment.name || "Unknown", // ✅ Uses name from Appointment model
+        age: appointment.age || "N/A", // ✅ Uses age from Appointment model
+        doctorName: appointment.doctor?.name || "Unknown",
+        appointmentDate: appointmentDate.toISOString().split("T")[0],
+        symptom: appointment.symptoms, // ✅ Extracts YYYY-MM-DD
+        appointmentTime: appointmentDate.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        }), // ✅ Extracts HH:MM AM/PM
+      };
+    });
+
+    res.status(200).json(formattedAppointments);
+  } catch (error) {
+    console.error("Error fetching doctor appointments:", error);
+    res.status(500).json({ error: "Error fetching appointments", details: error.message });
+  }
+  });
   
 
   

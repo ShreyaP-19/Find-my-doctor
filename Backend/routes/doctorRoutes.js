@@ -270,12 +270,23 @@ router.post("/bookappointment", async (req, res) => {
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
+    const hospitalData = await Hospital.findOne({ name: hospital });
+    if (!hospitalData) {
+      return res.status(404).json({ message: "Hospital not found" });
+    }
+    const hospitalId = hospitalData._id; // ✅ Get hospital ID
+
+    // ✅ Find the doctor by ID
+    const doctorData = await Doctor.findById(doctor);
+    if (!doctorData) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
 
     // Create a new appointment
     const newAppointment = new Appointment({
       patient: patientId, // Correct field name
       doctor, // Ensure doctor ID is passed correctly
-      hospital, // Ensure hospital ID is passed correctly
+      hospital:hospitalId, // Ensure hospital ID is passed correctly
       appointmentDateTime, // Combined Date & Time
     });
     
@@ -286,6 +297,12 @@ router.post("/bookappointment", async (req, res) => {
     // Add the appointment ID to the user's (patient's) appointments array
     patient.appointments.push(newAppointment._id);
     await patient.save(); // Save the updated user document
+
+    hospitalData.appointments.push(newAppointment._id);
+    await hospitalData.save(); // ✅ Save the updated hospital document
+
+    doctorData.appointmentHistory.push(newAppointment._id);
+    await doctorData.save(); // ✅ Save the updated doctor document
 
     // Return a success response with the new appointment details
     res.status(201).json({
@@ -433,6 +450,50 @@ router.post("/submit", async (req, res) => {
   }catch(error){
     res.status(500).json({ error: "Error fetching appointments", error: error.message });
   }
+
+});
+
+router.get("/doctor-details/:doctorId", async (req, res) => {
+  try{
+    const { doctorId } = req.params;
+   // Find the doctor
+   const doctor = await Doctor.findById(doctorId)
+                  .populate("user", "username email")
+                  .populate("specialization", "name")
+                  .populate("hospital", "name");
+   
+   if (!doctor) {
+     return res.status(404).json({ message: "Doctor not found" });
+   }
+
+   const responseData = {
+    _id: doctor._id,
+    name: doctor.name,
+    specialization: doctor.specialization.name,
+    qualification: doctor.qualification,
+    experience: doctor.experience,
+    fee: doctor.fee,
+    availability: doctor.availability,
+    Slots: doctor.Slots,
+    location: doctor.location,
+    hospital:doctor.hospital.name,
+    user: doctor.user
+      ? {
+          username: doctor.user.username,
+          email: doctor.user.email,
+        }
+      : null, // ✅ If user is missing, return `null`
+  };
+
+  res.status(200).json(responseData);
+
+   
+  
+  }catch(error){
+    console.error("Error fetching doctor details:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+
 
 });
 

@@ -4,9 +4,10 @@ import HomeFooter from "./HomeFooter";
 import "./editProfile.css";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
+import { Navigate,useNavigate,Route, Routes } from 'react-router-dom'
 
 function EditProfile() {
-  const { userData } = useAuth();
+  const { userData,isAuthenticated } = useAuth();
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false); // Track edit mode
@@ -18,13 +19,16 @@ function EditProfile() {
   const [availableDays, setAvailableDays] = useState([]);
   const [availableSlots, setAvailableSlots] = useState("");
   const [password, setPassword] = useState("");
+  if (!isAuthenticated) {
+    return <Navigate to="/SignIn" replace />; // ✅ Redirects unauthenticated users
+  }
 
   // Fetch doctor details
   useEffect(() => {
     const fetchDoctorDetails = async () => {
       try {
         if (userData?.doctorId) {
-          const response = await axios.get(`http://localhost:5000/doctor/${userData.doctorId}`);
+          const response = await axios.get(`http://localhost:5000/doctor/doctor-details/${userData.doctorId}`);
           const data = response.data;
 
           setDoctor(data);
@@ -34,7 +38,7 @@ function EditProfile() {
         }
       } catch (error) {
         console.error("Error fetching doctor details:", error);
-        setErrorMessage("Failed to load profile data.");
+        //setErrorMessage("Failed to load profile data.");
       } finally {
         setLoading(false);
       }
@@ -122,7 +126,7 @@ function EditProfile() {
                 <>
                   <p><strong>Username:</strong> {doctor.user.username}</p>
                   <p><strong>Email:</strong> {doctor.user.email}</p>
-                  <p><strong>Password:</strong> {doctor.user.password}</p>
+                  {/*<p><strong>Password:</strong> {doctor.user.password}</p>*/}
                 </>
               )}
             </div>

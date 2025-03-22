@@ -4,29 +4,36 @@ import HomeFooter from './HomeFooter'
 import './viewDrAppntmnt.css'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import axios from 'axios';
+import SignIn from './SignIn';
 
 function ViewDrAppntmnt() {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const { isAuthenticated,userData } = useAuth(); // Add this inside the component
-  const docId = userData?._Id; // Get doctor ID
+  const docId = userData?.doctorId; // Get doctor ID
   console.log(userData);
   useEffect(() => {
     if (docId) {
       fetchAppointments(docId);
     }
-  }, [docId]); // Fetch departments when hospitalId is available
+  }, [docId]); // Fetch departments when doctorId is available
 
 const fetchAppointments = async(id) => {
-  // axios
-  //   .get(`http://localhost:5000/hospital/appointment-list/${id}`)
-  //   .then((response) => {
-  //     setAppointments(response.data);
-  //   })
-  //   .catch((error) => console.error('Error fetching appointments:', error));
+  console.log("id is ",id);
+  axios
+    .get(`http://localhost:5000/hospital/doctor-appointment-history/${id}`)
+    .then((response) => {
+      console.log("response is ",response.data);
+      setAppointments(response.data);
+    })
+    .catch((error) => console.error('Error fetching appointments:', error));
 };
+  
   return (
     <div>
+      {isAuthenticated ? (
+        <div>
         <DoctorHeader/>
         {/* <h1>View</h1> */}
         <div style={{height:"62px"}}></div>
@@ -69,7 +76,7 @@ const fetchAppointments = async(id) => {
                 <div id="column-slot" style={{backgroundColor:"white"}}>
                   <p id="styling-para"> {appointment.appointmentTime}</p>
                 </div> 
-                <div id="column-doc" style={{backgroundColor:"white"}}>
+                <div id="column-sym" style={{backgroundColor:"white"}}>
                   <p id="styling-para"> {appointment.symptom}</p>
                 </div>
                   </div>
@@ -82,6 +89,8 @@ const fetchAppointments = async(id) => {
       </div>
       <div style={{height:"62px"}}></div>
         <HomeFooter/>
+    </div>):(<div><SignIn /></div> )
+}
     </div>
   )
 }
