@@ -17,6 +17,7 @@ function DeptList() {
   const { isAuthenticated,userData } = useAuth(); // Get user data from context
   //console.log("user data is",userData);
   //console.log("department",dept.name);
+  const [hoveredDoctor, setHoveredDoctor] = useState(null); // Track which doctor is hovered
 
   useEffect(() => {
     if (dept && userData?.hospitalId) { 
@@ -44,6 +45,13 @@ function DeptList() {
 
   return (
     <div>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossOrigin="anonymous"
+        referrerPolicy="no-referrer"
+      />
       {isAuthenticated ? (
         <div>
       <DoctorHeader/>
@@ -52,11 +60,27 @@ function DeptList() {
         <button id="buttonStyle" onClick={handleRemoveDoctor}>Remove Doctor</button>
       </div>
       <div id="main-container" style={{marginTop:"20px"}}>
-      <div id="existing" style={{maxWidth:"40%"}}>
+      <div id="existing" style={{maxWidth:"30%"}}>
         <h1 id="heading" style={{marginBottom:"30px"}}>{dept ? dept.name : "No department selected"}</h1>
-         <ul id="ul">
+         <ul id="doc-ul">
             {doctors.length > 0 ? (
-              doctors.map((doctor) => <li key={doctor._id} id="li">{doctor.name}</li>)
+              doctors.map((doctor) =><li key={doctor._id} id="doc-li" 
+                onMouseEnter={() => setHoveredDoctor(doctor._id)}
+                onMouseLeave={() => setHoveredDoctor(null)}style={{ position: "relative" }} >
+                <div id="flex-div">
+                  <div id="doc-style">
+                    <p><strong>Name :</strong> {doctor.name}</p>
+                    <p><strong>Username :</strong> </p>
+                    <p><strong>Email :</strong> </p>
+                    <p><strong>Password :</strong> </p>
+                    <p><strong>Qualification :</strong> {doctor.qualification}</p>
+                    <p><strong>Location : </strong>{doctor.location}</p>
+                    <p><strong>Available days : </strong>{doctor.availability.join(", ")}</p>
+                    <p><strong>Slot : </strong>{doctor.Slots.join(", ")}</p>
+
+                  </div>
+                  {/* {hoveredDoctor===doctor._id && (<i className="fa-solid fa-trash" id="hover-icon"/>)} */}
+                </div></li>)
             ) : (
               <p style={{textAlign:"center",marginBottom:"40px"}}>No doctors available</p>
             )}

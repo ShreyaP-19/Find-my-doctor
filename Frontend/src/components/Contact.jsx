@@ -14,7 +14,7 @@ function Contact() {
         referrerPolicy="no-referrer"
       />
       <HomeHeader/>
-      <h2 id="heading">Contact Us</h2>
+      <h2 id="heading" style={{marginTop:"80px",fontSize:"xx-large"}}>Contact Us</h2>
       <p id="line">We are Here to Find the Best Healthcare Near You!!!</p>
       <p id="line">You can contact us whenever you want to!!!!</p>
       <p id="line" style={{marginTop:"50px"}}><i className="fa-solid fa-phone" />: <a>+91 94004 83256</a></p>

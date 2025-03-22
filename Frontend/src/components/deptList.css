@@ -18,3 +18,48 @@
     opacity: 0.8;
     transform: scale(1.1);
 }
+#doc-ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Individual department items */
+#doc-li {
+  position: relative;
+  list-style: none;
+  background: white;
+  height:220px;
+  padding: 20px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  /* text-align: center; */
+  color: #165e98;
+  /* font-weight: bold; */
+  cursor: pointer;
+}
+#flex-div{
+  display: flex;
+}
+#doc-style{
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  line-height: 28px;
+}
+#hover-icon:hover {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 18px;
+  color: black;
+  cursor: pointer;
+}
+#doc-li {
+  position: relative;
+}
+
+#doc-li:hover .hover-icon {
+  display: block; /* Show only when hovered */
+}
