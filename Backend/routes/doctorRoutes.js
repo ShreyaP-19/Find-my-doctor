@@ -270,12 +270,23 @@ router.post("/bookappointment", async (req, res) => {
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
+    const hospitalData = await Hospital.findOne({ name: hospital });
+    if (!hospitalData) {
+      return res.status(404).json({ message: "Hospital not found" });
+    }
+    const hospitalId = hospitalData._id; // ✅ Get hospital ID
+
+    // ✅ Find the doctor by ID
+    const doctorData = await Doctor.findById(doctor);
+    if (!doctorData) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
 
     // Create a new appointment
     const newAppointment = new Appointment({
       patient: patientId, // Correct field name
       doctor, // Ensure doctor ID is passed correctly
-      hospital, // Ensure hospital ID is passed correctly
+      hospital:hospitalId, // Ensure hospital ID is passed correctly
       appointmentDateTime, // Combined Date & Time
     });
     
@@ -286,6 +297,12 @@ router.post("/bookappointment", async (req, res) => {
     // Add the appointment ID to the user's (patient's) appointments array
     patient.appointments.push(newAppointment._id);
     await patient.save(); // Save the updated user document
+
+    hospitalData.appointments.push(newAppointment._id);
+    await hospitalData.save(); // ✅ Save the updated hospital document
+
+    doctorData.appointmentHistory.push(newAppointment._id);
+    await doctorData.save(); // ✅ Save the updated doctor document
 
     // Return a success response with the new appointment details
     res.status(201).json({

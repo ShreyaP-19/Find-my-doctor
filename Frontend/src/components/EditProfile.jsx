@@ -4,9 +4,10 @@ import HomeFooter from "./HomeFooter";
 import "./editProfile.css";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
+import { Navigate,useNavigate,Route, Routes } from 'react-router-dom'
 
 function EditProfile() {
-  const { userData } = useAuth();
+  const { userData,isAuthenticated } = useAuth();
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false); // Track edit mode
@@ -18,6 +19,9 @@ function EditProfile() {
   const [availableDays, setAvailableDays] = useState([]);
   const [availableSlots, setAvailableSlots] = useState("");
   const [password, setPassword] = useState("");
+  if (!isAuthenticated) {
+    return <Navigate to="/SignIn" replace />; // ✅ Redirects unauthenticated users
+  }
 
   // Fetch doctor details
   useEffect(() => {
