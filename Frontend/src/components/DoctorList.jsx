@@ -17,6 +17,7 @@ function DoctorList() {
 
   const navigate=useNavigate();
   const [selectedSpecialization,setSpecialization]=useState("");
+  const [error, setError] = useState(null);
 
   const { isAuthenticated } = useAuth();
 
@@ -26,20 +27,35 @@ function DoctorList() {
   }, [selectedSpecialization]); // ✅ Fetch doctors when selectedSpecialization changes
 
   const fetchDoctors = () => {
+    const url = selectedSpecialization 
+        ? `http://localhost:5000/doctor/doctors/${selectedSpecialization}` 
+        : "http://localhost:5000/doctor/doctors";
+
     axios
-      .get("http://localhost:5000/doctor/doctors", {
-        params: selectedSpecialization ? { specialization: selectedSpecialization } : {},
-      })
+      .get(url)
       .then((response) => {
         console.log("API response:", response.data);
-        setDoctors(response.data);
+        if (Array.isArray(response.data) && response.data.length === 0) {
+          setDoctors([]);
+          setError("No doctors found.");  // ✅ Set error state when no doctors exist
+      } else {
+          setDoctors(response.data);
+          setError(null);  // ✅ Clear error if doctors are found
+      }
+        
       })
-      .catch((error) => console.error("Error fetching doctors:", error));
-  };
+      .catch((error) =>{
+         console.error("Error fetching doctors:", error);
+         setDoctors([]);  // ✅ Ensure doctors list is cleared on error
+         setError("Failed to fetch doctors. Please try again."); 
+      });
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevents page reload
-    console.log("Filtering by specialization:", selectedSpecialization);
+      
+};
+
+ const handleSubmit = (e) => {
+   e.preventDefault(); // Prevents page reload
+   console.log("Filtering by specialization:", selectedSpecialization);
   };
   
 
@@ -111,44 +127,40 @@ function DoctorList() {
 </div>
 
 <div id="list">
+  {/* ✅ Handle No Doctors Found */}
+  {error ? (
+    <p style={{ color: "red", fontSize: "20px", textAlign: "center" }}>No doctors found.</p>
+  ) : doctors.length === 0 ? (
+    <p style={{ color: "red", fontSize: "20px", textAlign: "center" }}>No doctors found.</p>
+  ) : (
+    doctors.map((doctor) => (
+      <div key={doctor._id} id="list1">
+        <div id="doctor1"></div>
 
-{doctors.map((doctor)=>(
+        <div className="doctor-info" style={{ marginRight: "30px", marginLeft: "20px" }}>
+          <h2>{doctor.name}</h2>
+          <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization}</p>
+          <p><strong><i className="fa-solid fa-user-graduate"></i></strong> {doctor.qualification}</p>
+          <p><strong><i className="fa-solid fa-location-dot"></i></strong> {doctor.location}</p>
+        </div>
 
-<div key={doctor._id} id="list1">
+        <div className="doctor-info">
+          <p style={{ marginTop: "53px" }}>
+            <strong><i className="fa-solid fa-hospital"></i></strong> {doctor.hospital}
+          </p>
+          <p style={{ marginLeft: "12px" }}>
+            <strong><i className="fa-solid fa-dollar-sign"></i></strong> {doctor.fee}
+          </p>
 
-    <div id="doctor1"></div>
-
-    <div className="doctor-info" style={{marginRight:"30px",marginLeft:"20px"}}>
-
-        <h2>{doctor.name}</h2>
-
-        <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization?.name}</p>
-
-        <p><strong><i className="fa-solid fa-user-graduate"></i></strong> {doctor.qualification}</p>
-
-        <p><strong><i className="fa-solid fa-location-dot"></i></strong> {doctor.hospital?.location}</p>
-
-    </div>
-
-    <div className="doctor-info">
-
-    <p style={{marginTop:"53px"}}><strong><i className="fa-solid fa-hospital"></i></strong> {doctor.hospital.name}</p>
-
-        {/* <p><strong>Year of Experience:</strong> {doctor.year}</p> */}
-
-        <p style={{marginLeft:"12px"}}><strong><i className="fa-solid fa-dollar-sign"></i></strong> {doctor.fee}</p>
-
-        <button id="userbut" onClick={()=>navigate('/Appointments',{state:{doctor}})}> Book Appointment</button>
-
-    </div>
-
+          <button id="userbut" onClick={() => navigate("/Appointments", { state: { doctor } })}>
+            Book Appointment
+          </button>
+        </div>
+      </div>
+    ))
+  )}
 </div>
 
-))}
-
-
-
-</div>
 
 </div>
 

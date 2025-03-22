@@ -8,7 +8,7 @@ import SignIn from './SignIn';
 import axios from "axios";
 
 function AddDr() {
-    const { isAuthenticated, userData, } = useAuth();
+    const { isAuthenticated, userData,setUserData } = useAuth();
     const location = useLocation();
     const selectedDept = location.state?.dept?.name || "";
     const initValues={name:"",specialization:selectedDept,location:"",qualification:"",year:"",Slots:"",fee:"",availability:""}
@@ -58,9 +58,17 @@ function AddDr() {
         const sendDoctorData = async () => {
             try {
                 const response = await axios.post("http://localhost:5000/doctor/adddoctor", doctorData);
-                alert("Successfully added a doctor!");
+               // alert("Successfully added a doctor!");
                 console.log("Server Response:", response.data);
-                setIsSubmit(true);
+                const newDoctorId = response.data.doctor_id;
+               // Updating user data state safely
+            setUserData((prevUserData) => {
+            const updatedUserData = { ...prevUserData, doctorId: newDoctorId };
+           // console.log("Updated user data: ", updatedUserData);
+            return updatedUserData;
+                });
+               
+                
             } catch (error) {
                 console.error("Error adding doctor:", error.response?.data || error.message);
                 alert("Failed to add doctor. Please try again.");
@@ -68,6 +76,14 @@ function AddDr() {
         };
         sendDoctorData(); // ✅ Call the async function
     }
+    // ✅ Log userData only when it updates
+useEffect(() => {
+    if (userData.doctorId) {
+        console.log("Now user data is:", userData);
+        alert("Successfully added a doctor!");
+        setIsSubmit(true);
+    }
+}, [userData]);
 
     function Validate(values){ //mainly to check if there is any error or to find if any empty fields
         const errors={}
