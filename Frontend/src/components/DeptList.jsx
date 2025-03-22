@@ -31,16 +31,20 @@ function DeptList() {
     }
   }, [dept, userData?.hospitalId]); // ✅ Runs when dept or hospitalId changes
   
+  const handleIconClick = (doctor) => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete ${doctor.name}?`);
+    if (confirmDelete) {
+      console.log(`Deleting Dr. ${doctor.name}`);
+      // Add delete logic here
+    } else {
+      console.log("Deletion canceled");
+    }
+  };
 
   const handleAddDoctor = () => {
     console.log("Add Doctor clicked");
     navigate('/AddDr',{ state: { dept } })
     // Implement Add Doctor functionality
-  };
-
-  const handleRemoveDoctor = () => {
-    console.log("Remove Doctor clicked");
-    // Implement Remove Doctor functionality
   };
 
   return (
@@ -57,15 +61,14 @@ function DeptList() {
       <DoctorHeader/>
       <div id="but-div">
         <button id="buttonStyle" onClick={handleAddDoctor}>Add Doctor</button>
-        <button id="buttonStyle" onClick={handleRemoveDoctor}>Remove Doctor</button>
       </div>
       <div id="main-container" style={{marginTop:"20px"}}>
       <div id="existing" style={{maxWidth:"30%"}}>
         <h1 id="heading" style={{marginBottom:"30px"}}>{dept ? dept.name : "No department selected"}</h1>
          <ul id="doc-ul">
             {doctors.length > 0 ? (
-              doctors.map((doctor) =><li key={doctor._id} id="doc-li" 
-                onMouseEnter={() => setHoveredDoctor(doctor._id)}
+              doctors.map((doctor) =><li key={doctor.id} id="doc-li" 
+                onMouseEnter={() => setHoveredDoctor(doctor.id)}
                 onMouseLeave={() => setHoveredDoctor(null)}style={{ position: "relative" }} >
                 <div id="flex-div">
                   <div id="doc-style">
@@ -79,7 +82,7 @@ function DeptList() {
                     <p><strong>Slot : </strong>{doctor.Slots.join(", ")}</p>
 
                   </div>
-                  {/* {hoveredDoctor===doctor._id && (<i className="fa-solid fa-trash" id="hover-icon"/>)} */}
+                  {hoveredDoctor===doctor.id && (<i className="fa-solid fa-trash" id="hover-icon" onClick={()=>handleIconClick(doctor)}/>)}
                 </div></li>)
             ) : (
               <p style={{textAlign:"center",marginBottom:"40px"}}>No doctors available</p>
