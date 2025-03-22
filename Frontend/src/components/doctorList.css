@@ -108,17 +108,14 @@
 }
 #back-button{
     position: fixed;
+    margin-top: 0;
     margin-left: 15px;
-    margin-top: 90px;
-    /* width:30px;
-    height:90px;
-    border-radius: 20px;
-    border:1px solid #165e98;
-    background-color: white; */
+    border-radius: 30px;
     border:none;
-    background-color: white;
-    font-size: xx-large;
-    color: #95b7d2;
+    font-size: 34px;
+    color: #8ac0ec;
+    width:30px;
+    padding: 0;
 }
 #back-button:hover{
     cursor:pointer;

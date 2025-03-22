@@ -200,7 +200,9 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
     <div>
       <HomeHeader />
       <h2 id="bookAppmt">Book an Appointment</h2>
-      <button id="back-button" style={{marginTop:"159px"}}><i className="fa-solid fa-circle-left" onClick={()=>navigate('/DoctorList')}></i></button>
+      <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DoctorList')}>
+        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
+      </div>
       
       <div id="container">
         {doctor  && ( //if doc not null/undefined/false
