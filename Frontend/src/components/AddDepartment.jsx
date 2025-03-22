@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DoctorHeader from './DoctorHeader';
 import HomeFooter from './HomeFooter';
 import './adddepartment.css';
 import { useAuth } from './AuthContext'
 import SignIn from './SignIn';
+import DoctorBody from './DoctorBody';
 
 
 function AddDepartment() {
@@ -53,6 +54,11 @@ function AddDepartment() {
        {isAuthenticated ? (
         <div>
       <DoctorHeader />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
+
+      <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DoctorBody')}>
+        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
+      </div>
       <h1 id="heading" style={{marginTop:"70px"}}>Manage Departments</h1>
       {/* <button id="back-button" onClick={() => navigate('/DoctorBody')}>
         <i className="fa-solid fa-circle-left"></i>
@@ -86,6 +92,10 @@ function AddDepartment() {
 
         <div><SignIn /></div>
       )}
+      <Routes>
+        <Route path='/DoctorBody' element={<DoctorBody/>}/>
+      </Routes>
+
     </div>
   );
 }

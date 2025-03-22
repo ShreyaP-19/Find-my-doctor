@@ -1,11 +1,12 @@
 import React, { useState ,useEffect} from 'react'
 import DoctorHeader from './DoctorHeader'
 import './addDr.css'
-import { useNavigate,useLocation } from 'react-router-dom'
+import { useNavigate,useLocation, Routes, Route } from 'react-router-dom'
 import HomeFooter from './HomeFooter';
 import { useAuth } from "./AuthContext";
 import SignIn from './SignIn';
 import axios from "axios";
+import DeptList from './DeptList';
 
 function AddDr() {
     const { isAuthenticated, userData,setUserData } = useAuth();
@@ -126,10 +127,14 @@ useEffect(() => {
 
   return (
     <div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
         {isAuthenticated ? (
             <div>
       <DoctorHeader/>
-      <h1 id="edit-head">Add a doctor</h1>
+      {/* <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DeptList')}>
+        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
+      </div> */}
+      <h1 id="edit-head" style={{marginTop:"70px"}}>Add a doctor</h1>
       <form id="form" onSubmit={handleSubmit}>
             <div id="middle">
             <div className="name">
@@ -213,6 +218,9 @@ useEffect(() => {
         </form>
         <HomeFooter/>
     </div>):(<div>{navigate('/SignIn')}</div>)}
+    <Routes>
+        <Route path="/DeptList" element={<DeptList/>}/>
+    </Routes>
     </div>
   )
 }

@@ -58,7 +58,9 @@ function AppointmentHistory() {
             <h1>Appointment History</h1>
       </div>
 
-      <button id="back-button"><i className="fa-solid fa-circle-left" onClick={()=>navigate('/HomeBody')}></i></button>
+      <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/HomeBody')}>
+        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
+      </div>
 
       {appointments.length>0?
           (<div id="appointment-container">

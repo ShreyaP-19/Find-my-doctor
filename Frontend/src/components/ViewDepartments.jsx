@@ -37,11 +37,13 @@ function ViewDepartments() {
       {isAuthenticated ? (
         <div>
       <DoctorHeader />
-      {/* <h1 id="heading" style={{marginTop:"70px"}}>View Departments</h1> */}
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
+
+      <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DoctorBody')}>
+        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
+      </div>
       <div style={{marginTop:"100px"}}></div>
-      <button id="back-button" onClick={() => navigate('/DoctorBody')}>
-        <i className="fa-solid fa-circle-left"></i>
-      </button>
+      
       <div id="main-container">
         <div id="existing">
           <h2>Existing Departments</h2>
@@ -59,6 +61,7 @@ function ViewDepartments() {
     </div>):(<div><SignIn /></div>)}
     <Routes>
       <Route path='/DeptList' element={<DeptList/>}/>
+      <Route path='/DoctorBody' element={<DoctorBody/>}/>
     </Routes>
     </div>
   );

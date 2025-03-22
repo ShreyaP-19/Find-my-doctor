@@ -12,7 +12,9 @@ function FirstAid() {
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
       <HomeHeader/>
       <h1 id="head">First Aid</h1>
-      <button id="back-button" style={{marginTop:"159px"}}><i className="fa-solid fa-circle-left" onClick={()=>navigate('/HomeBody')}></i></button>
+      <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/HomeBody')}>
+        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
+      </div>
       <div id="paragraph">
       <div id="quote">Empower yourself with first-aid knowledge and make a difference when it matters the most</div>
       </div>

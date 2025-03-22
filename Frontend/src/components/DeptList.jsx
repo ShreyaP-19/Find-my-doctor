@@ -7,6 +7,8 @@ import AddDr from './AddDr';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 import SignIn from './SignIn';
+import ViewAppointments from './ViewAppointments';
+import ViewDepartments from './ViewDepartments';
 
 function DeptList() {
   const location = useLocation();
@@ -59,6 +61,9 @@ function DeptList() {
       {isAuthenticated ? (
         <div>
       <DoctorHeader/>
+      <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/ViewDepartments')}>
+        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
+      </div>
       <div id="but-div">
         <button id="buttonStyle" onClick={handleAddDoctor}>Add Doctor</button>
       </div>
@@ -100,7 +105,7 @@ function DeptList() {
       
         <Routes>
             <Route path='/AddDr' element={<AddDr/>}/>
-            {/*<Route path='/SignIn' element={<SignIn/>}/>*/}
+            <Route path='/ViewDepartments' element={<ViewDepartments/>}/>
         </Routes>
     </div>
   )
