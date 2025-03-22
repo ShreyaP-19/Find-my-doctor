@@ -28,7 +28,7 @@ function EditProfile() {
     const fetchDoctorDetails = async () => {
       try {
         if (userData?.doctorId) {
-          const response = await axios.get(`http://localhost:5000/doctor/${userData.doctorId}`);
+          const response = await axios.get(`http://localhost:5000/doctor/doctor-details/${userData.doctorId}`);
           const data = response.data;
 
           setDoctor(data);
@@ -38,7 +38,7 @@ function EditProfile() {
         }
       } catch (error) {
         console.error("Error fetching doctor details:", error);
-        setErrorMessage("Failed to load profile data.");
+        //setErrorMessage("Failed to load profile data.");
       } finally {
         setLoading(false);
       }
@@ -126,7 +126,7 @@ function EditProfile() {
                 <>
                   <p><strong>Username:</strong> {doctor.user.username}</p>
                   <p><strong>Email:</strong> {doctor.user.email}</p>
-                  <p><strong>Password:</strong> {doctor.user.password}</p>
+                  {/*<p><strong>Password:</strong> {doctor.user.password}</p>*/}
                 </>
               )}
             </div>

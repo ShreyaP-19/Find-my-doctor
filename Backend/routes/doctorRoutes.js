@@ -453,4 +453,48 @@ router.post("/submit", async (req, res) => {
 
 });
 
+router.get("/doctor-details/:doctorId", async (req, res) => {
+  try{
+    const { doctorId } = req.params;
+   // Find the doctor
+   const doctor = await Doctor.findById(doctorId)
+                  .populate("user", "username email")
+                  .populate("specialization", "name")
+                  .populate("hospital", "name");
+   
+   if (!doctor) {
+     return res.status(404).json({ message: "Doctor not found" });
+   }
+
+   const responseData = {
+    _id: doctor._id,
+    name: doctor.name,
+    specialization: doctor.specialization.name,
+    qualification: doctor.qualification,
+    experience: doctor.experience,
+    fee: doctor.fee,
+    availability: doctor.availability,
+    Slots: doctor.Slots,
+    location: doctor.location,
+    hospital:doctor.hospital.name,
+    user: doctor.user
+      ? {
+          username: doctor.user.username,
+          email: doctor.user.email,
+        }
+      : null, // ✅ If user is missing, return `null`
+  };
+
+  res.status(200).json(responseData);
+
+   
+  
+  }catch(error){
+    console.error("Error fetching doctor details:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+
+
+});
+
 module.exports = router;
