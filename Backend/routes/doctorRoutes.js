@@ -245,8 +245,8 @@ router.delete("/delete-doctor/:doctorId", async (req, res) => {
 
 
   }catch(error){
-    console.error("Error deleting doctor:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error deletion:", error);
+    res.status(500).json({ error: "error occured" });
 
   }
 
