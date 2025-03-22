@@ -264,7 +264,8 @@ router.post("/addhospital", async (req, res) => {
     // ✅ Find doctors only in the given department and hospital
     const doctors = await Doctor.find(filter)
       .populate("specialization", "name") // Fetch department name
-      .populate("hospital", "name location"); // Fetch hospital details
+      .populate("hospital", "name location") // Fetch hospital details
+      .populate("user", "username email password");
 
     if (doctors.length === 0) {
       return res.status(404).json({ message: "No doctors found for this department in this hospital." });
@@ -278,7 +279,12 @@ router.post("/addhospital", async (req, res) => {
         specialization: doctor.specialization.name,
         location: doctor.location,
         Slots: doctor.Slots,
-        availability: doctor.availability
+        availability: doctor.availability,
+        user: doctor.user ? {
+          username: doctor.user.username,
+          email: doctor.user.email,
+          password:doctor.user.password
+        } : null // ✅ Handles missing user data
       };
     });
 

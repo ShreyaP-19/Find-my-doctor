@@ -73,9 +73,13 @@ function DeptList() {
                 <div id="flex-div">
                   <div id="doc-style">
                     <p><strong>Name :</strong> {doctor.name}</p>
-                    <p><strong>Username :</strong> </p>
-                    <p><strong>Email :</strong> </p>
-                    <p><strong>Password :</strong> </p>
+                    {doctor.user && (
+      <>
+        <p><strong>Username :</strong> {doctor.user.username}</p>
+        <p><strong>Email :</strong> {doctor.user.email}</p>
+        <p><strong>Password :</strong> {doctor.user.password}</p>
+      </>
+    )}  
                     <p><strong>Qualification :</strong> {doctor.qualification}</p>
                     <p><strong>Location : </strong>{doctor.location}</p>
                     <p><strong>Available days : </strong>{doctor.availability.join(", ")}</p>

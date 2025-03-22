@@ -54,36 +54,54 @@ function formatTime(date) {
 }
 
 // GET doctors with filtering
-router.get("/doctors", async (req, res) => {
+router.get("/doctors/:specialization?", async (req, res) => {
   try {
-    const { specialization, hospital, experience } = req.query;
-
+    //console.log("Filter:", req.params);
+    const { specialization } = req.params;
+    
     let filter = {};
-    if (specialization) filter.specialization = specialization;
-    if (hospital) filter.hospital = hospital;
-    if (experience) filter.year = { $gte: parseInt(experience) }; // Fixed from experience to year
 
+    if (specialization) {
+      // Find the corresponding department
+      const department = await Department.findOne({ name: specialization });
+
+      if (!department) {
+        return res.status(404).json({ error: "Department not found" });
+      }
+
+      filter.specialization = department._id;
+    }
+
+    // Fetch doctors based on the filter (all doctors if no specialization)
     const doctors = await Doctor.find(filter)
-    .populate({
-      path: "specialization",
-      select: "name", // Fetch only the department name
-      model: "Department",
-      match: specialization ? { name: specialization } : {}, // Filter by department name if provided
-    })
-    .populate("hospital", "name location");
+      .populate("specialization", "name")
+      .populate("hospital", "name location");
 
-    const filteredDoctors = doctors.filter((doc) => doc.specialization !== null);
-
-    if (filteredDoctors.length === 0) {
+    if (doctors.length === 0) {
       return res.status(404).json({ message: "No doctors found" });
     }
-    console.log(filteredDoctors);
 
-    res.json(filteredDoctors);
+    //console.log("Fetched Doctors:", doctors);
+    // ✅ Transforming doctor data using .map()
+    const filtered_doctors = doctors.map((doctor) => ({
+      id: doctor._id,
+      name: doctor.name,
+      specialization: doctor.specialization?.name || "N/A",
+      hospital: doctor.hospital?.name || "N/A",
+      location: doctor.hospital?.location || "Unknown",
+      qualification: doctor.qualification || "N/A", // 
+      fee: doctor.fee || "Not provided",
+      Slots: doctor.Slots,
+      availability: doctor.availability,
+      timeSlots: doctor.timeSlots
+
+    }));
+    res.json(filtered_doctors);
+    
   } catch (error) {
+    console.error("Error fetching doctors:", error);
     res.status(500).json({ error: "Error fetching doctors" });
   }
-  
 });
 
 // Add doctor
@@ -137,15 +155,104 @@ router.post("/adddoctor", async (req, res) => {
       availability,
       timeSlots
     });
-    console.log("✅ Doctor added:", newDoctor);
+    
+
 
     await newDoctor.save();
+    const doctorId = newDoctor._id;
+    console.log("✅ Doctor added:", newDoctor,"Id is ",doctorId);
 
 
-    res.status(201).json(newDoctor);
+    res.status(201).json({ newDoctor, doctor_id: doctorId });
   } catch (error) {
     res.status(500).json({ error: "Error adding doctor", details: error.message });
   }
+});
+
+router.post("/doctor-username-password", async (req, res) => {
+  try {
+    const { username, password,doctorId,email } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username or email is already taken" });
+    }
+    let user;
+    if (doctor.user) {
+      // ✅ If doctor already has a user, update credentials
+      user = await User.findById(doctor.user);
+      if (!user) {
+        return res.status(404).json({ message: "Associated user not found" });
+      }
+      user.username = username;
+      user.password = hashedPassword;
+      user.email = email;
+    } else {
+      // ✅ If doctor.user is null, create a new user
+      user = new User({
+        username,
+        password,
+        email,
+        role: "doctor",
+        doctor: doctorId // ✅ Ensure role is set
+      });
+       // Save the new user
+  await user.save();
+  // ✅ Link the new user to the doctor
+  doctor.user = user._id;
+  }
+  // Save updated doctor record
+  await doctor.save();
+
+  res.status(200).json({ message: "Username and password assigned successfully" });
+ 
+
+  
+}
+  catch (error) {
+    console.error("Error assigning credentials:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+
+  }
+
+
+
+});
+
+router.delete("/delete-doctor/:doctorId", async (req, res) => {
+  try{
+    const { doctorId } = req.params;
+   // Find the doctor
+   const doctor = await Doctor.findById(doctorId);
+   if (!doctor) {
+     return res.status(404).json({ message: "Doctor not found" });
+   }
+    // Delete associated user if exists
+     if (doctor.user) {
+      await User.findByIdAndDelete(doctor.user);
+    }
+    // Delete the doctor
+    await Doctor.findByIdAndDelete(doctorId);
+
+    res.status(200).json({ message: "Doctor deleted successfully" });
+    
+
+
+  }catch(error){
+    console.error("Error deletion:", error);
+    res.status(500).json({ error: "error occured" });
+
+  }
+
+
+
+
 });
 
 router.post("/bookappointment", async (req, res) => {
