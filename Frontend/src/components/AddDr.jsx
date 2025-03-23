@@ -1,7 +1,7 @@
 import React, { useState ,useEffect} from 'react'
 import DoctorHeader from './DoctorHeader'
 import './addDr.css'
-import { useNavigate,useLocation, Routes, Route } from 'react-router-dom'
+import { useNavigate,useLocation, Routes, Route,Navigate } from 'react-router-dom'
 import HomeFooter from './HomeFooter';
 import { useAuth } from "./AuthContext";
 import SignIn from './SignIn';
@@ -20,6 +20,14 @@ function AddDr() {
 
     const [selectedDays, setSelectedDays] = useState([]);
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+    if(!isAuthenticated){
+        return <Navigate to="/SignIn" replace />;
+
+    }
+
+
+
     useEffect(() => {
         setFormValue((prev) => ({ ...prev, dept: selectedDept }));
     }, [selectedDept]);
@@ -59,7 +67,7 @@ function AddDr() {
         const sendDoctorData = async () => {
             try {
                 const response = await axios.post("http://localhost:5000/doctor/adddoctor", doctorData);
-               // alert("Successfully added a doctor!");
+               alert("Successfully added a doctor!");
                 console.log("Server Response:", response.data);
                 const newDoctorId = response.data.doctor_id;
                // Updating user data state safely
@@ -81,7 +89,6 @@ function AddDr() {
 useEffect(() => {
     if (userData.doctorId) {
         console.log("Now user data is:", userData);
-        alert("Successfully added a doctor!");
         setIsSubmit(true);
     }
 }, [userData]);
@@ -128,8 +135,7 @@ useEffect(() => {
   return (
     <div>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
-        {isAuthenticated ? (
-            <div>
+        
       <DoctorHeader/>
       {/* <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DeptList')}>
         <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
@@ -217,7 +223,6 @@ useEffect(() => {
             </div>
         </form>
         <HomeFooter/>
-    </div>):(<div>{navigate('/SignIn')}</div>)}
     <Routes>
         <Route path="/DeptList" element={<DeptList/>}/>
     </Routes>

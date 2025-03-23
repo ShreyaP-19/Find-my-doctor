@@ -497,4 +497,62 @@ router.get("/doctor-details/:doctorId", async (req, res) => {
 
 });
 
+router.put("/edit-profile/:doctorId", async (req, res) => {
+  const { doctorId } = req.params;
+  const { location, availability, Slots, currentPassword, newPassword } = req.body;
+  try{
+    const doctor = await Doctor.findById(doctorId).populate("user", "username password");
+    if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+    const user = doctor.user;
+    if (currentPassword && newPassword) {
+      // 🔹 Compare as plain text
+      if (currentPassword !== user.password) {
+        return res.status(400).json({ message: "Incorrect password." });
+      }
+
+      // ❌ Do NOT hash the new password (not recommended)
+      user.password = newPassword;
+      await user.save();
+    }
+
+    const updatedData = {};
+    if (location!==undefined) {
+      updatedData.location = location;
+    }
+    if (availability!==undefined) {
+      updatedData.availability = availability;
+    }
+    if (Slots!=undefined) {
+      if (!Array.isArray(Slots)) {
+        console.error("❌ Error: Slots is not an array!", Slots);
+        return res.status(400).json({ error: "Invalid format for Slots. Expected an array." });
+      }
+        updatedData.Slots = Slots;
+        console.log("✅ Slots format is correct.");
+    const slots = req.body.Slots && req.body.Slots.length > 0 ? req.body.Slots : [];
+    if(slots){
+      console.log("fine ",slots);
+    }
+    
+    const timeSlots = splitTimeSlots(slots);
+    console.log("🔹 Processed Slots Array:", timeSlots);
+    updatedData.timeSlots=timeSlots;
+    }
+
+    
+    
+    Object.assign(doctor, updatedData);
+    await doctor.save();
+    res.json({ message: "Profile updated successfully!", updatedDoctor: doctor });
+    
+  }catch(error){
+    console.error("Error updating profile:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+
+  }
+  
+  
+});
+
+
 module.exports = router;

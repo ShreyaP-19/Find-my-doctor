@@ -18,7 +18,14 @@ function EditProfile() {
   const [location, setLocation] = useState("");
   const [availableDays, setAvailableDays] = useState([]);
   const [availableSlots, setAvailableSlots] = useState("");
-  const [password, setPassword] = useState("");
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+ 
+
+
   if (!isAuthenticated) {
     return <Navigate to="/SignIn" replace />; // ✅ Redirects unauthenticated users
   }
@@ -51,12 +58,27 @@ function EditProfile() {
   const handleDayChange = (event) => {
     const { value, checked } = event.target;
     setAvailableDays(checked ? [...availableDays, value] : availableDays.filter((day) => day !== value));
+    setErrorMessage("");
   };
 
   // Enable editing mode
   const enableEditing = () => {
     setIsEditing(true);
   };
+
+  const handleConfirmPasswordChange = (e) => {
+    const value = e.target.value;
+    setConfirmPassword(value);
+  
+    // Validate if `newPassword` and `confirmPassword` match
+    if (newPassword && value !== newPassword) {
+      setErrorMessage("Password do not match.");
+    } else {
+      setErrorMessage(""); // Clear error when they match
+    }
+  };
+  
+  
 
   // Cancel editing and revert to original details
   const cancelEditing = () => {
@@ -65,7 +87,9 @@ function EditProfile() {
       setAvailableDays(doctor.availability || []);
       setAvailableSlots(doctor.Slots ? doctor.Slots.join(", ") : "");
     }
-    setPassword(""); // Clear password field on cancel
+    setNewPassword(""); // Clear password field on cancel
+    setCurrentPassword("")
+    setConfirmPassword("")
     setIsEditing(false);
   };
 
@@ -75,17 +99,35 @@ function EditProfile() {
     setSuccessMessage("");
     setErrorMessage("");
 
-    const updatedData = {
-      location,
-      availability: availableDays,
-      Slots: availableSlots.split(",").map((slot) => slot.trim()),
-      password,
-    };
+    const updatedData = {};
+    if (doctor?.location !== location && location.trim() !== "") {
+      updatedData.location = location;
+    }
+    if (currentPassword && newPassword) {
+      updatedData.currentPassword = currentPassword;
+      updatedData.newPassword = newPassword;
+    }
+    if (JSON.stringify(doctor?.availability) !== JSON.stringify(availableDays) && availableDays.length > 0) {
+      updatedData.availability = availableDays;  // Prevent updating with an empty array
+    }
+    if (doctor?.Slots?.join(", ") !== availableSlots && availableSlots.trim() !== "") {
+      updatedData.Slots = availableSlots.split(",").map((slot) => slot.trim());
+    }
+
+    if (Object.keys(updatedData).length === 0) {
+      setErrorMessage("No changes detected.");
+      return;
+    }
+
+    console.log(updatedData);
+    
+    
 
     try {
-      await axios.put(`http://localhost:5000/doctor/${userData.doctorId}`, updatedData);
+      await axios.put(`http://localhost:5000/doctor/edit-profile/${userData.doctorId}`, updatedData);
       setSuccessMessage("Profile updated successfully!");
       setIsEditing(false);
+      navigate("/DrBody");
     } catch (error) {
       console.error("Error updating profile:", error);
       setErrorMessage("Failed to update profile. Please try again.");
@@ -106,8 +148,8 @@ function EditProfile() {
         ) : doctor ? (
           <div>
             {/* Success & Error Messages */}
-            {successMessage && <p className="success-message">{successMessage}</p>}
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {/*successMessage && <p className="success-message">{successMessage}</p>*/}
+            {/*errorMessage && <p className="error-message">{errorMessage}</p>*/}
 
             {/* Edit Profile Button */}
             {!isEditing && (
@@ -141,8 +183,11 @@ function EditProfile() {
                 <input
                   type="text"
                   value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="Enter your clinic/hospital location"
+                  onChange={(e) => {
+                    setLocation(e.target.value);
+                    setErrorMessage(""); // Clear error when user types
+                  }}
+                  placeholder="Enter your  location"
                   required
                   disabled={!isEditing} id="text-input"
                 />
@@ -169,21 +214,49 @@ function EditProfile() {
                   id="text-input"
                   type="text"
                   value={availableSlots}
-                  onChange={(e) => setAvailableSlots(e.target.value)}
+                  onChange={(e) => {
+                    setAvailableSlots(e.target.value);
+                    setErrorMessage(""); // Clear error when user types
+                  }}
                   placeholder="e.g., 10:00 AM - 12:00 PM, 3:00 PM - 5:00 PM"
                   required
                   disabled={!isEditing}
                 />
 
-                <label id="edit-label">Change Password:</label>
+                <label id="edit-label">Current Password:</label>
                 <input
                   id="password-input"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  type="text"
+                  value={currentPassword}
+                  onChange={(e) => {
+                    setCurrentPassword(e.target.value);
+                    setErrorMessage("");
+                  }}
+                  placeholder="Enter Current Password"
+                  disabled={!isEditing}
+                />
+
+                <label id="edit-label">New Password:</label>
+                <input
+                  id="password-input"
+                  type="text"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter new password"
                   disabled={!isEditing}
                 />
+
+                <label id="edit-label">Confirm New Password:</label>
+                <input
+                  id="password-input"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  placeholder="Confirm new password"
+                  disabled={!isEditing}
+                />
+                {errorMessage && <p style={{ color: "red", fontSize: "14px" }}>{errorMessage}</p>}
+
 
                 <div className="form-buttons">
                   <button type="submit" className="save-btn">Save Changes</button>
