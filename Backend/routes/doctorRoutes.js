@@ -108,7 +108,7 @@ router.get("/doctors/:specialization?", async (req, res) => {
 router.post("/adddoctor", async (req, res) => {
   try {
     console.log("data is ",req.body);
-    const { name, specialization, location, qualification, year,Slots, hospital, fee, availability } = req.body;
+    const { name, specialization, location, qualification, year,Slots, hospital, fee, availability,username,email,password } = req.body;
     if (!specialization) {
       return res.status(400).json({ error: "Specialization is missing in the request." });
     }
@@ -126,6 +126,8 @@ router.post("/adddoctor", async (req, res) => {
       return res.status(400).json({ error: `Department '${specialization}' not found in this hospital.` });
     }
     console.log("✅ Department found:", departmentExists.name);
+
+    
 
     // Extract 'Slots' from request and split into 30-min intervals
     console.log("🔹 Raw Slots Received:", Slots);
@@ -153,12 +155,27 @@ router.post("/adddoctor", async (req, res) => {
       fee,
       hospital: hospitalExists._id,
       availability,
-      timeSlots
+      timeSlots // Link doctor to user
     });
     
 
 
     await newDoctor.save();
+
+    const newUser = new User({
+      username,
+      email,
+      password,
+      role: "doctor",
+      doctor: newDoctor._id // Assuming you have a role field
+    });
+
+    await newUser.save();
+
+    newDoctor.user = newUser._id;
+    await newDoctor.save();
+
+    console.log("✅ User created:", newUser.username);
     const doctorId = newDoctor._id;
     console.log("✅ Doctor added:", newDoctor,"Id is ",doctorId);
 

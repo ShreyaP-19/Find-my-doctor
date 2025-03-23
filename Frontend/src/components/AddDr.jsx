@@ -43,6 +43,16 @@ function AddDr() {
         
         setFormValue({ ...formValue, [name]: value });
         }
+    const generatePassword = (name) => {
+            if (!name) return "";
+          
+            const cleanedName = name.replace(/^Dr\s+/g, ""); // Remove all spaces
+            const uniqueId = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit random number
+          
+            return `${cleanedName}@${uniqueId}`;
+        };
+          
+          
     
     function  handleSubmit(e) {
         e.preventDefault();
@@ -52,9 +62,12 @@ function AddDr() {
           return; // Stop submission if there are validation errors
         }
         
-        const firstLocationWord = formValue.location?.split(" ")[0] || ""; // Ensure location exists
-    const username = `${formValue.name.replace(/\s+/g, "")}${firstLocationWord}`;
-    const password = formValue.name; 
+        const firstLocationWord = formValue.location?.split(/[\s,]+/)[0].toLowerCase() || ""; // Ensure location exists
+       const cleanedName = formValue.name?.replace(/^Dr\s*/i, "").replace(/\s+/g, "");
+       const username = `${cleanedName}@${firstLocationWord}`;
+   
+    const password =generatePassword(formValue.name);
+    
 
     console.log("Generated Username:", username);
     console.log("Generated Password:", password);
@@ -68,15 +81,14 @@ function AddDr() {
             availability: selectedDays,  // ✅ Send selected days as an array
             Slots: formattedSlots,        // ✅ Already an array
             hospital: userData?.hospitalId,
-            user: {
-                username: formValue.username,  // ✅ Add username
-                password: formValue.password   // ✅ Add password
-            }
+            username: username,  // ✅ Add username
+            password: password   // ✅ Add password
         };
-        console.log(doctorData);
+        
 
         const sendDoctorData = async () => {
             try {
+                console.log(doctorData);
                 const response = await axios.post("http://localhost:5000/doctor/adddoctor", doctorData);
                alert("Successfully added a doctor!");
                 console.log("Server Response:", response.data);
@@ -87,6 +99,7 @@ function AddDr() {
            // console.log("Updated user data: ", updatedUserData);
             return updatedUserData;
                 });
+            navigate("/AddDr");
                
                 
             } catch (error) {
