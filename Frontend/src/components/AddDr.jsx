@@ -43,6 +43,13 @@ function AddDr() {
         if (Object.keys(errors).length !== 0) {
           return; // Stop submission if there are validation errors
         }
+        
+        const firstLocationWord = formValue.location?.split(" ")[0] || ""; // Ensure location exists
+    const username = `${formValue.name.replace(/\s+/g, "")}${firstLocationWord}`;
+    const password = formValue.name; 
+
+    console.log("Generated Username:", username);
+    console.log("Generated Password:", password);
 
         const formattedSlots = Array.isArray(formValue.Slots) 
         ? formValue.Slots 
@@ -53,6 +60,10 @@ function AddDr() {
             availability: selectedDays,  // ✅ Send selected days as an array
             Slots: formattedSlots,        // ✅ Already an array
             hospital: userData?.hospitalId,
+            user: {
+                username: formValue.username,  // ✅ Add username
+                password: formValue.password   // ✅ Add password
+            }
         };
         console.log(doctorData);
 
@@ -88,6 +99,7 @@ useEffect(() => {
 
     function Validate(values){ //mainly to check if there is any error or to find if any empty fields
         const errors={}
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         //to check if username field is not empty
         if (!values.name) errors.name = "Name is required.";
     
@@ -117,6 +129,12 @@ useEffect(() => {
           if (selectedDays.length===0) {
             errors.availability = "Atleast one day must be selected";
           }
+          if (!values.email) {   //email is not blank
+            errors.email = "Email is required!";
+          } 
+          else if (!regex.test(values.email)) {   
+            errors.email = "This is not a valid email format!";
+          }
         return errors;
       }
     
@@ -142,6 +160,15 @@ useEffect(() => {
                 onChange={handleChange} 
                 name="name" placeholder="Name" 
                 value={formValue.name} style={{ borderColor: formErrors.name ? "red" : "" }}
+                ></input>
+                <br></br><br></br>
+            </div>
+            <br></br>
+            <div className="name">
+                <input type="text" 
+                onChange={handleChange} 
+                name="email" placeholder="Email" 
+                value={formValue.email} style={{ borderColor: formErrors.email ? "red" : "" }}
                 ></input>
                 <br></br><br></br>
             </div>
@@ -189,7 +216,7 @@ useEffect(() => {
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
-                name="Slots" placeholder="Slot" 
+                name="Slots" placeholder="Slot.Eg:9:00 AM-11:00 AM" 
                 value={formValue.Slots}
  
                 style={{ borderColor: formErrors.Slots ? "red" : "" }}

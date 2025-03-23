@@ -37,9 +37,9 @@ const fetchAppointments = async(id) => {
         <DoctorHeader/>
         {/* <h1>View</h1> */}
         <div style={{height:"62px"}}></div>
-      {/* <button id="back-button" onClick={() => navigate('/DoctorBody')}>
-        <i className="fa-solid fa-circle-left"></i>
-      </button> */}
+        <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DrBody')}>
+        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
+      </div>
       <div id="main-container">
         <div id="container-existing">
           <h2>Appointments List</h2>

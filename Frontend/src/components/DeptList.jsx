@@ -92,7 +92,7 @@ function DeptList() {
                     {doctor.user && (
                       <>
                         <p><strong>Username :</strong> {doctor.user.username}</p>
-                        <p><strong>Email :</strong> {doctor.user.email}</p>
+                        <p><strong>Email :</strong> {doctor.email}</p>
                         <p><strong>Password :</strong> {doctor.user.password}</p>
                       </>
                     )}  
