@@ -12,7 +12,7 @@ function AddDr() {
     const { isAuthenticated, userData,setUserData } = useAuth();
     const location = useLocation();
     const selectedDept = location.state?.dept?.name || "";
-    const initValues={name:"",specialization:selectedDept,location:"",qualification:"",year:"",Slots:"",fee:"",availability:""}
+    const initValues={name:"",specialization:selectedDept,location:"",qualification:"",year:"",Slots:"",fee:"",availability:"",email:""}
     const [formErrors, setFormErrors] = useState({});
     const [formValue, setFormValue] = useState(initValues)
     const [isSubmit, setIsSubmit] = useState(false)
@@ -91,6 +91,7 @@ function AddDr() {
                 console.log(doctorData);
                 const response = await axios.post("http://localhost:5000/doctor/adddoctor", doctorData);
                alert("Successfully added a doctor!");
+               navigate('/HomeBody');
                 console.log("Server Response:", response.data);
                 const newDoctorId = response.data.doctor_id;
                // Updating user data state safely
@@ -99,7 +100,7 @@ function AddDr() {
            // console.log("Updated user data: ", updatedUserData);
             return updatedUserData;
                 });
-            navigate("/AddDr");
+            // navigate("/AddDr");
                
                 
             } catch (error) {
