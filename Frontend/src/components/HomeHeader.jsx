@@ -13,7 +13,7 @@ import user from '../Unwanted/user.jpg'
 function HomeHeader() {
   const navigate = useNavigate();
   //const { isAuthenticated,setIsAuthenticated } = useAuth(); 
-  const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, userData, setUserData,logout } = useAuth();
   const location = useLocation();
   const [active, setActive] = useState("");
   const [open,setOpen]=useState(false);
@@ -32,10 +32,9 @@ function HomeHeader() {
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false); // Update global auth state
-    setOpen(false); // Close profile box
-    setUserData(null); // Clear user data
-    navigate("/");
+    logout(); // ✅ Calls our global logout function
+    setOpen(false); // ✅ Close profile box if needed
+    navigate("/"); // ✅ Redirect to home or login page
   };
 
   return (

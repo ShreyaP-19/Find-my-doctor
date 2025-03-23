@@ -8,7 +8,7 @@ import { useAuth } from "./AuthContext";
 
 function DoctorHeader() {
   const navigate = useNavigate();
-  const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, userData, setUserData,logout } = useAuth();
   const [active, setActive] = useState("");
   const [open,setOpen]=useState(false);
   const handleclick=()=>{
@@ -16,10 +16,9 @@ function DoctorHeader() {
   }
 
   const handleLogout = () => {
-    setIsAuthenticated(false); // Update global auth state
-    setOpen(false); // Close profile box
-    setUserData(null); // Clear user data
-    navigate("/");
+    logout(); // ✅ Calls our global logout function
+    setOpen(false); // ✅ Close profile box if needed
+    navigate("/"); // ✅ Redirect to home or login page
   };
   return (
     <div>
@@ -41,7 +40,7 @@ function DoctorHeader() {
             </div>
             <div id="details-prof">
               <p>{userData?.role === "doctor" ? `Dr. ${userData?.username || "Username"}` : userData?.username || "Username"}</p>
-              <p>{userData?.role === "doctor" ? <p>Hospital name</p> : userData?.email || "Email"}</p>
+              <p>{userData?.role === "doctor" ? <p>{userData?.email || "Email"}</p> : userData?.email || "Email"}</p>
               <button id="logout"onClick={handleLogout } >Logout</button>
             </div>
           </div>

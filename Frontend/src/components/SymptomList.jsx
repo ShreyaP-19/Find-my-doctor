@@ -96,8 +96,7 @@ function SymptomList() {
         <div>
       <HomeHeader/>
       <h1 id="enter">Enter your details...</h1>
-        
-        <form id="form" onSubmit={handleSubmit}>
+      <form id="form" onSubmit={handleSubmit}>
             <div id="middle">
             <div className="name">
                 <input type="text" 
