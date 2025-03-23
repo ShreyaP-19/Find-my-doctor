@@ -21,6 +21,9 @@ import EditProfile from './components/EditProfile'
 import ViewDrAppntmnt from './components/ViewDrAppntmnt'
 import DeptList from './components/DeptList'
 import AddDr from './components/AddDr'
+import AdminBody from './components/AdminBody'
+import ViewHospital from './components/ViewHospital'
+import AddHospital from './components/AddHospital'
 
 
 function MainRoute() {
@@ -49,7 +52,9 @@ function MainRoute() {
         <Route path="/ViewDrAppntmnt/*" element={<ViewDrAppntmnt/>}/>
         <Route path="/DeptList/*" element={<DeptList/>}/>
         <Route path="/AddDr/*" element={<AddDr/>}/>
-
+        <Route path="/AdminBody/*" element={<AdminBody/>}/>
+        <Route path="/ViewHospital/*" element={<ViewHospital/>}/>
+        <Route path='/AddHospital/*' element={<AddHospital/>}/>
       </Routes>
     </div>
   )

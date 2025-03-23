@@ -6,55 +6,30 @@ import HomeFooter from './HomeFooter';
 import { useAuth } from "./AuthContext";
 import SignIn from './SignIn';
 import axios from "axios";
-import DeptList from './DeptList';
 
-function AddDr() {
+function AddHospital() {
     const { isAuthenticated, userData,setUserData } = useAuth();
-    const location = useLocation();
-    const selectedDept = location.state?.dept?.name || "";
-    const initValues={name:"",specialization:selectedDept,location:"",qualification:"",year:"",Slots:"",fee:"",availability:"",email:""}
+    // const location = useLocation();
+    // const selectedDept = location.state?.dept?.name || "";
+    const initValues={name:"",location:"",email:""}
     const [formErrors, setFormErrors] = useState({});
     const [formValue, setFormValue] = useState(initValues)
     const [isSubmit, setIsSubmit] = useState(false)
     const navigate=useNavigate();
 
-    const [selectedDays, setSelectedDays] = useState([]);
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    // const [selectedDays, setSelectedDays] = useState([]);
+    // const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
     if(!isAuthenticated){
         return <Navigate to="/SignIn" replace />;
 
     }
 
-
-
-    useEffect(() => {
-        setFormValue((prev) => ({ ...prev, dept: selectedDept }));
-    }, [selectedDept]);
-    const handleCheckboxChange = (event) => {
-        const { value, checked } = event.target;
-        setSelectedDays((prev) => 
-            checked ? [...prev, value] : prev.filter((day) => day !== value)
-        );
-    };
-
     const handleChange=(e)=>{
         const { name, value } = e.target;
         
         setFormValue({ ...formValue, [name]: value });
         }
-    const generatePassword = (name) => {
-            if (!name) return "";
-          
-            const cleanedName = name.replace(/^Dr\s+/i, "") // Remove "Dr" if present
-            .replace(/\s+/g, "")    // Remove spaces
-            .replace(/\./g, "");    // Remove dots (.) // Remove all spaces
-            const namePart = cleanedName.substring(0, 4); // Get first 4 letters
-            const uniqueId = Math.floor(1000 + Math.random() * 9000);
-          
-            return `${namePart}@${uniqueId}`;
-        };
-          
           
     
     function  handleSubmit(e) {
@@ -65,45 +40,38 @@ function AddDr() {
           return; // Stop submission if there are validation errors
         }
         
-        const firstLocationWord = formValue.location?.split(/[\s,]+/)[0].toLowerCase() || ""; // Ensure location exists
-       const cleanedName = formValue.name?.replace(/^Dr\s*/i, "").replace(/\s+/g, "");
-       const username = `${cleanedName}@${firstLocationWord}`;
-   
-    const password =generatePassword(formValue.name);
-    
+        const cleanedName = formValue.name.replace(/^Dr\s+/i, "") // Remove "Dr" if present
+        .replace(/\s+/g, " ")    // Ensure single spaces between words
+        .replace(/\./g, "");     // Remove dots (.)
 
-    console.log("Generated Username:", username);
-    console.log("Generated Password:", password);
+        const nameParts = cleanedName.split(" "); // Split into words
+        const firstWord = nameParts[0] || ""; // Get the first word safely
 
-        const formattedSlots = Array.isArray(formValue.Slots) 
-        ? formValue.Slots 
-        : formValue.Slots.split(",").map(slot => slot.trim());
+        const namePart = firstWord.length < 7 ? firstWord : firstWord.substring(0, 6);
+        const uniqueId = Math.floor(100 + Math.random() * 900); // 3-digit random number
 
-        const doctorData = {
+        const username = namePart + uniqueId;
+        const password = username.toLowerCase();
+
+        console.log("Username:", username);
+        console.log("Password:", password);
+
+
+        const hospitalData = {
             ...formValue,
-            availability: selectedDays,  // ✅ Send selected days as an array
-            Slots: formattedSlots,        // ✅ Already an array
-            hospital: userData?.hospitalId,
             username: username,  // ✅ Add username
-            password: password   // ✅ Add password
+            password: password, // ✅ Add password
+            // role:"hospitalAdmin"   
         };
         
 
         const sendDoctorData = async () => {
             try {
-                console.log(doctorData);
-                const response = await axios.post("http://localhost:5000/doctor/adddoctor", doctorData);
+                console.log(hospitalData);
+                const response = await axios.post("http://localhost:5000/hospital/addhospital", hospitalData);
                alert("Successfully added a doctor!");
-               navigate('/DoctorBody');
+               navigate('/AdminBody');
                 console.log("Server Response:", response.data);
-                const newDoctorId = response.data.doctor_id;
-               // Updating user data state safely
-            setUserData((prevUserData) => {
-            const updatedUserData = { ...prevUserData, doctorId: newDoctorId };
-           // console.log("Updated user data: ", updatedUserData);
-            return updatedUserData;
-                });
-            // navigate("/AddDr");
                
                 
             } catch (error) {
@@ -113,59 +81,25 @@ function AddDr() {
         };
         sendDoctorData(); // ✅ Call the async function
     }
-    // ✅ Log userData only when it updates
-useEffect(() => {
-    if (userData.doctorId) {
-        console.log("Now user data is:", userData);
-        setIsSubmit(true);
-    }
-}, [userData]);
-
     function Validate(values){ //mainly to check if there is any error or to find if any empty fields
         const errors={}
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         //to check if username field is not empty
         if (!values.name) errors.name = "Name is required.";
     
-        if (!values.fee) {
-          errors.fee = "fee is required";
-        }
-        else if (!/^\d+$/.test(values.fee)) 
-            errors.fee = "fee must be a number.";
-        if (!values.year) {
-            errors.year = "year is required";
-        }
-        else if (!/^\d+$/.test(values.year)) 
-                  errors.year = "year must be a number.";
-        if (!values.specialization) {
-          errors.dept = "Department is required";
-        }
+        
         if (!values.location) {
             errors.location = "Location is required";
         }
-        if (!values.qualification) {
-            errors.qualification = "Qualification is required";
-        }
-        if (!values.Slots || values.Slots.length === 0) {
-            errors.Slots = "At least one slot is required";
-        }
-        
-          if (selectedDays.length===0) {
-            errors.availability = "Atleast one day must be selected";
-          }
-          if (!values.email) {   //email is not blank
-            errors.email = "Email is required!";
-          } 
-          else if (!regex.test(values.email)) {   
+        if (!values.email) {   //email is not blank
+           errors.email = "Email is required!";
+        } 
+        else if (!regex.test(values.email)) {   
             errors.email = "This is not a valid email format!";
-          }
+        }
         return errors;
       }
     
-      useEffect(() => {
-        console.log(formErrors);
-        setFormValue(initValues);
-      }, [formErrors]);//dependency array  
 
   return (
     <div>
@@ -175,7 +109,7 @@ useEffect(() => {
       {/* <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DeptList')}>
         <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
       </div> */}
-      <h1 id="edit-head" style={{marginTop:"70px"}}>Add a doctor</h1>
+      <h1 id="edit-head" style={{marginTop:"70px"}}>Add a hospital</h1>
       <form id="form" onSubmit={handleSubmit}>
             <div id="middle">
             <div className="name">
@@ -190,19 +124,6 @@ useEffect(() => {
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
-                name="email" placeholder="Email" 
-                value={formValue.email} style={{ borderColor: formErrors.email ? "red" : "" }}
-                ></input>
-                <br></br><br></br>
-            </div>
-            <br></br>
-            <div className="name">
-                <input type="text" name="specialization" value={formValue.specialization} readOnly /> 
-            </div>
-            <br></br>
-            <div className="name">
-                <input type="text" 
-                onChange={handleChange} 
                 name="location" placeholder="Location" 
                 value={formValue.location} style={{ borderColor: formErrors.location ? "red" : "" }}
                 ></input>
@@ -212,12 +133,21 @@ useEffect(() => {
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
+                name="email" placeholder="Email" 
+                value={formValue.email} style={{ borderColor: formErrors.email ? "red" : "" }}
+                ></input>
+                <br></br><br></br>
+            </div>
+            {/* <br></br>
+            <div className="name">
+                <input type="text" 
+                onChange={handleChange} 
                 name="qualification" placeholder="Qualification" 
                 value={formValue.qualification} style={{ borderColor: formErrors.qualification ? "red" : "" }}
                 ></input>
                 <br></br><br></br>
-            </div>
-            <br></br>
+            </div> */}
+            {/* <br></br>
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
@@ -225,8 +155,8 @@ useEffect(() => {
                 value={formValue.fee} style={{ borderColor: formErrors.fee ? "red" : "" }}
                 ></input>
                 <br></br><br></br>
-            </div>
-            <br></br>
+            </div> */}
+            {/* <br></br>
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
@@ -234,8 +164,8 @@ useEffect(() => {
                 value={formValue.year} style={{ borderColor: formErrors.year ? "red" : "" }}
                 ></input>
                 <br></br><br></br>
-            </div>
-            <br></br>
+            </div> */}
+            {/* <br></br>
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
@@ -246,8 +176,8 @@ useEffect(() => {
                 ></input>
                 <br></br><br></br>
             </div>
-            <br></br>
-            <div id="avail-box">
+            <br></br> */}
+            {/* <div id="avail-box">
             <div className="name" id="checkdiv">
                 <p style={{fontSize:"larger",color:"#165e98"}}>Availability:</p>
                 {days.map((day) => (
@@ -260,7 +190,7 @@ useEffect(() => {
                 ))}
                 {formErrors.availability && <p style={{ color: "red" }}>{formErrors.availability}</p>}
             </div>
-            </div>
+            </div> */}
 
             <br></br>
             <button id="sub-but" type="submit" style={{ backgroundColor: '#165e98',marginLeft:"55px",border:"none",color:"white" }}>Submit</button>
@@ -268,10 +198,10 @@ useEffect(() => {
         </form>
         <HomeFooter/>
     <Routes>
-        <Route path="/DeptList" element={<DeptList/>}/>
+        {/* <Route path="/DeptList" element={<DeptList/>}/> */}
     </Routes>
     </div>
   )
 }
 
-export default AddDr
+export default AddHospital;

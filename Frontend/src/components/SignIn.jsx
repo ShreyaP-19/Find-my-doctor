@@ -8,6 +8,7 @@ import { useAuth } from "./AuthContext";
 import HomeBody from './HomeBody';
 import DoctorBody from './DoctorBody';
 import DrBody from './DrBody';
+import AdminBody from './AdminBody';
 
 
 function SignIn(){
@@ -48,7 +49,9 @@ function SignIn(){
           else if(response.data.role==='doctor'){
             navigate('/DrBody');
           }
-         
+          else if(response.data.role==='admin'){
+            navigate('/AdminBody');
+          }
           
         })
         .catch((error) => {
@@ -143,6 +146,7 @@ function SignIn(){
         <Route path="/HomeBody" element={<HomeBody/>}/>
         <Route path="/DoctorBody" element={<DoctorBody/>}/>
         <Route path="/DrBody" element={<DrBody/>}/>
+        <Route path="/AdminBody" element={<AdminBody/>}/>
       </Routes>
     </>
   )
