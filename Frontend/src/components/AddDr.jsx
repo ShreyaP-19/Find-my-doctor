@@ -169,15 +169,12 @@ useEffect(() => {
 
   return (
     <div>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
         
       <DoctorHeader/>
-      {/* <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DeptList')}>
-        <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
-      </div> */}
-      <h1 id="edit-head" style={{marginTop:"70px"}}>Add a doctor</h1>
-      <form id="form" onSubmit={handleSubmit}>
-            <div id="middle">
+      <h1 id="edit-head" style={{marginTop:"70px",marginBottom:"60px"}}>Add a doctor</h1>
+      <form id="addDr" onSubmit={handleSubmit}>
+        <div id="whole-form">
+            <div id="piece">
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
@@ -200,6 +197,8 @@ useEffect(() => {
                 <input type="text" name="specialization" value={formValue.specialization} readOnly /> 
             </div>
             <br></br>
+        </div>
+        <div id="piece">
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
@@ -227,6 +226,8 @@ useEffect(() => {
                 <br></br><br></br>
             </div>
             <br></br>
+            </div>
+            <div id="piece">
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
@@ -239,7 +240,7 @@ useEffect(() => {
             <div className="name">
                 <input type="text" 
                 onChange={handleChange} 
-                name="Slots" placeholder="Slot.Eg:9:00 AM-11:00 AM" 
+                name="Slots" placeholder="Slot (Eg:9:00 AM-11:00 AM)" 
                 value={formValue.Slots}
  
                 style={{ borderColor: formErrors.Slots ? "red" : "" }}
@@ -247,6 +248,8 @@ useEffect(() => {
                 <br></br><br></br>
             </div>
             <br></br>
+            </div>
+            <div id="piece" style={{marginBottom:"20px"}}>
             <div id="avail-box">
             <div className="name" id="checkdiv">
                 <p style={{fontSize:"larger",color:"#165e98"}}>Availability:</p>
@@ -261,10 +264,13 @@ useEffect(() => {
                 {formErrors.availability && <p style={{ color: "red" }}>{formErrors.availability}</p>}
             </div>
             </div>
+            </div>
+            <div style={{display:"flex",justifyContent:"center"}}>
 
             <br></br>
             <button id="sub-but" type="submit" style={{ backgroundColor: '#165e98',marginLeft:"55px",border:"none",color:"white" }}>Submit</button>
             </div>
+        </div>
         </form>
         <HomeFooter/>
     <Routes>

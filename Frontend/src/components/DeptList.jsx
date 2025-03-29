@@ -9,6 +9,7 @@ import { useAuth } from './AuthContext';
 import SignIn from './SignIn';
 import ViewAppointments from './ViewAppointments';
 import ViewDepartments from './ViewDepartments';
+import EditDr from './EditDr';
 
 function DeptList() {
   const location = useLocation();
@@ -79,7 +80,7 @@ function DeptList() {
         <button id="buttonStyle" onClick={handleAddDoctor}>Add Doctor</button>
       </div>
       <div id="main-container" style={{marginTop:"20px"}}>
-      <div id="existing" style={{maxWidth:"30%"}}>
+      <div id="existing" style={{maxWidth:"40%"}}>
         <h1 id="heading" style={{marginBottom:"30px"}}>{dept ? dept.name : "No department selected"}</h1>
          <ul id="doc-ul">
             {doctors.length > 0 ? (
@@ -103,6 +104,8 @@ function DeptList() {
 
                   </div>
                   {hoveredDoctor===doctor.id && (<i className="fa-solid fa-trash" id="hover-icon" onClick={()=>handleIconClick(doctor)}/>)}
+                  {hoveredDoctor===doctor.id && (<i className="fa-solid fa-pen" id="hover-icon" style={{marginRight:"40px"}}
+                  onClick={()=>navigate('/EditDr',{ state: { doctor } })}/>)}
                 </div></li>)
             ) : (
               <p style={{textAlign:"center",marginBottom:"40px"}}>No doctors available</p>
@@ -117,6 +120,7 @@ function DeptList() {
         <Routes>
             <Route path='/AddDr' element={<AddDr/>}/>
             <Route path='/ViewDepartments' element={<ViewDepartments/>}/>
+            <Route path='/EditDr' element={<EditDr/>}/>
         </Routes>
     </div>
   )
