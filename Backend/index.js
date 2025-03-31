@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const authRoutes = require("./routes/authRoutes"); // Import auth routes
 const hospitalRoutes=require("./routes/hospitalRoutes")//Import hospital routes
 const doctorRoutes=require("./routes/doctorRoutes")//Import doctor routes
+const fetchingRoutes=require("./routes/fetchingRoutes")//Import doctor routes
 
 
 
@@ -28,6 +29,8 @@ app.use("/hospital",hospitalRoutes);
 
 // adding doctor by admin
 app.use("/doctor",doctorRoutes);
+
+app.use("/feature",fetchingRoutes);
 
 
 

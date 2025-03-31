@@ -29,6 +29,13 @@ const appointmentHistorySchema = new mongoose.Schema({
   symptoms:{
     type:String,
   },
+  status:{
+    type: String, 
+    required: true, 
+    enum: ['Confirmed', 'Completed', 'Cancelled'],  
+    default: 'Confirmed' // Default role
+
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -12,9 +12,12 @@ import axios from "axios";
 function AppointmentHistory() {
     const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState(""); // Track error messages
+    const [selectedAppointment,setSelectedAppointment]=useState(null);
 
     const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
     const navigate=useNavigate();
+    
+
    // console.log("User Data:", userData);
    useEffect(() => {
     const fetchAppointments =async () => {
@@ -46,6 +49,19 @@ function AppointmentHistory() {
         console.log("Total Appointments:", appointments.length);
       }
     }, [appointments]); 
+  
+
+   // Debugging: Track selected appointment
+   useEffect(() => {
+    if (selectedAppointment) {
+        console.log("Selected Appointment:", selectedAppointment);
+    }
+}, [selectedAppointment]);
+
+// Handle click event for appointment selection
+const handleAppointmentClick = (appointment) => {
+    setSelectedAppointment(appointment);
+};
     
     
   return (
@@ -83,7 +99,11 @@ function AppointmentHistory() {
             </div>
             {appointments
             .map((appointment, index) => (
-              <div key={index} id="another-container">
+              <div key={index} 
+              id="another-container"
+              onClick={() => handleAppointmentClick(appointment)}
+              >
+             
                 <div id="column-doc">
                   <p id="styling-para"> {appointment.doctorName}</p>
                 </div>

@@ -337,20 +337,37 @@ router.post("/bookappointment", async (req, res) => {
 
 router.get("/history/:patientId",async (req, res) => {
   try {
-    console.log("query data",req.query);
+    console.log("query data",req.params);
     const { patientId } = req.params;
     if (!patientId) {
       return res.status(400).json({ message: "Missing patient ID" });
     }
+    const currentTime = new Date(); // Get current date and time
+    let appointments = await Appointment.find({ patient: patientId });
+
+        if (appointments.length === 0) {
+            return res.status(404).json({ message: "No appointments found" });
+        }
+
+    // Update status in database if needed
+    for (let app of appointments) {
+      const appointmentDateTime = new Date(app.appointmentDateTime);
+
+      let updatedStatus = appointmentDateTime <= currentTime ? "Completed" : "Confirmed";
+
+      if (app.status !== updatedStatus && app.status !== "Completed" && app.status !== "Cancelled") {
+        await Appointment.updateOne({ _id: app._id }, { $set: { status: updatedStatus } });
+    }
+    }
 
     
-    let appointments = await Appointment.find({ patient: patientId })
+    appointments = await Appointment.find({ patient: patientId })
   .populate({ path: "doctor",
     select: "name fee location",
     match: { name: { $exists: true, $ne: null } },})  // Populate only 'name' and 'fee' from doctor
-  .populate("hospital", "name")  // Populate only 'name' from hospital
+  .populate("hospital", "name location")  // Populate only 'name' from hospital
   .populate("patient", "username") // Populate only 'name' from patient
-  .select("appointmentDateTime doctor hospital patient") // Select only required fields
+  .select("appointmentDateTime doctor hospital patient status") // Select only required fields
   .sort({ appointmentDateTime: -1 }); // ✅ Sort by latest first
   if (appointments.length === 0) {
     return res.status(404).json({ message: "No appointments found" });
@@ -363,12 +380,12 @@ router.get("/history/:patientId",async (req, res) => {
     
     return {
       doctorName: app.doctor?.name || "Unknown",
-      location:app.doctor?.location || "Unknown",
+      location:app.hospital?.location || "Unknown",
       fee: app.doctor?.fee || "NA",
       hospitalName: app.hospital?.name || "Unknown",
       appointmentDate: appointmentDateTime.toISOString().split("T")[0].split("-").reverse().join("-"), // Extract YYYY-MM-DD
-      appointmentTime: appointmentDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) // Extract HH:MM AM/PM
-
+      appointmentTime: appointmentDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }), // Extract HH:MM AM/PM
+      status: app.status
     };
   });
   const patientName = appointments.length > 0 ? appointments[0]?.patient?.username : "Unknown";
@@ -420,7 +437,9 @@ router.get("/checkslots", async (req, res) => {
     // Count existing appointments for the requested date & time
     const existingAppointments = await Appointment.countDocuments({ 
       appointmentDateTime: parsedDate, 
-      doctor: doctorId 
+      doctor: doctorId,
+      status: "Confirmed"
+
     });
 
     const nowUTC = new Date(); // Get current time in UTC
@@ -569,6 +588,31 @@ router.put("/edit-profile/:doctorId", async (req, res) => {
   }
   
   
+});
+
+
+router.put("/cancel-appointment/:patientId",async (req,res)=>{
+  const {appointmentDateTime}=req.query;
+  const {patientId}=req.params;
+  try{
+  // Find the appointment by patient ID and appointment date
+  const appointment = await Appointment.findOne({
+    patient: patientId,
+    appointmentDateTime: new Date(appointmentDateTime),
+  });
+  if (!appointment) {
+    return res.status(404).json({ message: "Appointment not found" });
+  }
+  appointment.status = "Cancelled";
+    await appointment.save();
+
+    res.status(200).json({ message: "Appointment cancelled successfully", appointment });
+  }catch(error){
+    res.status(500).json({ error: "Error cancelling appointment", details: error.message });
+  }
+
+
+
 });
 
 

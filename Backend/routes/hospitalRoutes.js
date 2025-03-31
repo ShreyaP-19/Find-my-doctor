@@ -10,12 +10,32 @@ const moment = require("moment");
 //not finalized just for reference
 router.post("/addhospital", async (req, res) => {
     try {
-      const { name, location } = req.body;
+      const { name, location,email,username,password } = req.body;
   
       const hospital = new Hospital({ name, location });
       await hospital.save();
+
+      if (hospital.admin) {
+        return res.status(400).json({ error: "This hospital already has an admin." });
+      }
   
-      res.status(201).json({ message: "Hospital added successfully", hospital });
+      // Create hospital admin user
+      const newAdmin = new User({
+        email,
+        username,
+        password,
+        role: "hospitalAdmin",
+        hospital: hospital._id
+      });
+  
+      await newAdmin.save();
+  
+      // Assign the admin to the hospital
+      hospital.admin = newAdmin._id;
+      await hospital.save();
+  
+  
+      res.status(201).json({ message: "Hospital added successfully", hospital,admin: "New admin ",newAdmin });
     } catch (error) {
       res.status(500).json({ error: "Error adding hospital" });
     }
@@ -79,42 +99,6 @@ router.post("/addhospital", async (req, res) => {
     }
 
 
-  });
-
-  router.post("/register-hospital-admin", async (req, res) => {
-    try {
-      const { email, username, password, hospitalId } = req.body;
-  
-      // Check if the hospital exists
-      const hospitalExists = await Hospital.findById(hospitalId);
-      if (!hospitalExists) {
-        return res.status(400).json({ error: "Hospital not found" });
-      }
-  
-      // Check if the hospital already has an admin
-      if (hospitalExists.admin) {
-        return res.status(400).json({ error: "This hospital already has an admin." });
-      }
-  
-      // Create hospital admin user
-      const newAdmin = new User({
-        email,
-        username,
-        password,
-        role: "hospitalAdmin",
-        hospital: hospitalId
-      });
-  
-      await newAdmin.save();
-  
-      // Assign the admin to the hospital
-      hospitalExists.admin = newAdmin._id;
-      await hospitalExists.save();
-  
-      res.status(201).json(newAdmin);
-    } catch (error) {
-      res.status(500).json({ error: "Error creating hospital admin", details: error.message });
-    }
   });
 
   router.get("/departments/:hospitalId", async (req, res) => {
@@ -316,7 +300,8 @@ router.post("/addhospital", async (req, res) => {
     // ✅ Fetch appointments for the hospital
     let appointments = await Appointment.find({
       doctor: doctorId,
-      appointmentDateTime: { $gte: today }, // ✅ Fetch upcoming appointments
+      appointmentDateTime: { $gte: today },
+      status: "Confirmed" // ✅ Fetch upcoming appointments
     })
       .populate("doctor", "name") // ✅ Fetch doctor name
       .sort({ appointmentDateTime: 1 }); // ✅ Sort by upcoming appointments
