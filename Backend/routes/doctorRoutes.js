@@ -362,6 +362,7 @@ router.get("/history/:patientId",async (req, res) => {
     const appointmentDateTime = new Date(app.appointmentDateTime); // Convert ISO string to Date object
     
     return {
+      _id: app._id,  // Add this line
       doctorName: app.doctor?.name || "Unknown",
       location:app.doctor?.location || "Unknown",
       fee: app.doctor?.fee || "NA",
