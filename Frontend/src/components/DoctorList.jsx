@@ -83,6 +83,16 @@ const handleSubmit = (e) => {
         <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
       </div>
 
+      <div className="searchdiv">
+            <div className="nav-search">
+              <input className="search-input" placeholder="Search Doctors" />
+              <div className="Sicon">
+                <button className="search-button">
+                  <i className="fa-solid  fa-magnifying-glass" id="i"></i>
+                </button>
+              </div>
+            </div>
+          </div>
       <div id="container1">
 
         <div id="filter-box">
