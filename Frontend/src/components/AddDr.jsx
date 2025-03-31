@@ -176,6 +176,7 @@ useEffect(() => {
         <div id="whole-form">
             <div id="piece">
             <div className="name">
+            <label id="edit-label">Name:</label>
                 <input type="text" 
                 onChange={handleChange} 
                 name="name" placeholder="Name" 
@@ -185,6 +186,7 @@ useEffect(() => {
             </div>
             <br></br>
             <div className="name">
+            <label id="edit-label">Email:</label>
                 <input type="text" 
                 onChange={handleChange} 
                 name="email" placeholder="Email" 
@@ -194,12 +196,14 @@ useEffect(() => {
             </div>
             <br></br>
             <div className="name">
+            <label id="edit-label">Specialization:</label>
                 <input type="text" name="specialization" value={formValue.specialization} readOnly /> 
             </div>
             <br></br>
         </div>
         <div id="piece">
             <div className="name">
+            <label id="edit-label">Location:</label>
                 <input type="text" 
                 onChange={handleChange} 
                 name="location" placeholder="Location" 
@@ -209,6 +213,7 @@ useEffect(() => {
             </div>
             <br></br>
             <div className="name">
+            <label id="edit-label">Qualification:</label>
                 <input type="text" 
                 onChange={handleChange} 
                 name="qualification" placeholder="Qualification" 
@@ -218,6 +223,7 @@ useEffect(() => {
             </div>
             <br></br>
             <div className="name">
+            <label id="edit-label">Fees:</label>
                 <input type="text" 
                 onChange={handleChange} 
                 name="fee" placeholder="Fees" 
@@ -229,6 +235,7 @@ useEffect(() => {
             </div>
             <div id="piece">
             <div className="name">
+            <label id="edit-label">Year of Experience:</label>
                 <input type="text" 
                 onChange={handleChange} 
                 name="year" placeholder="Year of Experience" 
@@ -238,6 +245,7 @@ useEffect(() => {
             </div>
             <br></br>
             <div className="name">
+            <label id="edit-label">Available Slots:</label>
                 <input type="text" 
                 onChange={handleChange} 
                 name="Slots" placeholder="Slot (Eg:9:00 AM-11:00 AM)" 

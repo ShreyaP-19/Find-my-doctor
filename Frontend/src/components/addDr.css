@@ -22,7 +22,8 @@
 #whole-form{
     display: block;
     border: 2px solid #165e98;
-    padding-left: 50px;
+    padding-left: 30px;
+    padding-right: 30px;
     padding-bottom: 40px;
 }
 #piece{

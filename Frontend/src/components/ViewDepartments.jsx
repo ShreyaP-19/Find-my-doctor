@@ -14,6 +14,7 @@ function ViewDepartments() {
   const [departments, setDepartments] = useState([]);
   const { isAuthenticated,userData } = useAuth(); // Add this inside the component
   const hospitalId = userData?.hospitalId; // Get hospital ID
+  const [hoveredDoctor, setHoveredDoctor] = useState(null);
 
    useEffect(() => {
       if (hospitalId) {
@@ -32,6 +33,27 @@ function ViewDepartments() {
        .catch((error) => console.error('Error fetching departments:', error));
    };
 
+  //  const handleIconClick = (id,name) => {
+  //   const confirmDelete = window.confirm(`Are you sure you want to delete the department ${name}?`);
+  //   if (confirmDelete) {
+  //     console.log(`Deleting Department ${name}`);
+  //     axios
+  //     .delete(`http://localhost:5000/hospital/delete-department/${id}`)
+  //     .then((response) => {
+  //       console.log(`Department ${name} deleted successfully!`, response.data);
+  //       // Remove the deleted doctor from the state
+  //       setDepartments((prevDepartments) => prevDepartments.filter((dept) => dept._id !== id));
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error deleting doctor:", error);
+  //       alert("Failed to delete doctor. Please try again.");
+  //     });
+  //     // Add delete logic here
+  //   } else {
+  //     console.log("Deletion canceled");
+  //   }
+  // };
+
   return (
     <div>
       {isAuthenticated ? (
@@ -49,7 +71,15 @@ function ViewDepartments() {
           <h2>Existing Departments</h2>
           <ul id="ul">
             {departments.length > 0 ? (
-              departments.map((dept) => <li key={dept._id} id="li" onClick={()=>navigate('/DeptList', { state: { dept } })}>{dept.name}</li>)
+              departments.map((dept) => <li key={dept._id} id="li" onClick={()=>navigate('/DeptList', { state: { dept } })} 
+              onMouseEnter={() => setHoveredDoctor(dept._id)}
+              onMouseLeave={() => setHoveredDoctor(null)}
+              style={{ position: "relative" }} 
+              >{dept.name}
+              {hoveredDoctor===dept._id && (<i className="fa-solid fa-trash" id="hover-icon" style={{top:"10px"}}
+              onClick={()=>handleIconClick(dept._id,dept.name)}
+              />)}
+              </li>)
             ) : (
               <p style={{textAlign:"center"}}>No departments available</p>
             )}
