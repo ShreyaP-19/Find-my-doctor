@@ -13,6 +13,7 @@ function AppointmentHistory() {
     const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState(""); // Track error messages
     const [selectedAppointment,setSelectedAppointment]=useState(null);
+    const [hoveredAppointment, setHoveredAppointment] = useState(null);
 
     const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
     const navigate=useNavigate();
@@ -31,7 +32,32 @@ function AppointmentHistory() {
       console.log("Appointment history of:", response.data.patientName);
       console.log("API response:", response.data);
 
-      setAppointments(response.data.appointments);
+      const updatedAppointments = response.data.appointments.map((appointment) => {
+        const [day, month, year] = appointment.appointmentDate.split("-"); // Split DD-MM-YYYY
+  const formattedDate = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD format
+
+  const appointmentDateTime = new Date(`${formattedDate} ${appointment.appointmentTime}`);
+
+  const now = new Date(); 
+        console.log(`Appointment: ${appointment.appointmentDate} ${appointment.appointmentTime}`);
+  console.log(`Parsed Appointment DateTime: ${appointmentDateTime}`);
+  console.log(`Current DateTime: ${now}`);
+
+
+        let status = appointment.status; // Keep existing status
+        // console.log(today)
+        if (status !== "Cancelled") {
+          if (appointmentDateTime < now) {
+            status = "Completed"; // Past appointments are completed
+          } else {
+            status = "Confirmed"; // Future appointments are confirmed
+          }
+        }
+
+        return { ...appointment, status };
+      });
+
+      setAppointments(updatedAppointments);
       setError(""); // Reset error state if successful
       
     }catch(error){
@@ -63,6 +89,24 @@ const handleAppointmentClick = (appointment) => {
     setSelectedAppointment(appointment);
 };
     
+
+     const handleCancel = async (appointmentId) => {
+    const confirmCancel = window.confirm("Are you sure you want to cancel this appointment?");
+       if (!confirmCancel) return;
+  
+       try {
+         await axios.put(`http://localhost:5000/doctor/cancel-appointment/${appointmentId}`);
+         setAppointments((prev) =>
+           prev.map((appt) =>
+             appt._id === appointmentId ? { ...appt, status: "Cancelled" } : appt
+           )
+         );
+         alert("Appointment cancelled successfully.");
+       } catch (error) {
+         console.error("Error cancelling appointment:", error);
+        alert("Failed to cancel the appointment. Please try again.");
+      }
+     };
     
   return (
     <div>
@@ -96,14 +140,16 @@ const handleAppointmentClick = (appointment) => {
               <div id="column-slot">
                 <p id="styling-para"><strong>Slot</strong></p>
               </div>
+              <div id="column-date">
+                  <p id="styling-para"><strong>Status</strong></p>
+              </div>
             </div>
             {appointments
             .map((appointment, index) => (
-              <div key={index} 
-              id="another-container"
-              onClick={() => handleAppointmentClick(appointment)}
-              >
-             
+              <div key={index} id="another-container"
+                onMouseEnter={() => handleAppointmentClick(appointment._id)}
+                onMouseLeave={() => handleAppointmentClick(null)} style={{ position: "relative" }} 
+                >
                 <div id="column-doc">
                   <p id="styling-para"> {appointment.doctorName}</p>
                 </div>
@@ -119,6 +165,36 @@ const handleAppointmentClick = (appointment) => {
                 <div id="column-slot">
                   <p id="styling-para"> {appointment.appointmentTime}</p>
                 </div>
+                <div id="column-date">
+                    <p style={{
+        backgroundColor: 
+        appointment.status === "Completed" ? "green" : 
+        appointment.status === "Confirmed" ? "blue" : 
+        "red",
+        color: "white",
+        padding: "5px 10px",
+        borderRadius: "5px",
+        textAlign: "center",
+        fontWeight: "bold",
+        display: "inline-block",
+        minWidth: "100px",
+        marginTop:"10px"
+        }}>{appointment.status}</p>
+                  </div>
+                  {appointment.status === "Confirmed" && selectedAppointment === appointment._id && (
+                    <i
+                      className="fa-solid fa-xmark"
+                      id="hover-icon"
+                      style={{
+                        cursor: "pointer",
+                        top: "6px",left:"1100px",
+                        display: selectedAppointment === appointment._id ? "inline" : "none",color:"red",fontSize:"xx-large"
+                      }}
+                      onMouseEnter={() => handleAppointmentClick(appointment._id)}
+                      onMouseLeave={() => handleAppointmentClick(null)}
+                      onClick={() => handleCancel(appointment._id)}
+                    />
+                  )}
               </div>
             ))}
           </div>):

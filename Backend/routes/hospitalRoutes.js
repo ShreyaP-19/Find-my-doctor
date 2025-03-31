@@ -6,6 +6,7 @@ const User=require("../model/User");
 const Appointment = require("../model/AppointmentHistory"); 
 const Doctor = require("../model/Doctor");
 const moment = require("moment");
+const { splitTimeSlots } = require("./timeUtils");
 // Add a hospital
 //not finalized just for reference
 router.post("/addhospital", async (req, res) => {
@@ -138,14 +139,23 @@ router.post("/addhospital", async (req, res) => {
 
 
     // ✅ Fetch appointments for the hospital
-    let appointments = await Appointment.find({ hospital: hospitalId, appointmentDateTime: { $gte: today } })
-    .populate("doctor", "name specialization") // ✅ Corrected syntax
-    .populate({
-      path: "doctor",
-      populate: { path: "specialization", model: "Department", select: "name" } // ✅ Fetch department name
-    }) // ✅ Properly closed `.populate`
-    .populate("patient", "username email") // ✅ Fetch patient details
-    .sort({ appointmentDateTime: 1 }); // ✅ Sort by upcoming appointments
+    let appointments = await Appointment.find({
+      hospital: hospitalId,
+      appointmentDateTime: { $gte: today }, // Fetch future appointments
+      status: "Confirmed", // Ensure only confirmed appointments
+    })
+      .populate({
+        path: "doctor",
+        select: "name specialization", // Fetch doctor's name and specialization
+        populate: {
+          path: "specialization",
+          model: "Department",
+          select: "name", // Fetch department name
+        },
+      })
+      .populate("patient", "username email") // Fetch patient details
+      .sort({ appointmentDateTime: 1 }); // Sort by earliest appointments first
+    
 
     // Fetch appointments for the hospital
 
@@ -333,6 +343,93 @@ router.post("/addhospital", async (req, res) => {
     console.error("Error fetching doctor appointments:", error);
     res.status(500).json({ error: "Error fetching appointments", details: error.message });
   }
+  });
+
+  router.delete("/delete-department/:dept_id",async (req,res)=>{
+    try{
+      const { dept_id } = req.params;
+
+      // Find the department
+      const department = await Department.findById(dept_id);
+      if (!department) {
+          return res.status(400).json({ message: "Department not found" });
+      }
+
+     
+      // Check if any doctors are associated with this department
+      const doctors = await Doctor.find({ specialization: dept_id });
+      if (doctors.length > 0) {
+          return res.status(400).json({ message: "Cannot delete department with assigned doctors" });
+      }
+
+      await Department.findByIdAndDelete(dept_id);
+
+      res.status(200).json({ message: "Department deleted successfully" });
+
+  
+
+    }catch(error){
+      console.log("some error happened ",error);
+      res.status(500).json({ error: "Error in deleting department", details: error.message });
+    }
+
+
+  });
+
+  router.put("/doctor-details/:doctorId",async (req,res)=>{
+    const { doctorId } = req.params;
+    const {email,location,qualification,availability,Slots } = req.body;
+    try{
+     const doctor = await Doctor.findById(doctorId).populate("user", "username password email");
+     if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+
+     const user = doctor.user;
+     if(user.email && email){
+      user.email = email;
+      await user.save();
+     }
+
+     const updatedData={};
+
+     if (doctor?.location !== location && location.trim() !== "") {
+      updatedData.location = location;
+    }
+
+    if (availability!==undefined) {
+      updatedData.availability = availability;
+    }
+    if(qualification!=undefined){
+      updatedData.qualification=qualification;
+    }
+
+    if (Slots!=undefined) {
+      if (!Array.isArray(Slots)) {
+        console.error("❌ Error: Slots is not an array!", Slots);
+        return res.status(400).json({ error: "Invalid format for Slots. Expected an array." });
+      }
+        updatedData.Slots = Slots;
+        console.log("✅ Slots format is correct.");
+    const slots = req.body.Slots && req.body.Slots.length > 0 ? req.body.Slots : null;
+    if(slots){
+      console.log("fine ",slots);
+      const timeSlots = splitTimeSlots(slots);
+      console.log("🔹 Processed Slots Array:", timeSlots);
+      updatedData.timeSlots = timeSlots;
+    }
+    
+   
+    }
+
+    Object.assign(doctor, updatedData);
+    await doctor.save();
+    res.json({ message: "Profile updated successfully!", updatedDoctor: doctor });
+    
+
+    }catch(error){
+      console.error("Error updating profile:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+    }
+
   });
   
 

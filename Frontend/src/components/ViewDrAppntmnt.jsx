@@ -14,9 +14,12 @@ function ViewDrAppntmnt() {
   const docId = userData?.doctorId; // Get doctor ID
   console.log(userData);
   useEffect(() => {
-    if (docId) {
-      fetchAppointments(docId);
+    if (!docId) {
+      console.error("Doctor ID is missing! Check authentication.");
+      return;
     }
+    console.log("here id is ",docId);
+    fetchAppointments(docId);
   }, [docId]); // Fetch departments when doctorId is available
 
 const fetchAppointments = async(id) => {

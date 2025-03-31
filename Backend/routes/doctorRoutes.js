@@ -5,8 +5,10 @@ const Appointment = require("../model/AppointmentHistory");
 const User=require("../model/User");
 const Department=require("../model/Department");
 const router = express.Router();
+//const { splitTimeSlots } = require("./timeUtils");
 
-// Function to split time slots into 30-minute intervals
+router.use(express.json());  // Required for parsing JSON request bodies
+
 function splitTimeSlots(slots, interval = 30) {
   const allSlots = [];
 
@@ -52,6 +54,8 @@ function formatTime(date) {
   hours = hours % 12 || 12;
   return `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
 }
+
+
 
 // GET doctors with filtering
 router.get("/doctors/:specialization?", async (req, res) => {
@@ -379,6 +383,7 @@ router.get("/history/:patientId",async (req, res) => {
     const appointmentDateTime = new Date(app.appointmentDateTime); // Convert ISO string to Date object
     
     return {
+      _id: app._id,  // Add this line
       doctorName: app.doctor?.name || "Unknown",
       location:app.hospital?.location || "Unknown",
       fee: app.doctor?.fee || "NA",
@@ -539,6 +544,8 @@ router.put("/edit-profile/:doctorId", async (req, res) => {
   try{
     const doctor = await Doctor.findById(doctorId).populate("user", "username password");
     if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+    console.log("Received request body:", req.body);
+
     const user = doctor.user;
     if (currentPassword && newPassword) {
       // 🔹 Compare as plain text
@@ -591,15 +598,12 @@ router.put("/edit-profile/:doctorId", async (req, res) => {
 });
 
 
-router.put("/cancel-appointment/:patientId",async (req,res)=>{
-  const {appointmentDateTime}=req.query;
-  const {patientId}=req.params;
+router.put("/cancel-appointment/:appointmentId",async (req,res)=>{
+  const {appointmentId}=req.params;
   try{
   // Find the appointment by patient ID and appointment date
-  const appointment = await Appointment.findOne({
-    patient: patientId,
-    appointmentDateTime: new Date(appointmentDateTime),
-  });
+  const appointment = await Appointment.findById(appointmentId);
+
   if (!appointment) {
     return res.status(404).json({ message: "Appointment not found" });
   }

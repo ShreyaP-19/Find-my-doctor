@@ -15,7 +15,25 @@
 }
 #avail-box{
     border:1px solid gray;
-    padding: 10px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+#whole-form{
+    display: block;
+    border: 2px solid #165e98;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 40px;
+}
+#piece{
+    /* border:1px dashed green; */
+    display: flex;
+    justify-content: center;
+    gap:50px;
+    margin-top: 40px;
+}
+#addDr{
     display: flex;
     justify-content: center;
 }
