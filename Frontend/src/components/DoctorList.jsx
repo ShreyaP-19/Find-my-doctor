@@ -18,6 +18,7 @@ function DoctorList() {
   const navigate=useNavigate();
   const [selectedSpecialization,setSpecialization]=useState("");
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");  // State to store input value
 
   const { isAuthenticated } = useAuth();
 
@@ -53,6 +54,15 @@ function DoctorList() {
 
 };
 
+useEffect(() => {
+  if (!searchQuery.trim()) { 
+    console.log("Search query is empty. Fetching all doctors...");
+    fetchDoctors();  // Fetch all doctors when searchQuery is empty
+  } else {
+    handleSearch(); // Perform search when searchQuery is not empty
+  }
+}, [searchQuery]); // ✅ Trigger effect when searchQuery changes
+
 const handleSubmit = (e) => {
   e.preventDefault(); // Prevents page reload
   console.log("Filtering by specialization:", selectedSpecialization);
@@ -62,6 +72,47 @@ const handleSubmit = (e) => {
   const handleClear = () => {
     setSpecialization("");
   };
+
+  const handleInputChange = (event) => {
+    setSearchQuery(event.target.value);  // Update state on input change
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {  // ✅ Prevent API call if searchQuery is empty
+      console.log("Search query is empty. Skipping API call.");
+      fetchDoctors();
+      return;
+    }
+    console.log("Searching for:", searchQuery);
+    
+    try {
+      const response = await axios.get(`http://localhost:5000/feature/search`, {
+        params: { keyword: searchQuery },
+      });
+  
+      console.log("Full API Response:", response); // Debugging
+      console.log("Search Results:", response.data); 
+  
+      if (!response || !response.data) {
+        throw new Error("Invalid response from server");
+      }
+  
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        console.log("success");
+        setDoctors(response.data);
+
+        setError(null);
+      } else {
+        setDoctors([]); // ✅ Ensure UI clears properly
+        setError("No doctors found...");
+      }
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      setDoctors([]);
+      setError("Failed to fetch doctors. Please try again.");
+    }
+  };
+  
 
   
 
@@ -85,9 +136,13 @@ const handleSubmit = (e) => {
 
       <div className="searchdiv">
             <div className="nav-search">
-              <input className="search-input" placeholder="Search Doctors" />
+              <input className="search-input"
+               placeholder="Search Doctors" 
+               value={searchQuery}
+               onChange={handleInputChange} // Capture input value
+               />
               <div className="Sicon">
-                <button className="search-button">
+                <button className="search-button" onClick={handleSearch}>
                   <i className="fa-solid  fa-magnifying-glass" id="i"></i>
                 </button>
               </div>
