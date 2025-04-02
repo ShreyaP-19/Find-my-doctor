@@ -27,23 +27,49 @@ if (!isAuthenticated) {
 }
 
 const handleDayChange = (event) => {
-    const day = event.target.value;
-    setAvailableDays((prevDays) =>
-      prevDays.includes(day) ? prevDays.filter((d) => d !== day) : [...prevDays, day]
-    );
-  };
+  const day = event.target.value;
+  setAvailableDays((prevDays) => {
+    const updatedDays = prevDays.includes(day) 
+      ? prevDays.filter((d) => d !== day) 
+      : [...prevDays, day];
+
+    console.log("Updated availableDays:", updatedDays);  // ✅ Debugging
+    return updatedDays;
+  });
+};
+
   
 
- const handleSave = async () => {
+ const handleSave = async (event) => {
+  event.preventDefault();
+  const updatedData = {};
+  if (doctor?.location !== loc && loc.trim() !== "") {
+    updatedData.location = loc;
+  }
+  
+  if (doctor?.qualification !== qualification && qualification.trim() !== "") {
+    updatedData.qualification = qualification;
+  }
+  if (JSON.stringify(doctor?.availability) !== JSON.stringify(availableDays) && availableDays.length > 0) {
+    updatedData.availability = availableDays;  // Prevent updating with an empty array
+  }
+  if (doctor?.Slots?.join(", ") !== availableSlots && availableSlots.trim() !== "") {
+    updatedData.Slots = availableSlots.split(",").map((slot) => slot.trim());
+  }
+  if (doctor.user?.email !== email && email.trim() !== "") {
+    updatedData.email = email;
+  }
+  
+  updatedData.name=name;
+
+  // Check if there's any data to update
+  if (Object.keys(updatedData).length === 0) {
+    alert("No changes made.");
+    return;
+  }
+  console.log("Data sent is: ",updatedData);
      try {
-       await axios.put(`http://localhost:5000/hospital/doctor-details/${userData.doctorId}`, {
-        name,
-         email,
-      qualification,
-       location:loc,
-         availability: availableDays,
-        Slots: availableSlots.split(", ").map(slot => slot.trim()),
-      });
+       await axios.put(`http://localhost:5000/hospital/doctor-details/${doctor.id}`,updatedData);
   
        alert("Doctor details updated successfully!");
        navigate("/ViewDepartments");  // Redirect after saving
