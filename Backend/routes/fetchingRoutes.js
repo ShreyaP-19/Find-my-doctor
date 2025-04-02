@@ -9,6 +9,7 @@ const Doctor = require("../model/Doctor");
 router.get("/search", async (req, res) => {
     try {
       const { keyword } = req.query;
+      console.log("query is ",req.query);
   
       if (!keyword) {
         return res.status(400).json({ message: "Keyword is required" });
@@ -29,8 +30,23 @@ router.get("/search", async (req, res) => {
       })
       .populate("specialization", "name") // Populate Department Name
       .populate("hospital", "name location"); // Populate Hospital Name & Location
+
+      const filtered_doctors = doctors.map((doctor) => ({
+        id: doctor._id,
+        name: doctor.name,
+        specialization: doctor.specialization?.name || "N/A",
+        hospital: doctor.hospital?.name || "N/A",
+        location: doctor.hospital?.location || "Unknown",
+        qualification: doctor.qualification || "N/A", // 
+        fee: doctor.fee || "Not provided",
+        Slots: doctor.Slots,
+        availability: doctor.availability,
+        timeSlots: doctor.timeSlots
   
-      res.json(doctors);
+      }));
+      console.log(filtered_doctors);
+  
+      res.json(filtered_doctors);
     } catch (error) {
       console.error("Error searching doctors:", error);
       res.status(500).json({ message: "Server Error" });

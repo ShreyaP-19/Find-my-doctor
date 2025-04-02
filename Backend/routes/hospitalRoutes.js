@@ -379,6 +379,8 @@ router.post("/addhospital", async (req, res) => {
   router.put("/doctor-details/:doctorId",async (req,res)=>{
     const { doctorId } = req.params;
     const {email,location,qualification,availability,Slots } = req.body;
+    console.log("Data recieved : ",req.body);
+    console.log("user id ",doctorId);
     try{
      const doctor = await Doctor.findById(doctorId).populate("user", "username password email");
      if (!doctor) return res.status(404).json({ message: "Doctor not found" });
@@ -390,19 +392,27 @@ router.post("/addhospital", async (req, res) => {
      }
 
      const updatedData={};
+     const daysOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-     if (doctor?.location !== location && location.trim() !== "") {
+     if (location !== undefined && doctor?.location !== location && location.trim() !== "") {
       updatedData.location = location;
     }
 
-    if (availability!==undefined) {
-      updatedData.availability = availability;
+    if (availability !== undefined && Array.isArray(availability)) {
+      // Sort the new availability according to predefined week order
+      const updatedAvailability = [...availability].sort((a, b) => daysOrder.indexOf(a) - daysOrder.indexOf(b));
+    
+      // Check if there's an actual change before updating
+      if (JSON.stringify(doctor.availability.sort()) !== JSON.stringify(updatedAvailability)) {
+        updatedData.availability = updatedAvailability;  // ✅ Fully replacing the existing availability
+      }
     }
+    
     if(qualification!=undefined){
       updatedData.qualification=qualification;
     }
 
-    if (Slots!=undefined) {
+    if (Slots!==undefined) {
       if (!Array.isArray(Slots)) {
         console.error("❌ Error: Slots is not an array!", Slots);
         return res.status(400).json({ error: "Invalid format for Slots. Expected an array." });
