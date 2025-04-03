@@ -4,6 +4,7 @@ const Doctor = require("../model/Doctor");
 const Appointment = require("../model/AppointmentHistory"); 
 const User=require("../model/User");
 const Department=require("../model/Department");
+const ImageData = require("../model/ImageData"); // Import Image Schema
 const router = express.Router();
 //const { splitTimeSlots } = require("./timeUtils");
 
@@ -84,23 +85,29 @@ router.get("/doctors/:specialization?", async (req, res) => {
     if (doctors.length === 0) {
       return res.status(404).json({ message: "No doctors found" });
     }
+    
 
-    //console.log("Fetched Doctors:", doctors);
-    // ✅ Transforming doctor data using .map()
-    const filtered_doctors = doctors.map((doctor) => ({
+   // Fetch doctor images separately (Ensuring all doctors are included)
+const doctorsWithImages = await Promise.all(
+  doctors.map(async (doctor) => {
+    const imageData = await ImageData.findOne({ doctorId: doctor._id }).sort({ _id: -1 });
+
+    return {
       id: doctor._id,
       name: doctor.name,
       specialization: doctor.specialization?.name || "N/A",
       hospital: doctor.hospital?.name || "N/A",
       location: doctor.hospital?.location || "Unknown",
-      qualification: doctor.qualification || "N/A", // 
+      qualification: doctor.qualification || "N/A",
       fee: doctor.fee || "Not provided",
       Slots: doctor.Slots,
       availability: doctor.availability,
-      timeSlots: doctor.timeSlots
-
-    }));
-    res.json(filtered_doctors);
+      timeSlots: doctor.timeSlots,
+      image: imageData ? imageData.image : null,  // ✅ Ensures even doctors without images are sent
+    };
+  })
+);
+    res.json(doctorsWithImages);
     
   } catch (error) {
     console.error("Error fetching doctors:", error);
@@ -112,7 +119,7 @@ router.get("/doctors/:specialization?", async (req, res) => {
 router.post("/adddoctor", async (req, res) => {
   try {
     console.log("data is ",req.body);
-    const { name, specialization, location, qualification, year,Slots, hospital, fee, availability,username,email,password } = req.body;
+    const { name, specialization, location, qualification, year,Slots, hospital, fee, availability,username,email,password,image } = req.body;
     if (!specialization) {
       return res.status(400).json({ error: "Specialization is missing in the request." });
     }
@@ -178,6 +185,15 @@ router.post("/adddoctor", async (req, res) => {
 
     newDoctor.user = newUser._id;
     await newDoctor.save();
+
+    const newImageData=new ImageData({
+      image,
+      doctorId: newDoctor._id
+    });
+
+    await newImageData.save();
+
+  
 
     console.log("✅ User created:", newUser.username);
     const doctorId = newDoctor._id;

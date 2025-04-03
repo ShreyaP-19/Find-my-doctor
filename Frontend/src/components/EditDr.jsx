@@ -21,6 +21,8 @@ const [loc, setLocation] = useState(doctor.location || "");
 const [availableDays, setAvailableDays] = useState(doctor.availability || []);
 const [availableSlots, setAvailableSlots] = useState(doctor.Slots ? doctor.Slots.join(", ") : "");
 const { userData,isAuthenticated } = useAuth();
+const [file,setFile]=useState(null);
+const [imageData, setImageData] = useState("");
 
 if (!isAuthenticated) {
   return <Navigate to="/SignIn" replace />; // ✅ Redirects unauthenticated users
@@ -63,7 +65,7 @@ const handleDayChange = (event) => {
   updatedData.name=name;
 
   // Check if there's any data to update
-  if (Object.keys(updatedData).length === 0) {
+  if (Object.keys(updatedData).length === 1) {
     alert("No changes made.");
     return;
   }
@@ -91,6 +93,39 @@ const handleDayChange = (event) => {
     
   };
 
+  const handleUpload= async (e) =>{
+    if (!imageData) {
+      alert("Please select an image!");
+      return;
+  }
+  console.log("file to upload",file);
+  try {
+    const response = await axios.post("http://localhost:5000/feature/upload-image", { image: imageData,doctorId: doctor.id });
+    alert("Image uploaded successfully!");
+    console.log("message ",response.data);
+  } catch (error) {
+    console.error("Upload failed", error);
+  }
+  }
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    console.log(`File selected: ${selectedFile}`);
+    if (selectedFile) {
+        console.log(`File selected: ${selectedFile.name}`);
+        setFile(selectedFile);
+
+        const reader = new FileReader();
+    reader.readAsDataURL(selectedFile);
+    reader.onloadend = () => {
+      setImageData(reader.result); // Base64 string
+    };
+    } else {
+        console.log("Select a file first");
+        setFile(null);
+    }
+};
+
     
    
   
@@ -116,6 +151,13 @@ const handleDayChange = (event) => {
                 <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} id="text-input" />
                 <label id="edit-label">Qualification:</label>
                 <input type="text" value={qualification} onChange={(e) => setQualification(e.target.value)} id="text-input" />
+
+                <label id="edit-label">Image:</label>
+                <input type="file" accept="image/*" onChange={handleFileChange} />
+
+                <button onClick={handleUpload} disabled={!file}>Upload</button>
+
+
 
                 <label id="edit-label">Location:</label>
                 <input type="text" value={loc} onChange={(e) => setLocation(e.target.value)} id="text-input" />

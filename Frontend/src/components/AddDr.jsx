@@ -16,6 +16,8 @@ function AddDr() {
     const [formErrors, setFormErrors] = useState({});
     const [formValue, setFormValue] = useState(initValues)
     const [isSubmit, setIsSubmit] = useState(false)
+    const [file,setfile]=useState(null)
+    const [imageData, setImageData] = useState("");
     const navigate=useNavigate();
 
     const [selectedDays, setSelectedDays] = useState([]);
@@ -85,7 +87,8 @@ function AddDr() {
             Slots: formattedSlots,        // ✅ Already an array
             hospital: userData?.hospitalId,
             username: username,  // ✅ Add username
-            password: password   // ✅ Add password
+            password: password,   // ✅ Add password
+            image: imageData
         };
         
 
@@ -166,6 +169,26 @@ useEffect(() => {
         console.log(formErrors);
         setFormValue(initValues);
       }, [formErrors]);//dependency array  
+
+      const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        console.log(`File selected: ${selectedFile}`);
+        if (selectedFile) {
+            console.log(`File selected: ${selectedFile.name}`);
+            setfile(selectedFile);
+    
+            const reader = new FileReader();
+        reader.readAsDataURL(selectedFile);
+        reader.onloadend = () => {
+          setImageData(reader.result); // Base64 string
+        };
+        } else {
+            console.log("Select a file first");
+            setfile(null);
+        }
+    };
+
+      
 
   return (
     <div>
@@ -253,6 +276,13 @@ useEffect(() => {
  
                 style={{ borderColor: formErrors.Slots ? "red" : "" }}
                 ></input>
+                <br></br><br></br>
+            </div>
+            <br></br>
+            <div className="name">
+            <label id="edit-label">Upload image</label> {/*upload image */}
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+           { /*<button onClick={handleUpload} disabled={!file}>Upload</button>*/}
                 <br></br><br></br>
             </div>
             <br></br>

@@ -5,6 +5,7 @@ const router = express.Router();
 const User=require("../model/User");
 const Appointment = require("../model/AppointmentHistory"); 
 const Doctor = require("../model/Doctor");
+const ImageData = require("../model/ImageData"); // Import Image Schema
 
 router.get("/search", async (req, res) => {
     try {
@@ -52,4 +53,28 @@ router.get("/search", async (req, res) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
+
+
+  router.post("/upload-image", async (req, res) => {
+    try {
+      const { image, doctorId } = req.body; // Get data from request
+  
+      if (!image || !doctorId) {
+        return res.status(400).json({ message: "Both image and doctorId are required" });
+      }
+  
+      const newImage = new ImageData({
+        image, // Base64 string
+        doctorId
+      });
+  
+      await newImage.save();
+      res.status(201).json({ message: "Image uploaded successfully!" });
+  
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      res.status(500).json({ message: "Server Error" });
+    }
+  });
+  
   module.exports = router; 

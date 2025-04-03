@@ -10,6 +10,7 @@ import { useNavigate ,Routes,Route} from 'react-router-dom'
 import Appointments from './Appointments';
 import axios from "axios";
 import HomeBody from './HomeBody';
+import profile from "../Unwanted/profile.jpg";
 
 
 
@@ -201,8 +202,15 @@ const handleSubmit = (e) => {
     ) : (
     doctors.map((doctor) => (
     <div key={doctor._id} id="list1">
-       <div id="doctor1"></div>
-
+      <img 
+        src={doctor.image ? doctor.image : profile} 
+        alt={doctor.name} 
+        className="doctor-image"
+        style={{ width: "100px", height: "100px", borderRadius: "50%" }} 
+        onError={(e) => e.target.src = profile} // ✅ Fallback image
+        id="doctor1"
+      />
+       
      <div className="doctor-info" style={{ marginRight: "30px",marginLeft:'20px' }}>
         <h2>{doctor.name}</h2>
          <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization}</p>
