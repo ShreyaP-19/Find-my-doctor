@@ -127,13 +127,16 @@ const handleDayChange = (event) => {
 };
 
     
+  const handlePrev = () => {
+    navigate("/DeptList", { state: { dept: location.state?.dept } });
+  };
    
   
 
   return (
     <div>
       <DoctorHeader />
-       <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DrBody')}>
+       <div id="back-button" style={{fontSize:"20px"}}onClick={handlePrev}>
         <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
       </div> 
       <div className="edit-profile-container">

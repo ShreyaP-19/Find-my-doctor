@@ -14,7 +14,7 @@ function ViewHospital() {
   const [hospitals, setHospitals] = useState([]);
   const { isAuthenticated,userData } = useAuth(); // Add this inside the component
   const hospitalId = userData?.hospitalId; // Get hospital ID
-
+  const [hoveredDoctor, setHoveredDoctor] = useState(null); 
    useEffect(() => {
         fetchHospitals();
     }, []); // Fetch hospitals 
@@ -37,6 +37,29 @@ const handleAddDoctor = () => {
     // Implement Add Doctor functionality
   };
 
+  const handleIconClick = (hospital) => {
+    // const confirmDelete = window.confirm(`Are you sure you want to delete ${doctor.name}?`);
+    // if (confirmDelete) {
+    //   console.log(`Deleting Dr. ${doctor.name}`);
+    //   axios
+    //   .delete(`http://localhost:5000/doctor/delete-doctor/${doctor.id}`)
+    //   .then((response) => {
+    //     console.log(`Doctor ${doctor.name} deleted successfully!`, response.data);
+    //     // Remove the deleted doctor from the state
+    //     setDoctors((prevDoctors) => prevDoctors.filter((d) => d.id !== doctor.id));
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error deleting doctor:", error);
+    //     alert("Failed to delete doctor. Please try again.");
+    //   });
+    //   // Add delete logic here
+    // } else {
+    //   console.log("Deletion canceled");
+    // }
+    // console.log("clicked");
+    // console.log("Hospital:",hospital.name)
+  };
+
   return (
     <div>
       {isAuthenticated ? (
@@ -57,8 +80,12 @@ const handleAddDoctor = () => {
           <ul id="ul">
             {hospitals.length > 0 ? (
               hospitals.map((hospital) => <li key={hospital._id} id="li" 
+              onMouseEnter={() => setHoveredDoctor(hospital._id)}
+                onMouseLeave={() => setHoveredDoctor(null)}style={{ position: "relative" }} 
               // onClick={()=>navigate('/DeptList', { state: { hospital } })}
-              >{hospital.name} - {hospital.location}</li>)
+              >{hospital.name} - {hospital.location}
+              {hoveredDoctor===hospital._id && (<i className="fa-solid fa-trash" id="hover-icon" style={{top:"10px"}} onClick={()=>handleIconClick(hospital)}/>)}
+              </li>)
             ) : (
               <p style={{textAlign:"center"}}>No Hospital available</p>
             )}
