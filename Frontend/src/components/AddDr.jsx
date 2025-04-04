@@ -280,8 +280,8 @@ useEffect(() => {
             </div>
             <br></br>
             <div className="name">
-            <label id="edit-label">Upload image</label> {/*upload image */}
-            <input type="file" accept="image/*" onChange={handleFileChange} />
+            <label id="edit-label">Upload image:</label> {/*upload image */}
+            <input style={{marginTop:"10px",marginLeft:"2px"}}type="file" accept="image/*" onChange={handleFileChange} />
            { /*<button onClick={handleUpload} disabled={!file}>Upload</button>*/}
                 <br></br><br></br>
             </div>

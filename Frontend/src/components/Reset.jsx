@@ -15,14 +15,24 @@ function Reset() {
   const [message, setMessage] = useState("");
   const [action,setAction]=useState(false);
 
-const otpcheck=()=>{
+const otpcheck=async ()=>{
   const errors = Validate({ email, otp }); 
   setFormErrors(errors);
   if (Object.keys(errors).length === 0) {
-    console.log("otp check");
-    navigate('/PasswordReset') 
+    try {
+      const res = await axios.post("http://localhost:5000/feature/verify-otp", { email, otp });
+
+      // If success, navigate
+      console.log("OTP verified successfully");
+      navigate("/PasswordReset", { state: { email, otp } });
+
+    } catch (error) {
+      setMessage(error.response?.data?.message || "Something went wrong");
+      console.log("OTP verification failed");
+    }
+  } else {
+    console.log("Enter valid OTP of 6 digits");
   }
-  console.log("Enter valid otp of 6 digits")
 }
 
   const handleSubmit = async (e) => {
@@ -33,7 +43,7 @@ const otpcheck=()=>{
     if (Object.keys(errors).length === 0) {
       setAction(true);
       try {
-        const res = await axios.post("http://localhost:5000/api/auth/forgot-password", { email });
+        const res = await axios.post("http://localhost:5000/feature/forgot-password", { email });
         setMessage(res.data.message);
       } catch (error) {
         setMessage(error.response?.data?.message || "Something went wrong");

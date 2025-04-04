@@ -12,21 +12,26 @@ function PasswordReset() {
     const [password, setPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [message, setMessage] = useState("");
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const errors = Validate({ password,newPassword });  // Validate the form
+        const errors = Validate({ password,newPassword });  // Validate the inputs
         setFormErrors(errors);  // Set form errors
         setIsSubmit(true);  
         if (Object.keys(errors).length === 0) {
-            console.log("Error-free");
-            navigate('/SignIn')
+
             try {
-                const res = await axios.post("http://localhost:5000/api/auth/reset-password", {
+              console.log("Submitting reset-password with:", { email, otp, newPassword });
+                const res = await axios.post("http://localhost:5000/feature/reset-password", {
                   email,
                   otp,
                   newPassword
                 });
-                setMessage(res.data.message);
+                if (res.status === 200) {
+                  setMessage(res.data.message);
+                  console.log("Password reset successful");
+                  navigate('/SignIn');
+                }
               } catch (error) {
                 setMessage(error.response?.data?.message || "Something went wrong");
               }

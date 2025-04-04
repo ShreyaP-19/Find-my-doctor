@@ -130,6 +130,29 @@ router.get("/search", async (req, res) => {
     }
   });
 
+  router.post("/verify-otp", async (req, res) => {
+    const { email, otp } = req.body;
+  
+    try {
+      const user = await User.findOne({ email });
+      if (!user) return res.status(404).json({ message: "User not found" });
+  
+      if (user.resetToken !== otp) {
+        return res.status(400).json({ message: "Invalid OTP" });
+      }
+  
+      if (user.tokenExpiry < Date.now()) {
+        return res.status(400).json({ message: "OTP has expired" });
+      }
+  
+      return res.status(200).json({ message: "OTP verified successfully" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+
   router.post("/reset-password", async (req, res) => {
     const { email, otp, newPassword } = req.body;
   
