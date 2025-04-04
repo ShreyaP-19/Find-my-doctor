@@ -6,6 +6,7 @@ const User=require("../model/User");
 const Department=require("../model/Department");
 const ImageData = require("../model/ImageData"); // Import Image Schema
 const router = express.Router();
+const { sendWelcomeEmail } = require("./emailService"); // Import email service
 //const { splitTimeSlots } = require("./timeUtils");
 
 router.use(express.json());  // Required for parsing JSON request bodies
@@ -186,18 +187,23 @@ router.post("/adddoctor", async (req, res) => {
     newDoctor.user = newUser._id;
     await newDoctor.save();
 
+
+    if(image){
+
     const newImageData=new ImageData({
       image,
       doctorId: newDoctor._id
     });
 
     await newImageData.save();
+  }
 
   
 
     console.log("✅ User created:", newUser.username);
     const doctorId = newDoctor._id;
     console.log("✅ Doctor added:", newDoctor,"Id is ",doctorId);
+    await sendWelcomeEmail(email, name, username, password, hospitalExists.name);
 
 
     res.status(201).json({ newDoctor, doctor_id: doctorId });

@@ -161,9 +161,9 @@ const handleSubmit = (e) => {
 
             <label htmlFor="Specialization">
 
-                <input type="radio" value ="General Physician" name="Subject" id="checkbox"
-                checked={selectedSpecialization === "General Physician"}
-                 onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  General Physician</span><br/>
+                <input type="radio" value ="General Medicine" name="Subject" id="checkbox"
+                checked={selectedSpecialization === "General Medicine"}
+                 onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  General Medicine</span><br/>
 
                 <input type="radio" value ="Gynecologist" name="Subject" id="checkbox" 
                 checked={selectedSpecialization === "Gynecologist"}
