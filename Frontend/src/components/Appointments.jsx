@@ -162,6 +162,11 @@ console.log("Final selectedDateTime:", selectedDateTime.toISOString());
     appointmentDateTime: selectedDateTime.toISOString(), // Send in ISO format
   };
  // appointment data to send and store in backend
+ const confirmBooking = window.confirm("Are you sure you want to book this appointment?");
+  if (!confirmBooking) {
+    console.log("Booking status ",confirmBooking);
+    return;
+  }
 
   try {
     console.log("Booking appointment with data:", requestBody);
