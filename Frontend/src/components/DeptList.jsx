@@ -22,6 +22,15 @@ function DeptList() {
   //console.log("department",dept.name);
   const [hoveredDoctor, setHoveredDoctor] = useState(null); // Track which doctor is hovered
 
+  const dep = location.state?.dept || JSON.parse(localStorage.getItem("selectedDept"));
+  useEffect(() => {
+    if (dep) {
+      localStorage.setItem("selectedDept", JSON.stringify(dep));
+    }
+  }, [dep]);
+  
+
+
   useEffect(() => {
     if (dept && userData?.hospitalId) { 
       axios
@@ -105,7 +114,7 @@ function DeptList() {
                   </div>
                   {hoveredDoctor===doctor.id && (<i className="fa-solid fa-trash" id="hover-icon" onClick={()=>handleIconClick(doctor)}/>)}
                   {hoveredDoctor===doctor.id && (<i className="fa-solid fa-pen" id="hover-icon" style={{marginRight:"40px"}}
-                  onClick={()=>navigate('/EditDr',{ state: { doctor } })}/>)}
+                  onClick={()=>navigate('/EditDr',{ state: { doctor,dept } })}/>)}
                 </div></li>)
             ) : (
               <p style={{textAlign:"center",marginBottom:"40px"}}>No doctors available</p>

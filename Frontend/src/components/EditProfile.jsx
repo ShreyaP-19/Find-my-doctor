@@ -6,6 +6,7 @@ import axios from "axios";
 import { useAuth } from "./AuthContext";
 import { Navigate,useNavigate,Route, Routes } from 'react-router-dom'
 
+
 function EditProfile() {
   const { userData,isAuthenticated } = useAuth();
   const [doctor, setDoctor] = useState(null);
@@ -56,10 +57,25 @@ function EditProfile() {
 
   // Handle checkbox selection for available days
   const handleDayChange = (event) => {
-    const { value, checked } = event.target;
-    setAvailableDays(checked ? [...availableDays, value] : availableDays.filter((day) => day !== value));
-    setErrorMessage("");
+    const day = event.target.value;
+    const weekOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  
+    setAvailableDays((prevDays) => {
+      let updatedDays;
+      if (prevDays.includes(day)) {
+        updatedDays = prevDays.filter((d) => d !== day);
+      } else {
+        updatedDays = [...prevDays, day];
+      }
+  
+      // Sort days based on weekOrder
+      updatedDays.sort((a, b) => weekOrder.indexOf(a) - weekOrder.indexOf(b));
+  
+      setErrorMessage(""); // Clear error
+      return updatedDays;
+    });
   };
+  
 
   // Enable editing mode
   const enableEditing = () => {
@@ -126,6 +142,7 @@ function EditProfile() {
     try {
       await axios.put(`http://localhost:5000/doctor/edit-profile/${userData.doctorId}`, updatedData);
       setSuccessMessage("Profile updated successfully!");
+      alert("Profile updated successfully!");
       setIsEditing(false);
       navigate("/DrBody");
     } catch (error) {
@@ -139,7 +156,7 @@ function EditProfile() {
       <DoctorHeader />
       <div id="back-button" style={{fontSize:"20px"}}onClick={()=>navigate('/DrBody')}>
         <button style={{backgroundColor:"white",border:"1px solid #165e98",borderRadius:"3px",color:"#165e98"}}>Prev</button>
-      </div>
+</div>
       <div className="edit-profile-container">
         <h1 id="edit-head">Doctor Profile</h1>
 

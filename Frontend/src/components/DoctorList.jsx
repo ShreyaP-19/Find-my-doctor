@@ -10,6 +10,7 @@ import { useNavigate ,Routes,Route} from 'react-router-dom'
 import Appointments from './Appointments';
 import axios from "axios";
 import HomeBody from './HomeBody';
+import profile from "../Unwanted/profile.jpg";
 
 
 
@@ -18,6 +19,7 @@ function DoctorList() {
   const navigate=useNavigate();
   const [selectedSpecialization,setSpecialization]=useState("");
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");  // State to store input value
 
   const { isAuthenticated } = useAuth();
 
@@ -53,6 +55,15 @@ function DoctorList() {
 
 };
 
+useEffect(() => {
+  if (!searchQuery.trim()) { 
+    console.log("Search query is empty. Fetching all doctors...");
+    fetchDoctors();  // Fetch all doctors when searchQuery is empty
+  } else {
+    handleSearch(); // Perform search when searchQuery is not empty
+  }
+}, [searchQuery]); // ✅ Trigger effect when searchQuery changes
+
 const handleSubmit = (e) => {
   e.preventDefault(); // Prevents page reload
   console.log("Filtering by specialization:", selectedSpecialization);
@@ -62,6 +73,47 @@ const handleSubmit = (e) => {
   const handleClear = () => {
     setSpecialization("");
   };
+
+  const handleInputChange = (event) => {
+    setSearchQuery(event.target.value);  // Update state on input change
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {  // ✅ Prevent API call if searchQuery is empty
+      console.log("Search query is empty. Skipping API call.");
+      fetchDoctors();
+      return;
+    }
+    console.log("Searching for:", searchQuery);
+    
+    try {
+      const response = await axios.get(`http://localhost:5000/feature/search`, {
+        params: { keyword: searchQuery },
+      });
+  
+      console.log("Full API Response:", response); // Debugging
+      console.log("Search Results:", response.data); 
+  
+      if (!response || !response.data) {
+        throw new Error("Invalid response from server");
+      }
+  
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        console.log("success");
+        setDoctors(response.data);
+
+        setError(null);
+      } else {
+        setDoctors([]); // ✅ Ensure UI clears properly
+        setError("No doctors found...");
+      }
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      setDoctors([]);
+      setError("Failed to fetch doctors. Please try again.");
+    }
+  };
+  
 
   
 
@@ -85,9 +137,13 @@ const handleSubmit = (e) => {
 
       <div className="searchdiv">
             <div className="nav-search">
-              <input className="search-input" placeholder="Search Doctors" />
+              <input className="search-input"
+               placeholder="Search Doctors" 
+               value={searchQuery}
+               onChange={handleInputChange} // Capture input value
+               />
               <div className="Sicon">
-                <button className="search-button">
+                <button className="search-button" onClick={handleSearch}>
                   <i className="fa-solid  fa-magnifying-glass" id="i"></i>
                 </button>
               </div>
@@ -105,9 +161,9 @@ const handleSubmit = (e) => {
 
             <label htmlFor="Specialization">
 
-                <input type="radio" value ="General Physician" name="Subject" id="checkbox"
-                checked={selectedSpecialization === "General Physician"}
-                 onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  General Physician</span><br/>
+                <input type="radio" value ="General Medicine" name="Subject" id="checkbox"
+                checked={selectedSpecialization === "General Medicine"}
+                 onChange={(e) => setSpecialization(e.target.value)} /><span id="span">  General Medicine</span><br/>
 
                 <input type="radio" value ="Gynecologist" name="Subject" id="checkbox" 
                 checked={selectedSpecialization === "Gynecologist"}
@@ -146,8 +202,15 @@ const handleSubmit = (e) => {
     ) : (
     doctors.map((doctor) => (
     <div key={doctor._id} id="list1">
-       <div id="doctor1"></div>
-
+      <img 
+        src={doctor.image ? doctor.image : profile} 
+        alt={doctor.name} 
+        className="doctor-image"
+        style={{ width: "100px", height: "100px", borderRadius: "50%" }} 
+        onError={(e) => e.target.src = profile} // ✅ Fallback image
+        id="doctor1"
+      />
+       
      <div className="doctor-info" style={{ marginRight: "30px",marginLeft:'20px' }}>
         <h2>{doctor.name}</h2>
          <p><strong><i className="fa-solid fa-user-doctor"></i></strong> {doctor.specialization}</p>

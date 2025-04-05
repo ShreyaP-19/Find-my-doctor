@@ -25,6 +25,8 @@ import AdminBody from './components/AdminBody'
 import ViewHospital from './components/ViewHospital'
 import AddHospital from './components/AddHospital'
 import EditDr from './components/EditDr'
+import Reset from './components/Reset'
+import PasswordReset from './components/PasswordReset'
 
 
 function MainRoute() {
@@ -56,7 +58,9 @@ function MainRoute() {
         <Route path="/AdminBody/*" element={<AdminBody/>}/>
         <Route path="/ViewHospital/*" element={<ViewHospital/>}/>
         <Route path='/AddHospital/*' element={<AddHospital/>}/>
-        <Route path='/EditDr' element={<EditDr/>}/>
+        <Route path='/EditDr/*' element={<EditDr/>}/>
+        <Route path="/Reset/*" element={<Reset/>}/>
+        <Route path='/PasswordReset/*' element={<PasswordReset/>}/>
       </Routes>
     </div>
   )

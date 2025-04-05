@@ -17,6 +17,15 @@ const userSchema = new mongoose.Schema({
       return this.role === "hospitalAdmin"; // Required only for hospital admins
     }
   },
+  resetToken: { 
+    type: String
+  },
+
+tokenExpiry: {
+  type: Date
+
+},
+
   doctor: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Doctor",

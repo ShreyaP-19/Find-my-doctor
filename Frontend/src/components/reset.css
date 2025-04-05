@@ -1,0 +1,43 @@
+#reset-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+#reset-para{
+    text-align: center;
+    width:450px;
+    line-height: 24px;
+    color: #165e98;
+}
+#reset-form{
+    display: block;
+}
+#reset-form-div{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+#reset-input{
+    width:300px;
+    height: 40px;
+    font-size: medium;
+    padding-left: 10px;
+    border-radius: 8px;
+    border:1px solid #ccc;
+}
+#reset-input:hover{
+    border:1px solid blue;
+}
+#reset-button{
+    width: 130px;
+    height:30px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #165e98;
+    background-color: white;
+    border: 1px solid #165e98;
+}
+#reset-button:hover{
+    transform: scale(1.05);
+}

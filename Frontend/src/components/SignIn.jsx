@@ -9,6 +9,7 @@ import HomeBody from './HomeBody';
 import DoctorBody from './DoctorBody';
 import DrBody from './DrBody';
 import AdminBody from './AdminBody';
+import Reset from './Reset';
 
 
 function SignIn(){
@@ -137,6 +138,7 @@ function SignIn(){
             <button id="button" type="submit" style={{ color: '#165e98' }}>Submit</button>
             <br></br>
             <p>Don't have an account?<span onClick={() => navigate('/SignUp')}>Click here!</span></p>
+            <p style={{marginTop:"10px"}}><span onClick={() => navigate('/Reset')}>Forgot Password?</span></p>
           </div>
         </div>
       </form>
@@ -147,6 +149,7 @@ function SignIn(){
         <Route path="/DoctorBody" element={<DoctorBody/>}/>
         <Route path="/DrBody" element={<DrBody/>}/>
         <Route path="/AdminBody" element={<AdminBody/>}/>
+        <Route path="/Reset" element={<Reset/>}/>
       </Routes>
     </>
   )
