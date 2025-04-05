@@ -42,9 +42,11 @@ const otpcheck=async ()=>{
     setIsSubmit(true);  
     if (Object.keys(errors).length === 0) {
       setAction(true);
+      alert(`otp has bee successfully sent to ${email}`);
       try {
         const res = await axios.post("http://localhost:5000/feature/forgot-password", { email });
         setMessage(res.data.message);
+        console.log(res.data.message);
       } catch (error) {
         setMessage(error.response?.data?.message || "Something went wrong");
       }

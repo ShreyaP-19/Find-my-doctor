@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Header from './Header'
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function PasswordReset() {
     const location = useLocation();
@@ -29,7 +30,8 @@ function PasswordReset() {
                 });
                 if (res.status === 200) {
                   setMessage(res.data.message);
-                  console.log("Password reset successful");
+                  alert(`Password successfully updated`);
+                  console.log("updated successfully ",res.data);
                   navigate('/SignIn');
                 }
               } catch (error) {
@@ -70,7 +72,7 @@ function PasswordReset() {
             <input type="password" placeholder="Enter your new password" value={password} style={{ borderColor: formErrors.password ? "red" : "" }} id="reset-input" onChange={(e) => setPassword(e.target.value)} required />
             </div>
             <div id="reset-form-div">
-                <input type="password" placeholder="Re-enter the password" value={newPassword} style={{marginTop:"20px",marginBottom:"10px",borderColor: formErrors.newPassword? "red" : ""
+                <input type="text" placeholder="Re-enter the password" value={newPassword} style={{marginTop:"20px",marginBottom:"10px",borderColor: formErrors.newPassword? "red" : ""
                 }} id="reset-input" onChange={(e) => setNewPassword(e.target.value)}/>
             </div>
             <div id="reset-form-div">
@@ -78,7 +80,7 @@ function PasswordReset() {
             </div>
         </form>
         <div style={{height:"50px"}}></div>
-        {/* {message && <p>{message}</p>} */}
+         {message && <p>{message}</p>} 
     </div>
   )
 }
