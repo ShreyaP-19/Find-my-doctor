@@ -7,7 +7,6 @@ const hospitalSchema = new mongoose.Schema(
        unique: true },
     location: { type: String, 
       required: true },
-    admin: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Hospital admins
     doctors: [{ type: mongoose.Schema.Types.ObjectId, ref: "Doctor" }], // Associated doctors
     appointments: [{ type: mongoose.Schema.Types.ObjectId, ref: "AppointmentHistory" }], // Appointments linked to hospital
     departments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Department' }], // Stores department IDs
