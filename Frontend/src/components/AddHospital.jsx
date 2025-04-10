@@ -69,14 +69,14 @@ function AddHospital() {
             try {
                 console.log(hospitalData);
                 const response = await axios.post("http://localhost:5000/hospital/addhospital", hospitalData);
-               alert("Successfully added a doctor!");
+               alert("Successfully added a hospital!");
                navigate('/AdminBody');
                 console.log("Server Response:", response.data);
                
                 
             } catch (error) {
-                console.error("Error adding doctor:", error.response?.data || error.message);
-                alert("Failed to add doctor. Please try again.");
+                console.error("Error adding doctors:", error.response?.data || error.message);
+                alert("Failed to add hospital. Please try again.");
             }
         };
         sendDoctorData(); // ✅ Call the async function
