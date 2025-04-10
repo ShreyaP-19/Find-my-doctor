@@ -184,6 +184,46 @@ router.get("/search", async (req, res) => {
       res.status(500).json({ message: "Server error" });
     }
   });
+
+  router.delete("/delete-hospital/:id", async (req, res) => {
+    const hospitalId = req.params.id;
+    try{
+      const hospital = await Hospital.findById(hospitalId);
+    if (!hospital) {
+      return res.status(404).json({ message: 'Hospital not found' });
+    }
+     // 1. Find all doctors of the hospital
+     const doctors = await Doctor.find({ hospital: hospitalId });
+
+     // 2. Extract doctor IDs and their user IDs
+     const doctorIds = doctors.map(doc => doc._id);
+     const doctorUserIds = doctors.map(doc => doc.user);
+
+     // 3. Delete images linked to doctors
+    await ImageData.deleteMany({ doctor: { $in: doctorIds } });
+
+    // 4. Delete user accounts of the doctors
+    await User.deleteMany({ _id: { $in: doctorUserIds } });
+
+    // 5. Delete doctors
+    await Doctor.deleteMany({ hospital: hospitalId });
+
+    // 6. Delete the hospital admin's user account
+    await User.findByIdAndDelete(hospital.admin);
+
+    // 7. Delete the hospital
+    await Hospital.findByIdAndDelete(hospitalId);
+
+    res.status(200).json({ message: 'Hospital, admin, doctors, their user accounts, and doctor images deleted successfully' });
+
+    }catch(err){
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
+    }
+
+
+
+  })
   
   
   

@@ -17,7 +17,7 @@ function ViewHospital() {
   const [hoveredDoctor, setHoveredDoctor] = useState(null); 
    useEffect(() => {
         fetchHospitals();
-    }, []); // Fetch hospitals 
+    }, [hospitals]); // Fetch hospitals 
 
 
 
@@ -38,26 +38,26 @@ const handleAddDoctor = () => {
   };
 
   const handleIconClick = (hospital) => {
-    // const confirmDelete = window.confirm(`Are you sure you want to delete ${doctor.name}?`);
-    // if (confirmDelete) {
-    //   console.log(`Deleting Dr. ${doctor.name}`);
-    //   axios
-    //   .delete(`http://localhost:5000/doctor/delete-doctor/${doctor.id}`)
-    //   .then((response) => {
-    //     console.log(`Doctor ${doctor.name} deleted successfully!`, response.data);
-    //     // Remove the deleted doctor from the state
-    //     setDoctors((prevDoctors) => prevDoctors.filter((d) => d.id !== doctor.id));
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error deleting doctor:", error);
-    //     alert("Failed to delete doctor. Please try again.");
-    //   });
-    //   // Add delete logic here
-    // } else {
-    //   console.log("Deletion canceled");
-    // }
-    // console.log("clicked");
-    // console.log("Hospital:",hospital.name)
+    console.log(`Deleting hospital ${hospital.name} with ID ${hospital._id}`);
+     const confirmDelete = window.confirm(`Are you sure you want to delete ${hospital.name}?`);
+     if (confirmDelete) {
+       console.log(`Deleting Hospital ${hospital.name}`);
+       axios
+       .delete(`http://localhost:5000/feature/delete-hospital/${hospital._id}`)
+       .then((response) => {
+         console.log(`Doctor ${hospital.name} deleted successfully!`, response.data);
+         // Remove the deleted hospital from the state
+         setHospitals((prevHospitals) => prevHospitals.filter((h) => h.id !== hospital._id));
+         alert("Hospital deleted successfully!");
+       })
+       .catch((error) => {
+         console.error("Error deleting hospital:", error);
+         alert("Failed to delete hospital. Please try again.");
+       });
+      
+     } else {
+       console.log("Deletion canceled");
+     }
   };
 
   return (

@@ -7,6 +7,7 @@ const Appointment = require("../model/AppointmentHistory");
 const Doctor = require("../model/Doctor");
 const moment = require("moment");
 const { splitTimeSlots } = require("./timeUtils");
+const sendWelcomeHospitalEmail=require("../routes/emailService").sendWelcomeHospitalEmail;
 // Add a hospital
 //not finalized just for reference
 router.post("/addhospital", async (req, res) => {
@@ -34,6 +35,14 @@ router.post("/addhospital", async (req, res) => {
       // Assign the admin to the hospital
       hospital.admin = newAdmin._id;
       await hospital.save();
+
+      //await sendWelcomeHospitalEmail(email, name,location, username, password);
+      try {
+        await sendWelcomeHospitalEmail(email, name, location, username, password);
+      } catch (emailError) {
+        console.error("⚠️ Email sending failed:", emailError.message);
+        // Optional: Log error to DB or monitoring service
+      }
   
   
       res.status(201).json({ message: "Hospital added successfully", hospital,admin: "New admin ",newAdmin });
