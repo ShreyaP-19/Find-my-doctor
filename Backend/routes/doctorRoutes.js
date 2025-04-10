@@ -69,13 +69,14 @@ router.get("/doctors/:specialization?", async (req, res) => {
 
     if (specialization) {
       // Find the corresponding department
-      const department = await Department.findOne({ name: specialization });
+      const departments = await Department.find({ name: specialization });
 
-      if (!department) {
-        return res.status(404).json({ error: "Department not found" });
+      if (!departments || departments.length === 0) {
+        return res.status(404).json({ error: "No departments found with that name" });
       }
 
-      filter.specialization = department._id;
+      const departmentIds = departments.map((dept) => dept._id);
+      filter.specialization = { $in: departmentIds };
     }
 
     // Fetch doctors based on the filter (all doctors if no specialization)
