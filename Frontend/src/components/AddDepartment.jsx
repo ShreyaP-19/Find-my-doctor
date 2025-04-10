@@ -41,8 +41,9 @@ function AddDepartment() {
     console.log("Hospital ID:", hospitalId);
 
     axios
-      .post('http://localhost:5000/hospital//add-department', { name: departmentName, hospital:hospitalId })
+      .post('http://localhost:5000/hospital/add-department', { name: departmentName, hospital:hospitalId })
       .then((response) => {
+        console.log('Department added:', response.data);
         setDepartments([...departments, response.data]);
         setDepartmentName('');
       })

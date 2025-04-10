@@ -78,6 +78,7 @@ router.post("/addhospital", async (req, res) => {
 
   router.post("/add-department", async (req, res) => {
     try{
+      console.log("Data received: ", req.body);
       const { hospital, name } = req.body; // hospital = hospital ID, name = department name
       // Check if the hospital exists
     const hospitalExists = await Hospital.findOne({ _id: hospital }).populate("departments");
@@ -95,14 +96,20 @@ router.post("/addhospital", async (req, res) => {
       name,
       hospital: hospitalExists._id
     });
+    try{
 
     await newDepartment.save();
+    }catch(error){
+      console.log(error.message);
+    }
 
     // Add department reference to hospital
     hospitalExists.departments.push(newDepartment._id);
     await hospitalExists.save();
+    console.log(`Response is ${newDepartment}`);
 
     res.status(201).json(newDepartment);
+
 
     }catch(error){
       res.status(500).json({ error: "Error adding department", details: error.message });
