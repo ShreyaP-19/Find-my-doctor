@@ -55,6 +55,7 @@ function AddDr() {
             const uniqueId = Math.floor(1000 + Math.random() * 9000);
           
             return `${namePart}@${uniqueId}`;
+
         };
           
           
@@ -70,6 +71,7 @@ function AddDr() {
         const firstLocationWord = formValue.location?.split(/[\s,]+/)[0].toLowerCase() || ""; // Ensure location exists
        const cleanedName = formValue.name?.replace(/^Dr\s*/i, "").replace(/\s+/g, "");
        const username = `${cleanedName}@${firstLocationWord}`;
+
    
     const password =generatePassword(formValue.name);
     
