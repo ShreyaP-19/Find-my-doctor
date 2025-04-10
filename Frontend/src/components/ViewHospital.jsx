@@ -47,7 +47,7 @@ const handleAddDoctor = () => {
        .then((response) => {
          console.log(`Doctor ${hospital.name} deleted successfully!`, response.data);
          // Remove the deleted hospital from the state
-         setHospitals((prevHospitals) => prevHospitals.filter((h) => h.id !== hospital._id));
+         setHospitals((prevHospitals) => prevHospitals.filter((h) => h._id !== hospital._id));
          alert("Hospital deleted successfully!");
        })
        .catch((error) => {
