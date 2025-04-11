@@ -18,10 +18,10 @@ router.post("/signup", async (req, res) => {
     }
 
     // Determine role based on email domain
-    const getRole = (email) => (email.endsWith("@hospital.com") ? "hospitalAdmin" : "patient");
+    //const getRole = (email) => (email.endsWith("@hospital.com") ? "hospitalAdmin" : "patient");
 
     // Create new user
-    const newUser = new User({ email, username, password, role: getRole(email) });
+    const newUser = new User({ email, username, password, role: "patient" });
     await newUser.save();
 
     console.log(newUser);
