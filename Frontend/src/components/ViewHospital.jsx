@@ -30,8 +30,8 @@ function ViewHospital() {
       }
     };
 
-const handleAddDoctor = () => {
-    console.log("Add Doctor clicked");
+const handleAddHospital = () => {
+    console.log("Add hospital clicked");
     // console.log(userData)
     navigate('/AddHospital')
     // Implement Add Doctor functionality
@@ -72,7 +72,7 @@ const handleAddDoctor = () => {
       </div>
       {/* <div style={{marginTop:"100px"}}></div> */}
       <div id="but-div">
-        <button id="buttonStyle" style={{marginRight:"0",marginTop:"15px"}} onClick={handleAddDoctor}>Add Hospital</button>
+        <button id="buttonStyle" style={{marginRight:"0",marginTop:"15px"}} onClick={handleAddHospital}>Add Hospital</button>
       </div>
       <div id="main-container">
         <div id="existing" style={{width:"40%"}}>
